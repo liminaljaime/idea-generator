@@ -63,7 +63,7 @@ const theme: Theme = {
                     </div>
                   </div>
                 </div>
-                <button type="button" class="keep" data-keep="${i}" aria-pressed="false" aria-label="Keep the ${r.label.toLowerCase()} card">Keep</button>
+                <button type="button" class="keep" data-keep="${i}" aria-pressed="false" aria-label="Hold the ${r.label.toLowerCase()} card">Hold</button>
               </section>`).join('')}
           </div>
           <button type="button" class="shuffle">Shuffle &amp; deal</button>
@@ -99,10 +99,10 @@ const theme: Theme = {
 
     cleanup.push(machine.on('hold', ({ index, held }) => {
       keeps[index].setAttribute('aria-pressed', String(held))
-      keeps[index].textContent = held ? 'Kept' : 'Keep'
+      keeps[index].textContent = held ? 'Held' : 'Hold'
       cards[index].classList.toggle('kept', held)
       shuffle.disabled = !machine.canSpin
-      status.textContent = machine.canSpin ? IDLE : 'All kept · release one to deal again'
+      status.textContent = machine.canSpin ? IDLE : 'All held · release one to deal again'
     }))
 
     cleanup.push(machine.on('spin', async ({ spinning, results }) => {

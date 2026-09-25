@@ -88,7 +88,7 @@ sewn flowers, stars, hearts, cherries, loose threads. No plastic, gradients, cas
 A tongue-in-cheek pier-end fortune-teller's booth: striped awning, bulb-lit sign,
 velvet table. Three decks (sun = what to make, moon = premise, star = direction).
 SHUFFLE & DEAL sweeps unkept cards back, riffles the decks, deals and flips one at a
-time; KEEP holds a card face up. Card faces reuse the cross-stitch badges, with a
+time; HOLD keeps a card face up. Card faces reuse the cross-stitch badges, with a
 Roman numeral (the item's position in its list). The reader's lines live in
 `src/data/tarot-reader.csv` (same kinds as art-director.csv); a theme can supply its
 own voice via `Theme.voice`. A shared theme switcher sits top-right on every theme.
