@@ -38,7 +38,7 @@ const theme: Theme = {
         <main class="cabinet">
           <header class="marquee">
             ${motifSvg('plus')}${motifSvg('flower')}
-            <h1>${stitchLabel('Idea Machine', 'title')}</h1>
+            <h1>${stitchLabel('Homespun Ideas', 'title')}</h1>
             ${motifSvg('flower')}${motifSvg('plus')}
           </header>
           <div class="reels">

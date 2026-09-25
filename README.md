@@ -1,4 +1,4 @@
-# Idea Generator
+# Homespun Ideas
 
 The slot machine of creativity. Each spin picks one item from each of three reels.
 

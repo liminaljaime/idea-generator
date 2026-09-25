@@ -1,4 +1,4 @@
-# Idea Machine — plan
+# Homespun Ideas — plan
 
 A slot machine for internet-project ideas. Three reels — WHAT TO MAKE, PREMISE,
 DIRECTION — each with a HOLD, and one SPIN IDEA action that spins the unheld reels.
@@ -79,7 +79,7 @@ A 1990s arcade fruit machine imagined by a textile artist. Custard-yellow fabric
 background, cream linen cabinet, violet felt appliqué reel frames, aubergine thread
 instead of black outlines, raspberry stitched controls. HOLD buttons are sewn fabric
 tabs (HELD = raspberry, stitched padlock). SPIN IDEA is a small padded stitched pill.
-Title "IDEA MACHINE" drawn with the cross-stitch renderer; pixel-terminal font for UI
+Title "HOMESPUN IDEAS" (formerly Idea Machine) drawn with the cross-stitch renderer; pixel-terminal font for UI
 copy. Purple display panel: INSERT CURIOSITY / NO COINS REQUIRED / IDEA READY. Sparse
 sewn flowers, stars, hearts, cherries, loose threads. No plastic, gradients, casino cues.
 
