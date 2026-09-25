@@ -24,7 +24,7 @@ describe('slots', () => {
   })
 })
 
-describe.each(['art-director', 'tarot-reader'])('writeBrief with %s', (voice) => {
+describe.each(['art-director', 'tarot-reader', 'lotto-host'])('writeBrief with %s', (voice) => {
   const lines = parseLines(readFileSync(`src/data/${voice}.csv`, 'utf8'))
   it('has lines for every slot, direction family and held reel', () => {
     for (const k of ['what', 'premise', 'direction-visual', 'direction-behaviour', 'direction-mechanism',
@@ -43,7 +43,7 @@ describe.each(['art-director', 'tarot-reader'])('writeBrief with %s', (voice) =>
       expect(s).not.toMatch(/[{}]|\s{2}/)
       expect(s).not.toMatch(/\b(the|our|same|very|full|an?) (an?|the) /i)
       expect(s).not.toMatch(/,[,.]|\.,|\.\.|\S—|it's (is|only|uses|fits|loads|controlled|built|sound|two|keyboard|monospace|under|everything)\b/i)
-      expect(s).toMatch(/^[A-Z].*[.]$/)
+      expect(s).toMatch(/^[A-Z].*[.!]$/) // some voices (e.g. a game-show host) shout their nod
       expect(lines.nod.some((nod) => s.endsWith(` ${nod}`))).toBe(true)
       expect(s.toLowerCase()).toContain(results[0].item.toLowerCase())
       expect(s.toLowerCase()).toContain(results[1].item.toLowerCase())

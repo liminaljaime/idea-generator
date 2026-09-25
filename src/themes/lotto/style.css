@@ -1,0 +1,315 @@
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap');
+
+:root[data-theme="lotto"] {
+  --hot-pink: #ff2d95;
+  --hot-purple: #7b2ff7;
+  --hot-teal: #00d9c0;
+  --hot-gold: #ffcf3f;
+  --hot-red: #ff3b3b;
+  --ink: #2a1140;
+  --cream: #fffdf6;
+  --display: 'Baloo 2', system-ui, sans-serif;
+
+  color-scheme: light;
+  color: var(--ink);
+  font-family: var(--display);
+  background: var(--hot-purple);
+}
+[data-theme="lotto"] body { margin: 0; }
+:where([data-theme="lotto"]) :where(button) { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
+[data-theme="lotto"] :focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+
+.showroom {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  justify-items: center;
+  background: radial-gradient(ellipse at 50% 0%, var(--hot-pink) 0%, var(--hot-purple) 55%, #3a0e6e 100%);
+}
+
+/* Radiating game-show starburst rays behind everything */
+.rays {
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  background: repeating-conic-gradient(from 0deg, rgb(255 255 255 / 0.08) 0deg 9deg, transparent 9deg 18deg);
+  animation: spin-rays 90s linear infinite;
+  pointer-events: none;
+}
+@keyframes spin-rays { to { transform: rotate(360deg); } }
+
+.marquee { position: relative; z-index: 1; text-align: center; padding: clamp(16px, 3.5vh, 32px) 16px clamp(4px, 1vh, 10px); }
+.marquee h1 { margin: 0; line-height: 1; display: flex; gap: 0.3em; justify-content: center; flex-wrap: wrap; }
+.bubble {
+  font: 800 clamp(2.1rem, 6.5vh, 3.6rem) var(--display);
+  color: var(--hot-gold);
+  -webkit-text-stroke: 3px var(--ink);
+  paint-order: stroke fill;
+  text-shadow: 3px 3px 0 var(--ink), 6px 6px 0 rgb(0 0 0 / 0.35), 0 0 24px rgb(255 207 63 / 0.5);
+  transform: rotate(-2deg);
+}
+.bubble.accent { color: var(--hot-pink); transform: rotate(2deg); }
+.tagline {
+  margin: 4px 0 0;
+  font: 700 clamp(0.9rem, 2vh, 1.15rem) var(--display);
+  color: var(--cream);
+  letter-spacing: 0.06em;
+  text-shadow: 2px 2px 0 var(--ink);
+}
+
+.stage {
+  position: relative;
+  z-index: 1;
+  width: min(760px, 100% - 24px);
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: clamp(10px, 2vh, 20px);
+  padding-bottom: clamp(14px, 2.5vh, 26px);
+}
+
+.machine { display: grid; justify-items: center; }
+
+/* --- The one shared plastic globe: balls sit still until DRAW is pressed --- */
+.globe-wrap { display: grid; justify-items: center; }
+.glass {
+  position: relative;
+  width: clamp(150px, 26vh, 220px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 26%, rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.08) 45%, rgb(255 255 255 / 0.02) 70%);
+  border: 4px solid rgb(255 255 255 / 0.65);
+  box-shadow:
+    inset 0 -16px 26px rgb(0 0 0 / 0.15),
+    inset 0 12px 20px rgb(255 255 255 / 0.35),
+    0 10px 20px rgb(0 0 0 / 0.4);
+  overflow: hidden;
+}
+.balls { position: absolute; inset: 0; }
+.ball {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--sz);
+  height: var(--sz);
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #fff, var(--c) 55%, color-mix(in srgb, var(--c) 70%, #000) 100%);
+  display: grid;
+  place-items: center;
+  font: 700 0.5em var(--display);
+  color: rgb(0 0 0 / 0.5);
+  box-shadow: inset 0 -2px 3px rgb(0 0 0 / 0.25);
+  /* Still by default; only the churning globe animates them. */
+}
+.glass.churning .ball { animation: tumble var(--dur) ease-in-out var(--delay) infinite; }
+@keyframes tumble {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(7px, -9px); }
+  50% { transform: translate(-6px, 6px); }
+  75% { transform: translate(5px, 8px); }
+}
+
+.stand {
+  margin-top: -4px;
+  width: clamp(70px, 12vh, 100px);
+  height: 10px;
+  border-radius: 5px;
+  background: linear-gradient(#9a9a9a, #5f5f5f);
+  box-shadow: 0 4px 6px rgb(0 0 0 / 0.35);
+}
+
+/* --- The manifold: a horizontal distributor bar the three tubes hang from --- */
+.manifold {
+  width: min(420px, 70%);
+  height: 12px;
+  margin-top: 6px;
+  border-radius: 6px;
+  background: linear-gradient(#d8d8d8, #9a9a9a);
+  box-shadow: inset 0 -2px 3px rgb(0 0 0 / 0.25), 0 3px 5px rgb(0 0 0 / 0.3);
+}
+
+.lanes { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(10px, 2.5vw, 28px); width: 100%; margin-top: -2px; }
+.lane { display: grid; justify-items: center; gap: 6px; min-width: 0; }
+
+/* --- Tube: carries one travelling ball down from the manifold into its slot --- */
+.tube {
+  position: relative;
+  width: clamp(20px, 4vh, 28px);
+  height: clamp(38px, 7vh, 56px);
+  background: linear-gradient(90deg, rgb(255 255 255 / 0.5), var(--lc) 40%, color-mix(in srgb, var(--lc) 70%, #000) 100%);
+  border-radius: 6px;
+  box-shadow: inset 0 0 4px rgb(0 0 0 / 0.3);
+  overflow: hidden;
+}
+.travelling {
+  position: absolute;
+  top: -30%;
+  left: 50%;
+  width: 78%;
+  aspect-ratio: 1;
+  transform: translate(-50%, 0);
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #fff, var(--lc) 55%, color-mix(in srgb, var(--lc) 70%, #000) 100%);
+  box-shadow: inset 0 -2px 3px rgb(0 0 0 / 0.25);
+  opacity: 0;
+}
+.travelling.rolling {
+  opacity: 1;
+  animation: roll-down 0.34s cubic-bezier(.55,0,.85,.3) forwards;
+}
+@keyframes roll-down {
+  0% { top: -30%; opacity: 1; }
+  90% { top: 95%; opacity: 1; }
+  100% { top: 95%; opacity: 0; }
+}
+
+/* --- The numbered slot the ball drops into --- */
+.slot {
+  width: clamp(56px, 9vh, 74px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 100%, rgb(0 0 0 / 0.3), transparent 60%), #efe6ff;
+  border: 3px solid var(--ink);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  box-shadow: inset 0 4px 8px rgb(0 0 0 / 0.25);
+  margin-top: -6px;
+}
+.ball-drop {
+  width: 82%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 28%, #fff, var(--lc) 55%, color-mix(in srgb, var(--lc) 70%, #000) 100%);
+  display: grid;
+  place-items: center;
+  font: 800 1.1rem var(--display);
+  color: var(--ink);
+  box-shadow: inset 0 -3px 5px rgb(0 0 0 / 0.25), 0 3px 6px rgb(0 0 0 / 0.3);
+  transform: translateY(-140%) scale(0.6);
+  opacity: 0;
+}
+.ball-drop.settled {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  transition: transform 0.32s cubic-bezier(.34,1.56,.64,1), opacity 0.15s ease;
+}
+
+/* --- The nameplate that slides in beneath the ball --- */
+.plate {
+  width: 100%;
+  min-height: 2.4em;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: var(--cream);
+  border: 3px solid var(--ink);
+  box-shadow: 0 4px 0 rgb(0 0 0 / 0.25);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  transform: translateY(-8px) scale(0.9);
+  opacity: 0;
+}
+.plate.shown {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1) 0.08s, opacity 0.25s ease 0.08s;
+}
+.plate-text {
+  font: 700 clamp(0.72rem, 1.6vh, 0.95rem) / 1.15 var(--display);
+  color: var(--ink);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  overflow-wrap: break-word;
+}
+
+.lane-name {
+  margin: 0;
+  font: 700 clamp(0.72rem, 1.7vh, 0.9rem) var(--display);
+  color: var(--cream);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-shadow: 1.5px 1.5px 0 var(--ink);
+}
+
+/* --- Lock button --- */
+.lock {
+  padding: 5px 16px;
+  font: 700 0.85rem var(--display);
+  letter-spacing: 0.05em;
+  color: var(--ink);
+  background: var(--hot-gold);
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  box-shadow: 0 3px 0 rgb(0 0 0 / 0.3);
+}
+.lock[aria-pressed="true"] { background: var(--hot-teal); transform: translateY(2px); box-shadow: none; }
+.lock:disabled:not([aria-pressed="true"]) { opacity: 0.55; }
+
+/* --- The big red DRAW buzzer: a chunky, glossy plastic arcade button --- */
+.draw {
+  position: relative;
+  width: clamp(112px, 17vh, 156px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 8px 0 rgb(0 0 0 / 0.35)) drop-shadow(0 14px 20px rgb(0 0 0 / 0.4));
+  transition: transform 90ms ease, filter 90ms ease;
+}
+.draw svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.draw-label {
+  position: relative;
+  z-index: 1;
+  font: 800 clamp(1.05rem, 2.8vh, 1.5rem) var(--display);
+  color: #fff5f5;
+  letter-spacing: 0.1em;
+  text-shadow: 0 2px 0 rgb(0 0 0 / 0.4), 0 0 12px rgb(255 59 59 / 0.6);
+}
+.draw:active:not(:disabled) { transform: translateY(6px) scale(0.94); filter: drop-shadow(0 2px 0 rgb(0 0 0 / 0.35)) drop-shadow(0 4px 8px rgb(0 0 0 / 0.4)); }
+.draw:disabled { filter: saturate(0.4) brightness(0.75) drop-shadow(0 8px 0 rgb(0 0 0 / 0.25)); cursor: default; }
+
+/* --- The commentary / host line --- */
+.commentary { max-width: 60ch; text-align: center; display: grid; gap: 6px; margin-top: 4px; }
+.status {
+  margin: 0;
+  font: 800 clamp(0.85rem, 2vh, 1.05rem) var(--display);
+  letter-spacing: 0.04em;
+  color: var(--hot-gold);
+  text-shadow: 1.5px 1.5px 0 var(--ink);
+  text-transform: uppercase;
+}
+.brief {
+  margin: 0;
+  font: 600 clamp(0.95rem, 2vh, 1.15rem) / 1.35 var(--display);
+  color: var(--cream);
+  text-shadow: 1px 1px 0 rgb(0 0 0 / 0.4);
+  min-height: 3.4em;
+  display: grid;
+  place-items: center;
+  transition: opacity 0.2s;
+}
+.brief.waiting { opacity: 0.35; }
+
+/* Theme switcher, lotto style */
+[data-theme="lotto"] .theme-switcher a { color: var(--ink); background: var(--cream); border: 2px solid var(--ink); font-family: var(--display); font-weight: 700; }
+[data-theme="lotto"] .theme-switcher a[aria-current="page"] { background: var(--hot-gold); }
+
+/* --- Phones --- */
+@media (max-width: 720px) {
+  .lanes { gap: 8px; }
+  .glass { width: clamp(120px, 34vw, 160px); }
+  .bubble { font-size: clamp(1.9rem, 8.5vw, 2.6rem); }
+  .slot { width: clamp(48px, 14vw, 62px); }
+  .draw { width: clamp(92px, 25vw, 122px); }
+  .plate-text { font-size: 0.66rem; }
+  .manifold { width: 80%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ball, .rays, .travelling { animation: none; }
+  .ball-drop, .plate, .draw { transition: none; }
+}

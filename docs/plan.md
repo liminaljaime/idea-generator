@@ -93,6 +93,17 @@ Roman numeral (the item's position in its list). The reader's lines live in
 `src/data/tarot-reader.csv` (same kinds as art-director.csv); a theme can supply its
 own voice via `Theme.voice`. A shared theme switcher sits top-right on every theme.
 
+## Theme 3: Lucky Ideas (lotto draw)
+
+A bright, garish 90s game-show lotto draw. One shared plastic globe holds all the
+balls, sitting still until DRAW is pressed; pressing the big glossy red buzzer
+shuffles them, then one ball per unlocked lane rolls down its own coloured tube
+(hanging off a shared manifold bar) into a numbered slot, and a nameplate reveals
+the item. LOCK/LOCKED replaces HOLD/HELD. Balls are plain coloured circles with a
+cosmetic random number — no badge art, purely game-show simple. The host speaks
+from `src/data/lotto-host.csv`, an over-the-top showbiz-announcer voice (same
+what/premise/direction/nod shape as the other voices).
+
 ## Build order
 
 1. ~~Engine, CSV data, shell, bare theme~~ ✅
