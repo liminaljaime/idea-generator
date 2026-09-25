@@ -16,6 +16,11 @@ const filters = `
       <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/>
       <feDisplacementMap in="SourceGraphic" scale="1.3"/>
     </filter>
+    <!-- Fine, high-frequency wobble: roughens a fabric edge into loose threads. -->
+    <filter id="fray" x="-3%" y="-3%" width="106%" height="106%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.7 0.7" numOctaves="2" seed="11"/>
+      <feDisplacementMap in="SourceGraphic" scale="5"/>
+    </filter>
   </svg>`
 
 const IDLE = 'Insert curiosity · no coins required'
