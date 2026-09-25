@@ -69,6 +69,16 @@ const motifs: Record<string, string[]> = {
     'rrrrrrrrr',
     '.rrr..rrr',
   ],
+  lock: [
+    '.###.',
+    '#...#',
+    '#...#',
+    '#####',
+    '##.##',
+    '##.##',
+    '#####',
+  ],
+  plus: ['.#.', '###', '.#.'], // current colour
   sparkle: [
     '....t....',
     '....t....',

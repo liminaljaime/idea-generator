@@ -4,12 +4,21 @@ import type { Machine } from '../../engine/machine'
 import type { Item } from '../../engine/types'
 import { prefersReducedMotion } from '../../shell/controls'
 import { badgeSvg, motifSvg } from './badges'
-import { stitchText } from './stitch'
+import { stitchLabel, stitchText } from './stitch'
 
-// Embroidered arcade: a 90s fruit machine imagined by a textile artist.
+// Embroidered arcade: a 90s pixel fruit machine that turns out, up close, to be hand-stitched.
 let cleanup: (() => void)[] = []
 
-const lock = `<svg viewBox="0 0 7 8" width="14" height="16" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M2 0h3v1H2zM1 1h1v3H1zM5 1h1v3H5zM0 3h7v5H0z"/><path fill="var(--raspberry)" d="M3 5h1v2H3z"/></svg>`
+// Hand-made wobble for outlines and fabric edges.
+const filters = `
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <filter id="handmade" x="-2%" y="-2%" width="104%" height="104%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7"/>
+      <feDisplacementMap in="SourceGraphic" scale="1.3"/>
+    </filter>
+  </svg>`
+
+const IDLE = 'Insert curiosity · no coins required'
 
 function flicker(el: HTMLElement) {
   el.classList.remove('landed')
@@ -21,36 +30,36 @@ const theme: Theme = {
   mount(root: HTMLElement, machine: Machine) {
     document.documentElement.dataset.theme = 'embroidered'
     const deco = (side: string) =>
-      `<div class="deco deco-${side}" aria-hidden="true"><span class="plus">+</span><span class="thread"></span>${motifSvg('flower')}</div>`
+      `<div class="deco deco-${side}" aria-hidden="true">${motifSvg('plus')}<span class="thread"></span>${motifSvg('flower')}</div>`
     root.innerHTML = `
+      ${filters}
       <div class="scene">
         ${deco('left')}
         <main class="cabinet">
           <header class="marquee">
-            <span class="sparkles" aria-hidden="true">+<sub>+</sub></span>
-            ${motifSvg('flower')}
-            <h1><span class="visually-hidden">Idea Machine</span>${stitchText('Idea Machine', 'title')}</h1>
-            ${motifSvg('flower')}
-            <span class="sparkles" aria-hidden="true"><sub>+</sub>+</span>
+            ${motifSvg('plus')}${motifSvg('flower')}
+            <h1>${stitchLabel('Idea Machine', 'title')}</h1>
+            ${motifSvg('flower')}${motifSvg('plus')}
           </header>
           <div class="reels">
             ${machine.reels.map((r, i) => `
               <section class="reel" aria-label="${r.label}">
                 <div class="frame">
-                  <h2>${r.label}</h2>
+                  <h2>${stitchText(r.label)}</h2>
                   <div class="window" data-window="${i}">
                     <div class="badge" data-badge="${i}"></div>
                     <p class="result" data-result="${i}"></p>
                   </div>
                 </div>
-                <button type="button" class="hold" data-hold="${i}" aria-pressed="false">
-                  <span class="lock">${lock}</span><span class="hold-text">HOLD</span>
+                <button type="button" class="hold" data-hold="${i}" aria-pressed="false" aria-label="Hold ${r.label.toLowerCase()}">
+                  <span class="face off">${stitchText('Hold')}</span>
+                  <span class="face on">${motifSvg('lock')}${stitchText('Held')}</span>
                 </button>
               </section>`).join('')}
           </div>
-          <button type="button" class="spin">SPIN IDEA</button>
+          <button type="button" class="spin">${motifSvg('plus')}${stitchLabel('Spin idea')}${motifSvg('plus')}</button>
           <footer class="panel">
-            <p class="status" data-status>INSERT CURIOSITY ${motifSvg('flower')} NO COINS REQUIRED</p>
+            <p class="status" data-status></p>
             <p class="brief" aria-hidden="true"></p>
           </footer>
         </main>
@@ -64,14 +73,15 @@ const theme: Theme = {
     const spin = root.querySelector<HTMLButtonElement>('.spin')!
     const status = root.querySelector<HTMLElement>('[data-status]')!
     const brief = root.querySelector<HTMLElement>('.brief')!
-    const idle = status.innerHTML
 
+    const setStatus = (text: string) => (status.innerHTML = stitchLabel(text))
     const show = (i: number, item: Item) => {
       results[i].textContent = item.item
       badges[i].innerHTML = badgeSvg(item)
     }
     machine.reels.forEach((_, i) => show(i, machine.results[i]))
     brief.textContent = machine.brief
+    setStatus(IDLE)
 
     holds.forEach((b, i) => b.addEventListener('click', () => machine.toggleHold(i)))
     spin.addEventListener('click', () => machine.spin())
@@ -83,14 +93,13 @@ const theme: Theme = {
 
     cleanup.push(machine.on('hold', ({ index, held }) => {
       holds[index].setAttribute('aria-pressed', String(held))
-      holds[index].querySelector('.hold-text')!.textContent = held ? 'HELD' : 'HOLD'
       spin.disabled = !machine.canSpin
-      status.innerHTML = machine.canSpin ? idle : 'ALL HELD · RELEASE ONE TO SPIN'
+      setStatus(machine.canSpin ? IDLE : 'All held · release one to spin')
     }))
 
     cleanup.push(machine.on('spin', ({ spinning, results: final }) => {
       setBusy(true)
-      status.textContent = 'SPINNING…'
+      setStatus('Spinning…')
       brief.classList.add('waiting')
       if (prefersReducedMotion()) {
         spinning.forEach((i) => show(i, final[i]))
@@ -112,7 +121,7 @@ const theme: Theme = {
 
     cleanup.push(machine.on('ready', (e) => {
       setBusy(false)
-      status.textContent = 'IDEA READY · THE ART DIRECTOR SAYS'
+      setStatus("Idea ready · the art director says")
       brief.textContent = e.brief
       brief.classList.remove('waiting')
     }))

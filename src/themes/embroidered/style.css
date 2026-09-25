@@ -1,40 +1,45 @@
-@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
 
 :root[data-theme="embroidered"] {
   --custard: #e8dd8c;   /* washed-lemon background */
-  --cream: #f6efcf;     /* cabinet */
-  --cream-shade: #e9dfb4;
-  --aubergine: #2e1a47; /* thread: outlines and text */
-  --violet: #5a3fa6;    /* reel frames */
-  --raspberry: #e0284b; /* controls */
-  --raspberry-dark: #a81838;
+  --cream: #f6efcf;     /* aida cloth */
+  --cream-shade: #ebe1b8;
+  --aubergine: #2e1a47; /* thread */
+  --violet: #5a3fa6;    /* felt */
+  --raspberry: #e0284b;
+  --raspberry-dark: #b01c3c;
   --cobalt: #3a55c4;
   --turquoise: #2fa8a0;
-  --display: 'Silkscreen', monospace;
-  --terminal: 'VT323', monospace;
-  --px: 4px;            /* outline weight */
+  --type: 'Courier Prime', 'Courier New', monospace;
 
-  /* Desktop sizes scale with window height so the machine never needs scrolling. */
-  --drum: clamp(120px, 21vh, 200px);
-  --gap: clamp(8px, 1.6vh, 16px);
+  /* Fabric textures */
+  --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .18 0 0 0 0 .1 0 0 0 0 .28 0 0 0 .1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --weave: repeating-linear-gradient(0deg, rgb(46 26 71 / 0.035) 0 1px, transparent 1px 3px),
+           repeating-linear-gradient(90deg, rgb(46 26 71 / 0.03) 0 1px, transparent 1px 3px);
+  --aida: radial-gradient(circle, rgb(46 26 71 / 0.1) 0.7px, transparent 1.1px) 0 0 / 5px 5px;
+
+  /* One stitch. Scales with window height on desktop so the machine never needs scrolling. */
+  --s: clamp(2.6px, 0.45vh, 3.6px);
+  --drum: clamp(112px, 19vh, 176px);
+  --gap: clamp(8px, 1.5vh, 14px);
+  --running: 2px dashed; /* running-stitch outline */
 
   color-scheme: light;
-  background: var(--custard);
+  background: var(--noise), var(--weave), var(--custard);
   color: var(--aubergine);
-  font-family: var(--terminal);
+  font-family: var(--type);
 }
 
-[data-theme="embroidered"] body { margin: 0; background: var(--custard); }
-/* Zero-specificity defaults so component rules below always win. */
-:where([data-theme="embroidered"]) :where(button) { font: inherit; color: inherit; cursor: pointer; }
+[data-theme="embroidered"] body { margin: 0; background: transparent; }
+:where([data-theme="embroidered"]) :where(button) { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
 :where([data-theme="embroidered"]) :where(button:disabled) { cursor: default; }
-[data-theme="embroidered"] :focus-visible { outline: var(--px) dashed var(--cobalt); outline-offset: var(--px); }
+[data-theme="embroidered"] :focus-visible { outline: 3px dashed var(--cobalt); outline-offset: 4px; }
 
-.stitch { display: block; overflow: visible; }
+.stitch { display: block; width: auto; flex: none; overflow: visible; }
 
 .scene {
   display: grid;
-  grid-template-columns: 1fr min(720px, 100vw - 180px) 1fr;
+  grid-template-columns: 1fr min(680px, 100vw - 170px) 1fr;
   grid-template-areas: "left cabinet right";
   align-items: center;
   gap: 24px;
@@ -44,18 +49,28 @@
   box-sizing: border-box;
 }
 
-/* ---------- Cabinet ---------- */
+/* ---------- Cabinet: aida cloth with a couched-thread edge ---------- */
 .cabinet {
   grid-area: cabinet;
+  position: relative;
   min-width: 0;
-  max-height: 100%;
   display: grid;
   gap: var(--gap);
-  padding: var(--gap) 16px 0;
-  background: var(--cream);
-  border: var(--px) solid var(--aubergine);
-  box-shadow: calc(var(--px) * 2) calc(var(--px) * 2) 0 var(--aubergine);
-  box-sizing: border-box;
+  padding: calc(var(--gap) + 6px) 20px 0;
+  background: var(--noise), var(--aida), var(--cream);
+  border: 3px solid var(--aubergine);
+  border-radius: 6px;
+  box-shadow: 6px 7px 0 rgb(46 26 71 / 0.22);
+  filter: url(#handmade);
+}
+.cabinet::before { /* running stitch just inside the edge */
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: var(--running) var(--violet);
+  border-radius: 3px;
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 .marquee {
@@ -63,62 +78,65 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  padding: clamp(6px, 1.2vh, 12px) 14px;
-  margin: 5px;
-  border: 2px solid var(--aubergine);
-  outline: 2px solid var(--aubergine);
-  outline-offset: 4px;
+  gap: calc(var(--s) * 3);
+  padding: calc(var(--s) * 3) 12px;
+  border: var(--running) var(--raspberry);
+  border-radius: 8px;
 }
-.marquee h1 { margin: 0; line-height: 0; flex: 0 1 auto; min-width: 0; width: min(100%, 9 * clamp(30px, 6vh, 50px)); }
-.marquee .title { width: 100%; height: auto; color: var(--aubergine); }
-.marquee > .stitch { height: clamp(22px, 3.6vh, 30px); width: auto; flex: none; }
-.sparkles { font-family: var(--display); font-size: 1.3rem; line-height: 1; }
-.sparkles sub { font-size: 1rem; }
+.marquee h1 { margin: 0; line-height: 0; min-width: 0; }
+.marquee .title { --s: clamp(4px, 0.75vh, 6px); color: var(--aubergine); max-width: 100%; }
 
-/* ---------- Reels ---------- */
+/* ---------- Reels: violet felt with cream running stitch ---------- */
 .reels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .reel { display: grid; gap: var(--gap); min-width: 0; }
 
 .frame {
+  position: relative;
   display: grid;
+  justify-items: center;
   gap: 8px;
-  padding: 8px 10px 10px;
-  background: var(--violet);
-  border: var(--px) solid var(--aubergine);
+  padding: 11px 11px 12px;
+  background: var(--noise), var(--violet);
+  border-radius: 12px;
+  box-shadow: 2px 3px 0 rgb(46 26 71 / 0.35);
 }
-.frame h2 {
-  margin: 0;
-  color: var(--cream);
-  font: 400 0.85rem var(--display);
-  letter-spacing: 0.08em;
-  text-align: center;
+.frame::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: var(--running) rgb(246 239 207 / 0.7);
+  border-radius: 8px;
+  pointer-events: none;
 }
+.frame h2 { --s: clamp(1.6px, 0.26vh, 2px); margin: 0; color: var(--cream); line-height: 0; }
 
-/* Curved drum: shaded top and bottom bands, lighter in the middle. */
+/* Drum: linen, shaded top and bottom, satin-stitched edge */
 .window {
+  position: relative;
+  z-index: 1;
+  width: 100%;
   display: grid;
-  grid-template-rows: 40% auto;
+  grid-template-rows: auto auto;
   justify-items: center;
   align-content: center;
-  gap: 6px;
+  gap: calc(var(--s) * 2.5);
   height: var(--drum);
-  padding: 6px 8px;
-  border: var(--px) solid var(--aubergine);
-  border-radius: 10px / 22px;
-  background: linear-gradient(to bottom,
-    var(--cream-shade) 0 7%, #f1e8c4 7% 15%, var(--cream) 15% 85%, #f1e8c4 85% 93%, var(--cream-shade) 93%);
+  padding: 8px 10px;
+  border: 2.5px solid var(--aubergine);
+  border-radius: 12px / 26px;
+  background:
+    linear-gradient(to bottom, rgb(46 26 71 / 0.12), transparent 18%, transparent 82%, rgb(46 26 71 / 0.12)),
+    var(--weave), var(--cream);
   overflow: hidden;
   box-sizing: border-box;
 }
-.badge { display: grid; place-items: end center; height: 100%; min-height: 0; }
-.badge .stitch { height: 100%; max-height: 58px; width: auto; max-width: 70px; }
+.badge { display: grid; place-items: center; }
 .result {
   margin: 0;
-  align-self: start;
-  font-size: clamp(1.1rem, 2.4vh, 1.35rem);
-  line-height: 1.05;
-  letter-spacing: 0.04em;
+  font-weight: 700;
+  font-size: clamp(0.85rem, 1.9vh, 1rem);
+  line-height: 1.15;
+  letter-spacing: 0.02em;
   text-align: center;
   text-transform: uppercase;
   overflow-wrap: anywhere;
@@ -131,71 +149,84 @@
 .window.landed .result { animation: land 0.28s steps(3); }
 @keyframes land { 0% { transform: translateY(-8px); } 60% { transform: translateY(2px); } 100% { transform: none; } }
 
-/* ---------- Hold ---------- */
+/* ---------- Hold: sewn-on felt tabs ---------- */
 .hold {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: clamp(36px, 5.5vh, 48px);
-  font: 700 1rem var(--display);
-  letter-spacing: 0.08em;
-  background: var(--custard);
-  border: var(--px) solid var(--aubergine);
-  box-shadow: 0 var(--px) 0 var(--aubergine);
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: clamp(34px, 5vh, 44px);
+  color: var(--aubergine);
+  background: var(--noise), var(--custard);
+  border-radius: 10px;
+  box-shadow: 0 3px 0 rgb(46 26 71 / 0.35);
 }
-.hold .lock { display: none; }
+.hold::before {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border: var(--running) currentColor;
+  border-radius: 7px;
+  opacity: 0.6;
+}
+.hold .face { --s: clamp(1.8px, 0.3vh, 2.4px); display: flex; align-items: center; gap: calc(var(--s) * 3); }
+.hold .on { display: none; }
 .hold[aria-pressed="true"] {
-  background: var(--raspberry);
   color: var(--cream);
-  transform: translateY(var(--px));
-  box-shadow: none;
+  background: var(--noise), var(--raspberry);
+  transform: translateY(3px);
+  box-shadow: inset 0 2px 3px rgb(46 26 71 / 0.35);
 }
-.hold[aria-pressed="true"] .lock { display: inline-flex; }
-.hold[aria-pressed="true"] .lock svg path:last-child { fill: var(--raspberry); }
+.hold[aria-pressed="true"] .off { display: none; }
+.hold[aria-pressed="true"] .on { display: flex; }
 .hold:disabled:not([aria-pressed="true"]) { opacity: 0.6; }
 
-/* ---------- Spin ---------- */
+/* ---------- Spin: a padded felt pill ---------- */
 .spin {
-  padding: clamp(8px, 1.6vh, 14px) 16px;
-  font: 700 clamp(1.5rem, 4.4vh, 2.4rem) var(--display);
-  letter-spacing: 0.06em;
+  position: relative;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: calc(var(--s) * 4);
+  padding: calc(var(--s) * 4) calc(var(--s) * 9);
+  --s: clamp(3px, 0.55vh, 4.2px);
   color: var(--cream);
-  background: var(--raspberry);
-  border: var(--px) solid var(--aubergine);
-  box-shadow: inset 0 calc(var(--px) * -2) 0 var(--raspberry-dark), 0 calc(var(--px) * 2) 0 var(--aubergine);
-  margin: 0 -6px;
+  background: var(--noise), var(--raspberry);
+  border-radius: 999px;
+  box-shadow:
+    inset 0 3px 4px rgb(255 255 255 / 0.25),
+    inset 0 -5px 6px rgb(46 26 71 / 0.3),
+    0 4px 0 var(--raspberry-dark),
+    0 6px 8px rgb(46 26 71 / 0.25);
 }
-.spin:active:not(:disabled) { transform: translateY(var(--px)); box-shadow: inset 0 calc(var(--px) * -1) 0 var(--raspberry-dark), 0 var(--px) 0 var(--aubergine); }
-.spin:disabled { filter: saturate(0.4); }
+.spin::before {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: var(--running) rgb(246 239 207 / 0.75);
+  border-radius: 999px;
+}
+.spin .stitch:not(.text) { --s: clamp(2.4px, 0.4vh, 3.2px); }
+.spin:active:not(:disabled) { transform: translateY(3px); box-shadow: inset 0 -3px 5px rgb(46 26 71 / 0.35), 0 1px 0 var(--raspberry-dark); }
+.spin:disabled { filter: saturate(0.5); }
 
 /* ---------- Footer panel: status + the art director ---------- */
 .panel {
   display: grid;
-  gap: 4px;
-  margin: 0 -16px;
-  padding: clamp(8px, 1.4vh, 12px) 20px clamp(10px, 1.8vh, 16px);
-  border-top: 2px solid var(--aubergine);
+  justify-items: center;
+  gap: 6px;
+  margin: 0 -20px;
+  padding: clamp(8px, 1.4vh, 12px) 22px clamp(12px, 2vh, 18px);
+  border-top: var(--running) var(--aubergine);
   text-align: center;
 }
-.status {
-  margin: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  font: 400 0.75rem var(--display);
-  letter-spacing: 0.12em;
-  opacity: 0.8;
-}
-.status .stitch { height: 14px; width: auto; }
-/* Room for four lines is always reserved so the machine never jumps or overflows. */
+.status { --s: 1.7px; margin: 0; min-height: calc(7 * var(--s)); opacity: 0.8; line-height: 0; }
+/* Four lines are always reserved so a long line never pushes the machine off-screen. */
 .brief {
-  margin: 0 auto;
-  max-width: 62ch;
-  font-size: clamp(1.1rem, 2.3vh, 1.3rem);
-  line-height: 1.15;
-  min-height: 4.6em;
+  margin: 0;
+  max-width: 60ch;
+  font-size: clamp(0.85rem, 1.9vh, 1rem);
+  line-height: 1.3;
+  min-height: 5.2em;
   display: grid;
   place-items: center;
   transition: opacity 0.2s;
@@ -206,39 +237,41 @@
 .deco { display: grid; justify-items: center; gap: 10px; }
 .deco-left { grid-area: left; justify-self: end; }
 .deco-right { grid-area: right; justify-self: start; }
-.deco .plus { font: 700 1.8rem var(--display); line-height: 1; }
-.deco .thread { width: 3px; height: 12vh; background: repeating-linear-gradient(var(--aubergine) 0 3px, transparent 0 9px); }
-.deco .stitch { width: 30px; height: auto; }
+.deco .thread { width: 2px; height: 12vh; background: repeating-linear-gradient(var(--aubergine) 0 5px, transparent 0 10px); border-radius: 2px; }
 
 /* ---------- Small screens: reels become rows; scrolling is fine ---------- */
 @media (max-width: 720px) {
-  .scene { grid-template-columns: minmax(0, 1fr); grid-template-areas: "cabinet"; height: auto; min-height: 100dvh; align-items: start; padding: 16px; }
+  :root[data-theme="embroidered"] { --s: 3px; }
+  .scene { grid-template-columns: minmax(0, 1fr); grid-template-areas: "cabinet"; height: auto; min-height: 100dvh; align-items: start; padding: 16px 14px; }
   .deco { display: none; }
-  .cabinet { padding: 12px 12px 0; gap: 12px; max-height: none; }
+  .cabinet { padding: 16px 14px 0; gap: 12px; }
   .marquee { gap: 8px; padding: 10px 8px; }
-  .marquee > .stitch, .sparkles { display: none; }
-  .marquee .title { height: auto; width: 100%; }
-  .marquee h1 { width: 100%; }
+  .marquee > .stitch { display: none; }
+  .marquee .title { --s: 3.6px; }
   .reels { grid-template-columns: minmax(0, 1fr); gap: 12px; }
-  .reel { grid-template-columns: minmax(0, 1fr) 68px; align-items: stretch; gap: 10px; }
-  .frame { padding: 6px 8px 8px; gap: 6px; }
-  .frame h2 { text-align: left; font-size: 0.8rem; }
-  .window { height: auto; min-height: 84px; grid-template-rows: none; grid-template-columns: 44px minmax(0, 1fr); gap: 10px; justify-items: start; align-items: center; border-radius: 16px / 8px; }
-  .badge { height: 40px; place-items: center; }
-  .badge .stitch { max-width: 44px; }
-  .result { align-self: center; font-size: 1.2rem; text-align: left; }
-  .hold { flex-direction: column; gap: 4px; font-size: 0.8rem; min-height: 0; padding: 0; }
-  .spin { margin: 0; font-size: 1.8rem; padding: 12px; }
-  .panel { margin: 0 -12px; padding: 10px 14px 14px; }
-  .brief { font-size: 1.2rem; min-height: 0; }
-  .status { font-size: 0.6rem; letter-spacing: 0.08em; gap: 6px; white-space: nowrap; }
+  .reel { grid-template-columns: minmax(0, 1fr) 64px; align-items: stretch; gap: 10px; }
+  .frame { justify-items: start; padding: 9px 10px 10px; }
+  .frame h2 { --s: 1.7px; padding-left: 4px; }
+  .window { height: auto; min-height: 76px; grid-template-rows: none; grid-template-columns: auto minmax(0, 1fr); gap: 12px; justify-items: start; align-items: center; border-radius: 16px / 10px; }
+  .result { text-align: left; font-size: 0.95rem; }
+  .hold .face { flex-direction: column; gap: 4px; }
+  .hold .face { --s: 1.7px; }
+  .spin { --s: 3.4px; }
+  .panel { margin: 0 -14px; padding: 10px 14px 16px; }
+  .status { --s: 1.4px; }
+  .brief { min-height: 0; font-size: 0.95rem; }
+}
+
+/* Desktop: sized to fit, so absorb sub-pixel rounding rather than scroll. */
+@media (min-width: 721px) and (min-height: 560px) {
+  :root[data-theme="embroidered"] { overflow: hidden; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .window.spinning .badge, .window.spinning .result, .window.landed .badge, .window.landed .result { animation: none; filter: none; }
 }
 
-/* Desktop: the machine is sized to fit, so absorb sub-pixel rounding rather than scroll. */
-@media (min-width: 721px) and (min-height: 560px) {
-  :root[data-theme="embroidered"] { overflow: hidden; }
-}
+/* Small stitched lettering needs heavier thread to stay legible. */
+.stitch.text path { stroke-width: 0.5; }
+.stitch.text path[opacity] { opacity: 0.85; }
+.title.text path { stroke-width: 0.4; }
