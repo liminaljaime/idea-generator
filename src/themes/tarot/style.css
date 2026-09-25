@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Rye&family=IM+Fell+English:ital@0;1&family=Cinzel:wght@700;800&family=Cinzel+Decorative:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rye&family=IM+Fell+English:ital@0;1&family=Cinzel:wght@700;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap');
 
 :root[data-theme="tarot"] {
   --velvet: #1a2a5e;       /* navy velvet */
@@ -79,8 +79,9 @@
 .corner.br { bottom: -9px; right: -9px; }
 .sign h1 {
   margin: 2px 0 4px;
-  font: 700 clamp(1.6rem, 4.8vh, 2.6rem) / 1.05 'Cinzel Decorative', var(--rws);
-  letter-spacing: 0.04em;
+  /* A Victorian playbill Didone, in title case. */
+  font: 700 clamp(1.8rem, 5.2vh, 2.9rem) / 1.05 'Playfair Display', Georgia, serif;
+  letter-spacing: 0.01em;
   color: #d9ae52;
 }
 .sign h1 .the {
