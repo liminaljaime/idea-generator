@@ -71,6 +71,9 @@ const theme: Theme = {
     document.documentElement.dataset.theme = 'tarot'
     document.title = 'The Creative Oracle'
     root.innerHTML = `
+      <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+        <filter id="ink"><feTurbulence type="fractalNoise" baseFrequency="0.08" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="1.8"/></filter>
+      </svg>
       <div class="booth">
         <div class="awning" aria-hidden="true"></div>
         <header class="sign">

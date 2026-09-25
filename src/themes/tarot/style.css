@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Rye&family=IM+Fell+English:ital@0;1&family=Cinzel:wght@700;800&family=Pinyon+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rye&family=IM+Fell+English:ital@0;1&family=Cinzel:wght@700;800&family=Pinyon+Script&family=Monsieur+La+Doulaise&display=swap');
 
 :root[data-theme="tarot"] {
   --velvet: #1a2a5e;       /* navy velvet */
@@ -79,9 +79,11 @@
 .corner.br { bottom: -9px; right: -9px; }
 .sign h1 {
   margin: 2px 0 4px;
-  /* Copperplate script, the formal Victorian pen hand. */
-  font: 400 clamp(2.3rem, 6.6vh, 3.7rem) / 1 'Pinyon Script', 'Snell Roundhand', cursive;
+  /* Hand-lettered: a flourished dip-pen script, slightly uneven ink and a touch off level. */
+  font: 400 clamp(2.6rem, 7.4vh, 4.2rem) / 1 'Monsieur La Doulaise', 'Pinyon Script', cursive;
   letter-spacing: 0;
+  transform: rotate(-2deg);
+  filter: url(#ink);
   color: #d9ae52;
 }
 .sign h1 .the {
@@ -230,7 +232,7 @@
   .suit-name { font-size: 0.58rem; letter-spacing: 0.04em; }
   .front { padding: 12px 11px 13px; }
   .name { margin: 0 -1px -3px; }
-  .sign h1 { font-size: 2.1rem; }
+  .sign h1 { font-size: 2.4rem; }
   .sign { padding: 8px 18px; }
 }
 
