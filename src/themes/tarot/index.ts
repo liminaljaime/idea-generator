@@ -76,8 +76,8 @@ const theme: Theme = {
       </svg>
       <div class="booth">
         <header class="sign">
-          <span class="corner tl" aria-hidden="true">✦</span><span class="corner tr" aria-hidden="true">✦</span>
-          <span class="corner bl" aria-hidden="true">✦</span><span class="corner br" aria-hidden="true">✦</span>
+          <span class="corner tl" aria-hidden="true"></span><span class="corner tr" aria-hidden="true"></span>
+          <span class="corner bl" aria-hidden="true"></span><span class="corner br" aria-hidden="true"></span>
           <h1><span class="the">The</span> Creative Oracle</h1>
           <p class="sign-sub">~ Visions Curated &amp; Futures Pitched ~</p>
         </header>
