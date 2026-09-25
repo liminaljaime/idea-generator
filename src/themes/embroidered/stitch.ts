@@ -15,7 +15,8 @@ const colours: Record<string, string> = {
 
 const inset = 0.12
 
-export function stitchSvg(grid: string[], className = ''): string {
+/** With `box`, the grid is centred in a box×box square so stitches keep their size. */
+export function stitchSvg(grid: string[], className = '', box = 0): string {
   const w = Math.max(...grid.map((r) => r.length))
   const under: Record<string, string[]> = {}
   const over: Record<string, string[]> = {}
@@ -31,7 +32,10 @@ export function stitchSvg(grid: string[], className = ''): string {
     `<path d="${under[c].join('')}" stroke="${colours[c]}" opacity="0.7"/>` +
     `<path d="${over[c].join('')}" stroke="${colours[c]}"/>`,
   )
-  return `<svg class="stitch ${className}" style="height:calc(${grid.length} * var(--s))" viewBox="-0.1 -0.1 ${w + 0.2} ${grid.length + 0.2}" fill="none" stroke-width="0.38" stroke-linecap="round" aria-hidden="true">${paths.join('')}</svg>`
+  const bw = Math.max(w, box)
+  const bh = Math.max(grid.length, box)
+  const [ox, oy] = [(bw - w) / 2, (bh - grid.length) / 2]
+  return `<svg class="stitch ${className}" style="height:calc(${bh} * var(--s))" viewBox="${-ox - 0.1} ${-oy - 0.1} ${bw + 0.2} ${bh + 0.2}" fill="none" stroke-width="0.38" stroke-linecap="round" aria-hidden="true">${paths.join('')}</svg>`
 }
 
 /** 5×7 stitch alphabet for short interface copy. */

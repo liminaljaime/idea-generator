@@ -147,7 +147,7 @@
   overflow: hidden;
   box-sizing: border-box;
 }
-.badge { display: grid; place-items: center; }
+.badge { display: grid; place-items: center; --s: clamp(1.9px, 0.33vh, 2.6px); }
 .result {
   margin: 0;
   font-weight: 700;
