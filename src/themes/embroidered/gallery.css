@@ -31,3 +31,5 @@
 .gallery[data-filter="drawn"] .card[data-done="false"],
 .gallery[data-filter="witty"] .card:not([data-tone="witty"]),
 .gallery[data-filter="literal"] .card:not([data-tone="literal"]) { display: none; }
+
+.gallery [hidden] { display: none; }

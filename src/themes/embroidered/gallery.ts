@@ -54,8 +54,20 @@ export function mountGallery(root: HTMLElement) {
     </main>`
 
   const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-filter]')]
-  buttons.forEach((b) => b.addEventListener('click', () => {
-    buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)))
-    root.querySelector('.gallery')!.setAttribute('data-filter', b.dataset.filter!)
-  }))
+  const apply = (filter: string) => {
+    buttons.forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.filter === filter)))
+    root.querySelector('.gallery')!.setAttribute('data-filter', filter)
+    // Hide family headings whose cards are all filtered out.
+    root.querySelectorAll<HTMLElement>('.cards').forEach((list) => {
+      const empty = [...list.children].every((c) => getComputedStyle(c).display === 'none')
+      list.hidden = empty
+      ;(list.previousElementSibling as HTMLElement).hidden = empty
+    })
+    const url = new URL(location.href)
+    url.searchParams.set('filter', filter)
+    history.replaceState(null, '', url)
+  }
+  buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter!)))
+  const initial = new URLSearchParams(location.search).get('filter')
+  if (initial && buttons.some((b) => b.dataset.filter === initial)) apply(initial)
 }

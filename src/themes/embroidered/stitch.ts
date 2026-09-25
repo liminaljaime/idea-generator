@@ -1,14 +1,16 @@
 /**
  * Renders a character grid as cross-stitch: every filled cell becomes an "×" of
  * two thread strokes, the under-stitch slightly paler than the over-stitch.
- * r raspberry · p violet · g aubergine · w cream · b cobalt · t turquoise · # current colour · . empty
+ * r raspberry · p violet · g aubergine · w cream · b cobalt · t turquoise
+ * y gold · n leaf · s pink · e stone · # current colour · . empty
  *
  * Size comes from CSS: each SVG is `rows × var(--s)` tall, so one stitch is the same
  * size wherever --s is the same — as it would be on a real piece of embroidery.
  */
 const colours: Record<string, string> = {
   r: 'var(--raspberry)', p: 'var(--violet)', g: 'var(--aubergine)',
-  w: 'var(--cream)', b: 'var(--cobalt)', t: 'var(--turquoise)', '#': 'currentColor',
+  w: 'var(--cream)', b: 'var(--cobalt)', t: 'var(--turquoise)',
+  y: 'var(--gold)', n: 'var(--leaf)', s: 'var(--pink)', e: 'var(--stone)', '#': 'currentColor',
 }
 
 const inset = 0.12
