@@ -26,8 +26,14 @@
 
   /* One stitch. Scales with window height on desktop so the machine never needs scrolling. */
   --s: clamp(2.6px, 0.45vh, 3.6px);
-  --drum: clamp(112px, 19vh, 176px);
-  --gap: clamp(8px, 1.5vh, 14px);
+  --drum: clamp(112px, 19vh, 184px);
+  /* One spacing scale for the whole machine; shrinks on short windows. */
+  --sp-1: clamp(4px, 0.6vh, 6px);
+  --sp-2: clamp(6px, 1vh, 10px);
+  --sp-3: clamp(8px, 1.5vh, 14px);
+  --sp-4: clamp(12px, 2.2vh, 20px);
+  --sp-5: clamp(16px, 3vh, 28px);
+  --gap: var(--sp-3);
   --running: 2px dashed; /* running-stitch outline */
 
   color-scheme: light;
@@ -56,10 +62,10 @@
 
 .scene {
   display: grid;
-  grid-template-columns: 1fr min(680px, 100vw - 170px) 1fr;
+  grid-template-columns: 1fr min(740px, 100vw - 170px) 1fr;
   grid-template-areas: "left cabinet right";
   align-items: center;
-  gap: 24px;
+  gap: clamp(24px, 4vw, 56px);
   height: 100vh;
   height: 100dvh;
   padding: clamp(12px, 3vh, 32px) 16px;
@@ -73,7 +79,7 @@
   min-width: 0;
   display: grid;
   gap: var(--gap);
-  padding: calc(var(--gap) + 6px) 20px 0;
+  padding: var(--sp-5) var(--sp-5) 0;
   background: var(--linen), var(--aida), var(--cream);
   border: 3px solid var(--aubergine);
   border-radius: 6px;
@@ -96,7 +102,7 @@
   align-items: center;
   justify-content: center;
   gap: calc(var(--s) * 3);
-  padding: calc(var(--s) * 3) 12px;
+  padding: var(--sp-3) var(--sp-4);
   border: var(--running) var(--raspberry);
   border-radius: 8px;
 }
@@ -104,15 +110,15 @@
 .marquee .title { --s: clamp(4px, 0.75vh, 6px); color: var(--aubergine); max-width: 100%; }
 
 /* ---------- Reels: violet felt with cream running stitch ---------- */
-.reels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.reels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-4); }
 .reel { display: grid; gap: var(--gap); min-width: 0; }
 
 .frame {
   position: relative;
   display: grid;
   justify-items: center;
-  gap: 8px;
-  padding: 11px 11px 12px;
+  gap: var(--sp-2);
+  padding: calc(var(--sp-3) + 4px) var(--sp-3) var(--sp-3);
   background: var(--felt), var(--violet);
   border-radius: 12px;
   box-shadow: 2px 3px 0 rgb(46 26 71 / 0.35);
@@ -120,9 +126,9 @@
 .frame::before {
   content: "";
   position: absolute;
-  inset: 5px;
+  inset: 4px;
   border: var(--running) rgb(246 239 207 / 0.7);
-  border-radius: 8px;
+  border-radius: 9px;
   pointer-events: none;
 }
 .frame h2 { --s: clamp(1.6px, 0.26vh, 2px); margin: 0; color: var(--cream); line-height: 0; }
@@ -133,12 +139,12 @@
   z-index: 1;
   width: 100%;
   display: grid;
-  grid-template-rows: auto auto;
+  /* Badge sits at a fixed height; text hangs below it, so nothing jumps between spins. */
+  grid-template-rows: minmax(0, 0.8fr) minmax(0, 1fr);
   justify-items: center;
-  align-content: center;
-  gap: calc(var(--s) * 2.5);
+  gap: var(--sp-2);
   height: var(--drum);
-  padding: 8px 10px;
+  padding: var(--sp-2) var(--sp-3);
   border: 2.5px solid var(--aubergine);
   border-radius: 12px / 26px;
   background:
@@ -147,9 +153,10 @@
   overflow: hidden;
   box-sizing: border-box;
 }
-.badge { display: grid; place-items: center; --s: clamp(1.9px, 0.33vh, 2.6px); }
+.badge { display: grid; align-self: end; place-items: center; --s: clamp(1.9px, 0.33vh, 2.6px); }
 .result {
   margin: 0;
+  align-self: start;
   font-weight: 700;
   font-size: clamp(0.85rem, 1.9vh, 1rem);
   line-height: 1.15;
@@ -201,6 +208,7 @@
 .spin {
   position: relative;
   justify-self: center;
+  margin: var(--sp-1) 0 var(--sp-3);
   display: flex;
   align-items: center;
   gap: calc(var(--s) * 4);
@@ -230,10 +238,9 @@
 .panel {
   display: grid;
   justify-items: center;
-  gap: 6px;
-  margin: 0 -20px;
-  padding: clamp(8px, 1.4vh, 12px) 22px clamp(12px, 2vh, 18px);
-  border-top: var(--running) var(--aubergine);
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-2) var(--sp-5);
+  border-top: var(--running) rgb(46 26 71 / 0.55);
   text-align: center;
 }
 .status { --s: 1.7px; margin: 0; min-height: calc(7 * var(--s)); opacity: 0.8; line-height: 0; }
@@ -261,20 +268,21 @@
   :root[data-theme="embroidered"] { --s: 3px; }
   .scene { grid-template-columns: minmax(0, 1fr); grid-template-areas: "cabinet"; height: auto; min-height: 100dvh; align-items: start; padding: 16px 14px; }
   .deco { display: none; }
-  .cabinet { padding: 16px 14px 0; gap: 12px; }
+  .cabinet { padding: 18px 16px 0; gap: 14px; }
   .marquee { gap: 8px; padding: 10px 8px; }
   .marquee > .stitch { display: none; }
   .marquee .title { --s: 3.6px; }
   .reels { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .reel { grid-template-columns: minmax(0, 1fr) 64px; align-items: stretch; gap: 10px; }
-  .frame { justify-items: start; padding: 9px 10px 10px; }
-  .frame h2 { --s: 1.7px; padding-left: 4px; }
-  .window { height: auto; min-height: 76px; grid-template-rows: none; grid-template-columns: auto minmax(0, 1fr); gap: 12px; justify-items: start; align-items: center; border-radius: 16px / 10px; }
+  .frame { justify-items: start; padding: 14px 12px 12px; gap: 8px; }
+  .frame h2 { --s: 1.7px; padding-left: 6px; }
+  .window { height: auto; min-height: 76px; grid-template-rows: none; align-items: center; grid-template-columns: auto minmax(0, 1fr); gap: 12px; justify-items: start; align-items: center; border-radius: 16px / 10px; }
+  .badge, .result { align-self: center; }
   .result { text-align: left; font-size: 0.95rem; }
   .hold .face { flex-direction: column; gap: 4px; }
   .hold .face { --s: 1.7px; }
   .spin { --s: 3.4px; }
-  .panel { margin: 0 -14px; padding: 10px 14px 16px; }
+  .panel { padding: 12px 4px 18px; }
   .status { --s: 1.4px; }
   .brief { min-height: 0; font-size: 0.95rem; }
 }
