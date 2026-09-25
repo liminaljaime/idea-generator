@@ -9,8 +9,6 @@
   --parchment: #f7ecd2;
   --ink: #2a1a2e;
   --bulb: #ffe9a8;
-  --stripe-a: #c8243f;
-  --stripe-b: #f6efcf;
   /* Badge threads (shared with the embroidered theme's cross-stitch art). */
   --raspberry: #d8284a; --violet: #5a3fa6; --aubergine: #2e1a47; --cream: #f6efcf;
   --cobalt: #3a55c4; --turquoise: #2fa8a0; --pink: #ee94ae; --leaf: #4f9a58; --stone: #9189a6;
@@ -40,23 +38,14 @@
   min-height: 100vh;
   min-height: 100dvh;
   display: grid;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto 1fr;
   justify-items: center;
-}
-
-/* Striped pier awning with a scalloped hem */
-.awning {
-  width: 100%;
-  height: clamp(28px, 5vh, 44px);
-  background: repeating-linear-gradient(90deg, var(--stripe-a) 0 36px, var(--stripe-b) 36px 72px);
-  -webkit-mask: radial-gradient(18px at 18px 100%, #0000 98%, #000) 0 0 / 36px 100%;
-  mask: radial-gradient(18px at 18px 100%, #0000 98%, #000) 0 0 / 36px 100%;
 }
 
 /* Sign: an engraved Victorian theatre bill — fine double rules, corner ornaments, antique gold */
 .sign {
   position: relative;
-  margin-top: clamp(8px, 1.8vh, 18px);
+  margin-top: clamp(16px, 3.5vh, 36px);
   padding: clamp(8px, 1.4vh, 12px) clamp(28px, 4vw, 48px) clamp(8px, 1.3vh, 12px);
   text-align: center;
   color: var(--gold);
@@ -217,7 +206,6 @@
 .brief.waiting { opacity: 0.25; }
 
 /* Theme switcher, tarot style */
-[data-theme="tarot"] .theme-switcher { top: calc(clamp(28px, 5vh, 44px) + 8px); }
 [data-theme="tarot"] .theme-switcher a { color: var(--gold-soft); background: var(--velvet-deep); border: 1px solid rgb(226 179 74 / 0.6); font-family: var(--mystic); }
 [data-theme="tarot"] .theme-switcher a[aria-current="page"] { background: var(--gold); color: var(--velvet-deep); }
 
