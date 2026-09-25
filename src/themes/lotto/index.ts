@@ -4,48 +4,40 @@ import type { Machine } from '../../engine/machine'
 import type { Item } from '../../engine/types'
 import { prefersReducedMotion } from '../../shell/controls'
 import voice from '../../data/lotto-host.csv?raw'
+import { Drum } from './drum'
+import { drawBall } from './ball'
 
-// Lucky Ideas: a bright, garish game-show lotto draw. One big plastic globe holds all
-// the balls, sitting still until DRAW is pressed — then they shuffle, and three balls
-// roll out through their own tubes into numbered slots below.
+// Lucky Ideas: a bright, garish game-show lotto draw. Physics (Matter.js) runs only
+// inside the drum, which swirls its pile on command. The journey from the drum to a
+// pedestal is a scripted arc — grow, arc, bounce, fade the text in — never physics.
+// "Throw back" reverses that arc, drops the ball back into the pile, and rolls a fresh
+// one. The engine always decides the result first; the drum and the flight only decide
+// how it looks — see drum.ts.
 let cleanup: (() => void)[] = []
 
-const lanes = ['gold', 'pink', 'teal'] as const
+const lanes = ['teal', 'pink', 'gold'] as const // left-to-right: blue, pink, yellow
 type Lane = (typeof lanes)[number]
 const IDLE = "It's anyone's game! Press DRAW to find out."
-
-// How many decorative filler balls sit in the shared globe.
-const FILLER_BALLS = 26
+const MIXING = 'Mixing it up, folks…'
 const laneColours: Record<Lane, string> = { gold: '#ffcf3f', pink: '#ff4f9e', teal: '#2de0c7' }
-const allColours = Object.values(laneColours)
 
-function rand(seed: () => number, min: number, max: number) {
-  return min + seed() * (max - min)
-}
+const SWIRL_MS = 2000
+const BETWEEN_SWIRL_MS = 650
+const THROWBACK_SWIRL_MS = 1100
+const FLIGHT_MS = 700
+const BOUNCE_MS = 180
+const RETURN_MS = 520
 
-// A tiny seeded generator so the globe's ball layout is stable within a session.
-function mulberry32(seed: number) {
-  return () => {
-    seed |= 0
-    seed = (seed + 0x6d2b79f5) | 0
-    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed)
-    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+// Friendly labels for the "extra detail" line — every item's family is real metadata
+// that isn't shown anywhere else on the machine.
+const familyDetail = (item: Item): string => {
+  const constraintLabels: Record<string, string> = {
+    Mechanism: 'Psychological bias',
+    'Technical constraint': 'Technical constraint',
+    'Visual reference': 'Visual style reference',
+    Behaviour: 'Behaviour quirk',
   }
-}
-
-const globeBalls = () => {
-  const rng = mulberry32(42)
-  return Array.from({ length: FILLER_BALLS }, (_, i) => {
-    const size = rand(rng, 30, 46)
-    const x = rand(rng, 6, 94)
-    const y = rand(rng, 6, 92)
-    const colour = allColours[i % allColours.length]
-    const dur = rand(rng, 2.2, 3.8).toFixed(2)
-    const delay = rand(rng, 0, 2.4).toFixed(2)
-    const num = Math.floor(rand(rng, 1, 99))
-    return `<span class="ball" style="--sz:${size}px;--x:${x}%;--y:${y}%;--dur:${dur}s;--delay:${delay}s;--c:${colour}">${num}</span>`
-  }).join('')
+  return constraintLabels[item.family] ?? item.family ?? ''
 }
 
 // A big, chunky, glossy plastic arcade button: dark moulded base, a domed red top
@@ -73,6 +65,15 @@ const drawBuzzer = `
   </svg>`
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
+const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v))
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t
+const easeInOutQuad = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2)
+const easeOutCubic = (t: number) => 1 - (1 - t) ** 3
+
+type Point = { x: number; y: number }
+type PedestalBall = { colour: string; text: string } | null
+type FlightKind = 'out' | 'back'
+type Flight = { kind: FlightKind; from: Point; to: Point; colour: string; text: string; pileR: number; fullR: number; start: number; duration: number }
 
 const theme: Theme = {
   voice,
@@ -82,93 +83,214 @@ const theme: Theme = {
     root.innerHTML = `
       <div class="showroom">
         <div class="rays" aria-hidden="true"></div>
-        <header class="marquee">
-          <h1><span class="bubble">Lucky</span> <span class="bubble accent">Ideas</span></h1>
-          <p class="tagline">Tonight's Big Draw!</p>
-        </header>
         <main class="stage">
-          <div class="machine">
-            <div class="globe-wrap">
-              <div class="glass" data-globe>
-                <div class="balls">${globeBalls()}</div>
+          <div class="layout" data-layout>
+            <div class="drum-wrap"><canvas data-drum-canvas></canvas></div>
+            <canvas class="overlay" data-overlay-canvas></canvas>
+            <div class="right-side">
+              <header class="marquee">
+                <h1><span class="bubble">Lucky</span> <span class="bubble accent">Ideas</span></h1>
+                <p class="tagline">Tonight's Big Draw!</p>
+              </header>
+              <div class="pedestals">
+                ${machine.reels.map((r, i) => `
+                  <div class="pedestal-col">
+                    <div class="pedestal-slot">
+                      <div class="stand">
+                        <div class="stand-cup" data-cup="${i}"></div>
+                        <div class="stand-base"><span class="stand-label">${r.label}</span></div>
+                      </div>
+                    </div>
+                    <button type="button" class="throwback" data-throwback="${i}" aria-label="Throw back the ${r.label.toLowerCase()} ball">Throw back</button>
+                    <p class="detail-line" data-detail="${i}"></p>
+                  </div>`).join('')}
               </div>
-              <div class="stand" aria-hidden="true"></div>
+              <div class="bottom-row">
+                <div class="commentary">
+                  <p class="status" data-status>${IDLE}</p>
+                  <p class="brief" aria-hidden="true"></p>
+                </div>
+                <button type="button" class="draw"><span class="visually-hidden">Draw</span>${drawBuzzer}<span class="draw-label">DRAW</span></button>
+              </div>
             </div>
-            <div class="manifold" aria-hidden="true"></div>
-            <div class="lanes">
-              ${machine.reels.map((r, i) => `
-                <section class="lane" aria-label="${r.label}">
-                  <div class="tube" data-tube="${i}" style="--lc:${laneColours[lanes[i]]}">
-                    <span class="travelling" data-travel="${i}"></span>
-                  </div>
-                  <div class="slot" data-slot="${i}" style="--lc:${laneColours[lanes[i]]}">
-                    <div class="ball-drop" data-drop="${i}"><span class="ball-text" data-drop-text="${i}"></span></div>
-                  </div>
-                  <p class="lane-name">${r.label}</p>
-                  <button type="button" class="lock" data-lock="${i}" aria-pressed="false" aria-label="Lock ${r.label.toLowerCase()}">Lock</button>
-                </section>`).join('')}
-            </div>
-          </div>
-          <button type="button" class="draw"><span class="visually-hidden">Draw</span>${drawBuzzer}<span class="draw-label">DRAW</span></button>
-          <div class="commentary">
-            <p class="status" data-status>${IDLE}</p>
-            <p class="brief" aria-hidden="true"></p>
           </div>
         </main>
       </div>`
 
-    const globe = root.querySelector<HTMLElement>('[data-globe]')!
-    const travellers = [...root.querySelectorAll<HTMLElement>('[data-travel]')]
-    const drops = [...root.querySelectorAll<HTMLElement>('[data-drop]')]
-    const dropTexts = [...root.querySelectorAll<HTMLElement>('[data-drop-text]')]
-    const locks = [...root.querySelectorAll<HTMLButtonElement>('[data-lock]')]
-    const draw = root.querySelector<HTMLButtonElement>('.draw')!
+    const layout = root.querySelector<HTMLElement>('[data-layout]')!
+    const drumCanvas = root.querySelector<HTMLCanvasElement>('[data-drum-canvas]')!
+    const overlay = root.querySelector<HTMLCanvasElement>('[data-overlay-canvas]')!
+    const overlayCtx = overlay.getContext('2d')!
+    const cups = [...root.querySelectorAll<HTMLElement>('[data-cup]')]
+    const details = [...root.querySelectorAll<HTMLElement>('[data-detail]')]
+    const throwbacks = [...root.querySelectorAll<HTMLButtonElement>('[data-throwback]')]
+    const drawBtn = root.querySelector<HTMLButtonElement>('.draw')!
     const status = root.querySelector<HTMLElement>('[data-status]')!
     const brief = root.querySelector<HTMLElement>('.brief')!
 
+    const reduced = prefersReducedMotion()
+    const drum = new Drum(drumCanvas, lanes.map((l) => laneColours[l]), reduced)
+    drum.start()
+
+    // Size the overlay to the whole layout (drum + pedestals) so one coordinate space
+    // covers the entire flight; work out each fixed point once layout has settled.
+    const layoutRect = layout.getBoundingClientRect()
+    const dpr = window.devicePixelRatio || 1
+    overlay.width = layoutRect.width * dpr
+    overlay.height = layoutRect.height * dpr
+    overlayCtx.scale(dpr, dpr)
+    const drumRect = drumCanvas.getBoundingClientRect()
+    const openingPoint: Point = {
+      x: drumRect.left - layoutRect.left + drum.openingPoint.x,
+      y: drumRect.top - layoutRect.top + drum.openingPoint.y,
+    }
+    // Sized and positioned from the cup's own rendered box, so the ball sits neatly in
+    // it — slightly overflowing the rim, like a real ball in an egg cup — rather than
+    // swallowing the base and its printed label below.
+    // A slightly smaller ball-to-cup ratio on narrow layouts keeps it clear of the label
+    // on the base below, where there's much less room to spare than on desktop.
+    const fullRadius = () => cups[0].getBoundingClientRect().width * (layoutRect.width < 500 ? 0.42 : 0.62)
+    const pedestalPoint = (i: number): Point => {
+      const r = cups[i].getBoundingClientRect()
+      return { x: r.left - layoutRect.left + r.width / 2, y: r.top - layoutRect.top + r.height * 0.2 }
+    }
+
+    const pedestals: PedestalBall[] = [null, null, null]
+    let flight: Flight | null = null
+
+    const overlayFrame = () => {
+      overlayCtx.clearRect(0, 0, layoutRect.width, layoutRect.height)
+      pedestals.forEach((p, i) => {
+        if (!p) return
+        const pt = pedestalPoint(i)
+        drawBall(overlayCtx, { x: pt.x, y: pt.y, r: fullRadius(), colour: p.colour, text: p.text, textOpacity: 1 })
+      })
+      if (flight) {
+        const t = clamp((performance.now() - flight.start) / flight.duration, 0, 1)
+        const e = easeInOutQuad(t)
+        const arcHeight = Math.abs(flight.to.x - flight.from.x) * 0.35 + layoutRect.height * 0.12
+        const mx = (flight.from.x + flight.to.x) / 2
+        const my = (flight.from.y + flight.to.y) / 2 - arcHeight
+        const u = 1 - e
+        const x = u * u * flight.from.x + 2 * u * e * mx + e * e * flight.to.x
+        const y = u * u * flight.from.y + 2 * u * e * my + e * e * flight.to.y
+        const rt = clamp(t / 0.8, 0, 1)
+        const r = flight.kind === 'out'
+          ? lerp(flight.pileR, flight.fullR, easeOutCubic(rt))
+          : lerp(flight.fullR, flight.pileR, easeOutCubic(rt))
+        const textOpacity = flight.kind === 'out' ? clamp((t - 0.7) / 0.3, 0, 1) : clamp(1 - t / 0.3, 0, 1)
+        drawBall(overlayCtx, { x, y, r, colour: flight.colour, text: flight.text, textOpacity })
+      }
+      requestAnimationFrame(overlayFrame)
+    }
+    requestAnimationFrame(overlayFrame)
+
+    // A scripted arc from the drum's opening to a pedestal: grows to full size, the text
+    // fades in near the end, then a small squash-bounce as it settles. No physics at all.
+    const flyOut = async (i: number, colour: string, text: string) => {
+      if (reduced) { pedestals[i] = { colour, text }; return }
+      flight = { kind: 'out', from: openingPoint, to: pedestalPoint(i), colour, text, pileR: drum.pileRadius, fullR: fullRadius(), start: performance.now(), duration: FLIGHT_MS }
+      await wait(FLIGHT_MS)
+      flight = null
+      pedestals[i] = { colour, text }
+      await bounce(i, colour, text)
+    }
+
+    // A quick vertical squash-and-recover once the ball has arrived.
+    const bounce = async (i: number, colour: string, text: string) => {
+      const pt = pedestalPoint(i)
+      const start = performance.now()
+      await new Promise<void>((resolve) => {
+        const frame = () => {
+          const t = clamp((performance.now() - start) / BOUNCE_MS, 0, 1)
+          const squash = 1 - Math.sin(t * Math.PI) * 0.16
+          // Draw one extra bounce frame on top of the settled ball each tick.
+          overlayCtx.save()
+          drawBall(overlayCtx, { x: pt.x, y: pt.y, r: fullRadius(), colour, text, textOpacity: 1, squash })
+          overlayCtx.restore()
+          if (t < 1) requestAnimationFrame(frame)
+          else resolve()
+        }
+        frame()
+      })
+    }
+
+    // The reverse journey for "throw back": shrinks and arcs back into the drum's neck.
+    const flyBack = async (i: number) => {
+      const p = pedestals[i]
+      pedestals[i] = null
+      if (!p || reduced) return
+      flight = { kind: 'back', from: pedestalPoint(i), to: openingPoint, colour: p.colour, text: p.text, pileR: drum.pileRadius, fullR: fullRadius(), start: performance.now(), duration: RETURN_MS }
+      await wait(RETURN_MS)
+      flight = null
+    }
+
     const show = (i: number, item: Item) => {
-      dropTexts[i].textContent = item.item
-      drops[i].classList.add('settled')
-    }
-    machine.reels.forEach((_, i) => show(i, machine.results[i]))
-    brief.textContent = machine.brief
-
-    locks.forEach((b, i) => b.addEventListener('click', () => machine.toggleHold(i)))
-    draw.addEventListener('click', () => machine.spin())
-
-    const setBusy = (busy: boolean) => {
-      draw.disabled = busy || !machine.canSpin
-      locks.forEach((b) => (b.disabled = busy))
+      details[i].textContent = familyDetail(item)
+      landed[i] = true
+      updateThrowbacks()
     }
 
-    cleanup.push(machine.on('hold', ({ index, held }) => {
-      locks[index].setAttribute('aria-pressed', String(held))
-      locks[index].textContent = held ? 'Locked' : 'Lock'
-      draw.disabled = !machine.canSpin
-      status.textContent = machine.canSpin ? IDLE : 'All locked in! Release one to draw again.'
-    }))
+    const landed = [true, true, true]
+    let busy = false
+    const updateThrowbacks = () => {
+      throwbacks.forEach((b, i) => (b.disabled = busy || !landed[i]))
+    }
+
+    machine.reels.forEach((_, i) => {
+      pedestals[i] = { colour: laneColours[lanes[i]], text: machine.results[i].item }
+      show(i, machine.results[i])
+    })
+    brief.textContent = machine.brief // every ball is already landed at the very start
+
+    const setBusy = (v: boolean) => {
+      busy = v
+      drawBtn.disabled = v
+      updateThrowbacks()
+    }
+
+    drawBtn.addEventListener('click', () => machine.spin())
+
+    let pendingRelease: number[] | null = null
+    let throwbackActive = false
+
+    // "Throw back" is a one-shot action, not a persistent lock: it silently holds the
+    // other two reels just long enough for spin() to redraw only this one, then
+    // releases them again once the new ball has settled.
+    throwbacks.forEach((b, i) => {
+      b.addEventListener('click', async () => {
+        if (busy || machine.spinning || !landed[i]) return
+        setBusy(true)
+        landed[i] = false
+        details[i].textContent = ''
+        await flyBack(i)
+        drum.addBall(i) // each reel always draws from its own dedicated lane/colour
+        throwbackActive = true
+        const others = [0, 1, 2].filter((j) => j !== i)
+        others.forEach((j) => machine.toggleHold(j))
+        pendingRelease = others
+        machine.spin()
+      })
+    })
 
     cleanup.push(machine.on('spin', async ({ spinning, results }) => {
       setBusy(true)
-      status.textContent = 'Mixing it up, folks…'
-      brief.classList.add('waiting')
-      if (prefersReducedMotion()) {
-        spinning.forEach((i) => show(i, results[i]))
-        return machine.settle()
-      }
-      // The whole globe shuffles for everyone to see, even lanes that are locked.
-      spinning.forEach((i) => drops[i].classList.remove('settled'))
-      globe.classList.add('churning')
-      await wait(1000)
-      globe.classList.remove('churning')
-      // One ball per unlocked lane travels down its own tube, left to right.
-      for (const i of spinning) {
-        travellers[i].classList.add('rolling')
-        await wait(340)
-        travellers[i].classList.remove('rolling')
+      status.textContent = MIXING
+      brief.textContent = '' // never mention a result before its ball has actually landed
+      spinning.forEach((i) => { landed[i] = false; details[i].textContent = '' })
+      await drum.agitate(throwbackActive ? THROWBACK_SWIRL_MS : SWIRL_MS)
+      for (let k = 0; k < spinning.length; k++) {
+        if (k > 0) {
+          await wait(200)
+          await drum.agitate(BETWEEN_SWIRL_MS)
+        }
+        const i = spinning[k]
+        const colour = drum.ejectOne(i)
+        await flyOut(i, colour, results[i].item)
         show(i, results[i])
-        await wait(280)
+        await wait(160)
       }
+      throwbackActive = false
       machine.settle()
     }))
 
@@ -176,8 +298,13 @@ const theme: Theme = {
       setBusy(false)
       status.textContent = 'AND THE RESULTS ARE IN!'
       brief.textContent = e.brief
-      brief.classList.remove('waiting')
+      if (pendingRelease) {
+        pendingRelease.forEach((j) => machine.toggleHold(j))
+        pendingRelease = null
+      }
     }))
+
+    cleanup.push(() => drum.destroy())
   },
   unmount() {
     cleanup.forEach((f) => f())

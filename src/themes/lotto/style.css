@@ -21,12 +21,9 @@
 
 .showroom {
   position: relative;
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
-  display: grid;
-  grid-template-rows: auto 1fr;
-  justify-items: center;
   background: radial-gradient(ellipse at 50% 0%, var(--hot-pink) 0%, var(--hot-purple) 55%, #3a0e6e 100%);
 }
 
@@ -41,10 +38,43 @@
 }
 @keyframes spin-rays { to { transform: rotate(360deg); } }
 
-.marquee { position: relative; z-index: 1; text-align: center; padding: clamp(16px, 3.5vh, 32px) 16px clamp(4px, 1vh, 10px); }
-.marquee h1 { margin: 0; line-height: 1; display: flex; gap: 0.3em; justify-content: center; flex-wrap: wrap; }
+/* --- Desktop: everything in one screen, no scrolling --- */
+.stage {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  box-sizing: border-box;
+  padding: clamp(10px, 2vh, 22px) clamp(16px, 3vw, 36px);
+  display: grid;
+  align-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* The drum sits large in the left corner; the overlay canvas spans the whole layout so
+   a ball can fly from the drum's neck all the way to a pedestal on the right. */
+.layout {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 3vw, 40px);
+  min-height: min(75vh, 60vw);
+}
+.drum-wrap {
+  position: relative;
+  flex: none;
+  width: min(75vh, 45vw);
+  aspect-ratio: 1;
+}
+.drum-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+
+.right-side { flex: 1; min-width: 0; display: grid; gap: clamp(14px, 2.5vh, 28px); align-content: center; }
+
+.marquee { text-align: left; }
+.marquee h1 { margin: 0; line-height: 1; display: flex; gap: 0.3em; flex-wrap: wrap; }
 .bubble {
-  font: 800 clamp(2.1rem, 6.5vh, 3.6rem) var(--display);
+  font: 800 clamp(2rem, 6vh, 3.4rem) var(--display);
   color: var(--hot-gold);
   -webkit-text-stroke: 3px var(--ink);
   paint-order: stroke fill;
@@ -54,243 +84,150 @@
 .bubble.accent { color: var(--hot-pink); transform: rotate(2deg); }
 .tagline {
   margin: 4px 0 0;
-  font: 700 clamp(0.9rem, 2vh, 1.15rem) var(--display);
+  font: 700 clamp(0.85rem, 1.9vh, 1.1rem) var(--display);
   color: var(--cream);
   letter-spacing: 0.06em;
   text-shadow: 2px 2px 0 var(--ink);
 }
 
-.stage {
-  position: relative;
-  z-index: 1;
-  width: min(760px, 100% - 24px);
-  display: grid;
-  justify-items: center;
-  align-content: center;
-  gap: clamp(10px, 2vh, 20px);
-  padding-bottom: clamp(14px, 2.5vh, 26px);
-}
+/* Three pedestal columns, clear of the balls' flight paths above them */
+.pedestals { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(10px, 2vw, 24px); }
+.pedestal-col { display: grid; justify-items: center; gap: 8px; min-width: 0; }
+.pedestal-slot { width: 100%; aspect-ratio: 0.85; display: flex; align-items: flex-end; justify-content: center; }
 
-.machine { display: grid; justify-items: center; }
-
-/* --- The one shared plastic globe: balls sit still until DRAW is pressed --- */
-.globe-wrap { display: grid; justify-items: center; }
-.glass {
-  position: relative;
-  width: clamp(170px, 30vh, 250px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle at 32% 26%, rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.08) 45%, rgb(255 255 255 / 0.02) 70%);
-  border: 4px solid rgb(255 255 255 / 0.65);
-  box-shadow:
-    inset 0 -16px 26px rgb(0 0 0 / 0.15),
-    inset 0 12px 20px rgb(255 255 255 / 0.35),
-    0 10px 20px rgb(0 0 0 / 0.4);
-  overflow: hidden;
+/* A little white plastic pedestal: a narrow egg cup on top (the ball, drawn on the
+   overlay canvas, rests just above it) and a wider labelled base underneath, clearly
+   separate so the ball never covers the category printed on the base. */
+.stand { width: 78%; display: flex; flex-direction: column; align-items: center; }
+.stand-cup {
+  width: 46%;
+  aspect-ratio: 1.5;
+  background: linear-gradient(180deg, #fff 0%, #f1eef5 60%, #d8d3e0 100%);
+  border-radius: 50% 50% 20% 20% / 65% 65% 35% 35%;
+  box-shadow: inset 0 2px 3px rgb(255 255 255 / 0.9), inset 0 -4px 6px rgb(0 0 0 / 0.12), 0 3px 5px rgb(0 0 0 / 0.3);
+  margin-bottom: -3%;
 }
-.balls { position: absolute; inset: 0; }
-.ball {
-  position: absolute;
-  left: var(--x);
-  top: var(--y);
-  width: var(--sz);
-  height: var(--sz);
-  border-radius: 50%;
-  background: radial-gradient(circle at 32% 28%, #fff, var(--c) 55%, color-mix(in srgb, var(--c) 70%, #000) 100%);
+.stand-base {
+  width: 100%;
+  min-height: 2.6em;
+  background: linear-gradient(180deg, #fbf9ff 0%, #e4dfec 100%);
+  border-radius: 10px;
+  box-shadow: inset 0 2px 2px rgb(255 255 255 / 0.8), 0 5px 8px rgb(0 0 0 / 0.35);
   display: grid;
   place-items: center;
-  font: 700 0.5em var(--display);
-  color: rgb(0 0 0 / 0.5);
-  box-shadow: inset 0 -2px 3px rgb(0 0 0 / 0.25);
-  /* Still by default; only the churning globe animates them. */
-}
-.glass.churning .ball { animation: tumble var(--dur) ease-in-out var(--delay) infinite; }
-@keyframes tumble {
-  0%, 100% { transform: translate(0, 0); }
-  25% { transform: translate(7px, -9px); }
-  50% { transform: translate(-6px, 6px); }
-  75% { transform: translate(5px, 8px); }
-}
-
-.stand {
-  margin-top: -4px;
-  width: clamp(70px, 12vh, 100px);
-  height: 10px;
-  border-radius: 5px;
-  background: linear-gradient(#9a9a9a, #5f5f5f);
-  box-shadow: 0 4px 6px rgb(0 0 0 / 0.35);
-}
-
-/* --- The manifold: a horizontal distributor bar the three tubes hang from --- */
-.manifold {
-  width: min(420px, 70%);
-  height: 12px;
-  margin-top: 6px;
-  border-radius: 6px;
-  background: linear-gradient(#d8d8d8, #9a9a9a);
-  box-shadow: inset 0 -2px 3px rgb(0 0 0 / 0.25), 0 3px 5px rgb(0 0 0 / 0.3);
-}
-
-.lanes { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(10px, 2.5vw, 28px); width: 100%; margin-top: -2px; }
-.lane { display: grid; justify-items: center; gap: 6px; min-width: 0; }
-
-/* --- Tube: carries one travelling ball down from the manifold into its slot --- */
-.tube {
-  position: relative;
-  width: clamp(20px, 4vh, 28px);
-  height: clamp(38px, 7vh, 56px);
-  background: linear-gradient(90deg, rgb(255 255 255 / 0.5), var(--lc) 40%, color-mix(in srgb, var(--lc) 70%, #000) 100%);
-  border-radius: 6px;
-  box-shadow: inset 0 0 4px rgb(0 0 0 / 0.3);
-  overflow: hidden;
-}
-.travelling {
-  position: absolute;
-  top: -30%;
-  left: 50%;
-  width: 78%;
-  aspect-ratio: 1;
-  transform: translate(-50%, 0);
-  border-radius: 50%;
-  background: radial-gradient(circle at 32% 28%, #fff, var(--lc) 55%, color-mix(in srgb, var(--lc) 70%, #000) 100%);
-  box-shadow: inset 0 -2px 3px rgb(0 0 0 / 0.25);
-  opacity: 0;
-}
-.travelling.rolling {
-  opacity: 1;
-  animation: roll-down 0.34s cubic-bezier(.55,0,.85,.3) forwards;
-}
-@keyframes roll-down {
-  0% { top: -30%; opacity: 1; }
-  90% { top: 95%; opacity: 1; }
-  100% { top: 95%; opacity: 0; }
-}
-
-/* --- The slot the ball drops into: bigger now, since the ball carries the text --- */
-.slot {
-  width: clamp(96px, 17vh, 140px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle at 50% 100%, rgb(0 0 0 / 0.3), transparent 60%), #efe6ff;
-  border: 3px solid var(--ink);
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-  box-shadow: inset 0 4px 8px rgb(0 0 0 / 0.25);
-  margin-top: -6px;
-}
-.ball-drop {
-  width: 88%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle at 32% 28%, #fff, var(--lc) 55%, color-mix(in srgb, var(--lc) 70%, #000) 100%);
-  display: grid;
-  place-items: center;
-  padding: 14%;
   box-sizing: border-box;
-  box-shadow: inset 0 -3px 5px rgb(0 0 0 / 0.25), 0 3px 6px rgb(0 0 0 / 0.3);
-  transform: translateY(-140%) scale(0.6);
-  opacity: 0;
+  padding: 6px 8px;
 }
-.ball-drop.settled {
-  transform: translateY(0) scale(1);
-  opacity: 1;
-  transition: transform 0.32s cubic-bezier(.34,1.56,.64,1), opacity 0.15s ease;
-}
-.ball-text {
-  font: 800 clamp(0.62rem, 1.55vh, 0.82rem) / 1.12 var(--display);
+.stand-label {
+  font: 700 clamp(0.6rem, 1.3vh, 0.78rem) var(--display);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
   color: var(--ink);
   text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
-  overflow-wrap: break-word;
-  hyphens: auto;
+  line-height: 1.05;
 }
 
-.lane-name {
-  margin: 0;
-  font: 700 clamp(0.72rem, 1.7vh, 0.9rem) var(--display);
-  color: var(--cream);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  text-shadow: 1.5px 1.5px 0 var(--ink);
-}
-
-/* --- Lock button --- */
-.lock {
-  padding: 5px 16px;
-  font: 700 0.85rem var(--display);
-  letter-spacing: 0.05em;
+.throwback {
+  padding: 4px 12px;
+  font: 700 0.75rem var(--display);
+  letter-spacing: 0.03em;
   color: var(--ink);
   background: var(--hot-gold);
-  border: 2.5px solid var(--ink);
+  border: 2px solid var(--ink);
   border-radius: 999px;
   box-shadow: 0 3px 0 rgb(0 0 0 / 0.3);
 }
-.lock[aria-pressed="true"] { background: var(--hot-teal); transform: translateY(2px); box-shadow: none; }
-.lock:disabled:not([aria-pressed="true"]) { opacity: 0.55; }
+.throwback:active:not(:disabled) { transform: translateY(2px); box-shadow: none; }
+.throwback:disabled { opacity: 0.5; cursor: default; }
 
-/* --- The big red DRAW buzzer: a chunky, glossy plastic arcade button --- */
-.draw {
-  position: relative;
-  width: clamp(112px, 17vh, 156px);
-  aspect-ratio: 1;
-  border-radius: 50%;
+.detail-line {
+  margin: 0;
+  min-height: 1.3em;
+  font: 600 clamp(0.66rem, 1.4vh, 0.82rem) var(--display);
+  color: var(--cream);
+  text-shadow: 1px 1px 0 rgb(0 0 0 / 0.4);
+  text-align: center;
+}
+
+/* Bottom row: the host's line and the DRAW button, under the pedestals */
+.bottom-row {
   display: grid;
-  place-items: center;
-  filter: drop-shadow(0 8px 0 rgb(0 0 0 / 0.35)) drop-shadow(0 14px 20px rgb(0 0 0 / 0.4));
-  transition: transform 90ms ease, filter 90ms ease;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: clamp(12px, 2.5vw, 32px);
 }
-.draw svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.draw-label {
-  position: relative;
-  z-index: 1;
-  font: 800 clamp(1.05rem, 2.8vh, 1.5rem) var(--display);
-  color: #fff5f5;
-  letter-spacing: 0.1em;
-  text-shadow: 0 2px 0 rgb(0 0 0 / 0.4), 0 0 12px rgb(255 59 59 / 0.6);
-}
-.draw:active:not(:disabled) { transform: translateY(6px) scale(0.94); filter: drop-shadow(0 2px 0 rgb(0 0 0 / 0.35)) drop-shadow(0 4px 8px rgb(0 0 0 / 0.4)); }
-.draw:disabled { filter: saturate(0.4) brightness(0.75) drop-shadow(0 8px 0 rgb(0 0 0 / 0.25)); cursor: default; }
-
-/* --- The commentary / host line --- */
-.commentary { max-width: 60ch; text-align: center; display: grid; gap: 6px; margin-top: 4px; }
+.commentary { max-width: 44ch; text-align: left; display: grid; gap: 4px; }
 .status {
   margin: 0;
-  font: 800 clamp(0.85rem, 2vh, 1.05rem) var(--display);
-  letter-spacing: 0.04em;
+  font: 800 clamp(0.72rem, 1.6vh, 0.9rem) var(--display);
+  letter-spacing: 0.03em;
   color: var(--hot-gold);
   text-shadow: 1.5px 1.5px 0 var(--ink);
   text-transform: uppercase;
 }
 .brief {
   margin: 0;
-  font: 600 clamp(0.95rem, 2vh, 1.15rem) / 1.35 var(--display);
-  color: var(--cream);
-  text-shadow: 1px 1px 0 rgb(0 0 0 / 0.4);
-  min-height: 3.4em;
+  font: 600 clamp(0.78rem, 1.7vh, 0.95rem) / 1.3 var(--display);
+  color: #fff;
+  text-shadow: 1px 1px 0 rgb(0 0 0 / 0.55);
+  min-height: 2.6em;
+}
+
+/* --- The big red DRAW buzzer: a chunky, glossy plastic arcade button --- */
+.draw {
+  position: relative;
+  width: clamp(84px, 13vh, 112px);
+  aspect-ratio: 1;
+  border-radius: 50%;
   display: grid;
   place-items: center;
-  transition: opacity 0.2s;
+  flex: none;
+  filter: drop-shadow(0 6px 0 rgb(0 0 0 / 0.35)) drop-shadow(0 10px 16px rgb(0 0 0 / 0.4));
+  transition: transform 90ms ease, filter 90ms ease;
 }
-.brief.waiting { opacity: 0.35; }
+.draw svg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.draw-label {
+  position: relative;
+  z-index: 1;
+  font: 800 clamp(0.85rem, 2.2vh, 1.2rem) var(--display);
+  color: #fff5f5;
+  letter-spacing: 0.08em;
+  text-shadow: 0 2px 0 rgb(0 0 0 / 0.4), 0 0 12px rgb(255 59 59 / 0.6);
+}
+.draw:active:not(:disabled) { transform: translateY(5px) scale(0.94); filter: drop-shadow(0 1px 0 rgb(0 0 0 / 0.35)) drop-shadow(0 3px 6px rgb(0 0 0 / 0.4)); }
+.draw:disabled { filter: saturate(0.4) brightness(0.75) drop-shadow(0 6px 0 rgb(0 0 0 / 0.25)); cursor: default; }
 
 /* Theme switcher, lotto style */
 [data-theme="lotto"] .theme-switcher a { color: var(--ink); background: var(--cream); border: 2px solid var(--ink); font-family: var(--display); font-weight: 700; }
 [data-theme="lotto"] .theme-switcher a[aria-current="page"] { background: var(--hot-gold); }
 
-/* --- Phones --- */
+/* --- Mobile: stack the drum above the pedestals; DRAW pinned to the bottom --- */
 @media (max-width: 720px) {
-  .lanes { gap: 8px; }
-  .glass { width: clamp(130px, 38vw, 175px); }
-  .bubble { font-size: clamp(1.9rem, 8.5vw, 2.6rem); }
-  .slot { width: clamp(78px, 24vw, 100px); }
-  .draw { width: clamp(92px, 25vw, 122px); }
-  .ball-text { font-size: 0.6rem; }
-  .manifold { width: 80%; }
+  .showroom { height: auto; min-height: 100dvh; overflow-x: hidden; overflow-y: visible; }
+  .stage { height: auto; min-height: 100dvh; align-content: start; padding: 16px 16px calc(110px + env(safe-area-inset-bottom, 0px)); }
+  .layout { flex-direction: column; min-height: 0; gap: 12px; }
+  .drum-wrap { width: min(60vh, 70vw); }
+  .marquee { text-align: center; }
+  .marquee h1 { justify-content: center; }
+  .pedestals { gap: 8px; }
+  .pedestal-col { gap: 12px; }
+  .pedestal-slot { aspect-ratio: 1.05; }
+  .throwback { padding: 3px 10px; font-size: 0.68rem; }
+
+  .bottom-row {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 15;
+    background: linear-gradient(180deg, transparent, var(--hot-purple) 30%);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+  }
+  .commentary { max-width: none; }
+  .draw { width: clamp(72px, 20vw, 96px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .ball, .rays, .travelling { animation: none; }
-  .ball-drop, .draw { transition: none; }
+  .rays { animation: none; }
+  .draw { transition: none; }
 }
