@@ -6,7 +6,7 @@ The slot machine of creativity. Each spin picks one item from each of three reel
 
 Reel contents live in three CSVs in [`src/data/`](src/data/): `what-to-make.csv`,
 `premises.csv`, `constraints.csv`, with columns `family, item, badge`. Edit them in
-Numbers, on GitHub, or locally; the site redeploys when `main` changes.
+Numbers, on GitHub, or locally.
 
 ## Themes
 
@@ -22,3 +22,9 @@ npm test
 ```
 
 `npm run build` outputs a static site to `dist/`.
+
+## Deploying
+
+Pushing to `main` runs `.github/workflows/deploy.yml`: tests, build, then publish to
+GitHub Pages at https://liminaljaime.github.io/idea-generator/. Batch changes and push
+when ready to ship — every push is a deploy.
