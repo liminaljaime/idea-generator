@@ -1,7 +1,0 @@
-{
-  "reels": [
-    { "name": "Reel 1", "items": ["Placeholder A1", "Placeholder A2", "Placeholder A3", "Placeholder A4"] },
-    { "name": "Reel 2", "items": ["Placeholder B1", "Placeholder B2", "Placeholder B3", "Placeholder B4"] },
-    { "name": "Reel 3", "items": ["Placeholder C1", "Placeholder C2", "Placeholder C3", "Placeholder C4"] }
-  ]
-}

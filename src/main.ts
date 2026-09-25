@@ -1,36 +1,12 @@
-import './style.css'
-import data from './data/reels.json'
+import { Machine } from './engine/machine'
+import { reels } from './data/reels'
+import { attachShell } from './shell/controls'
+import { themes, defaultTheme } from './themes/types'
+import './shell/base.css'
 
-type Reel = { name: string; items: string[] }
-const reels: Reel[] = data.reels
+const machine = new Machine(reels)
+attachShell(machine)
 
-function pick<T>(items: T[]): T {
-  const [n] = crypto.getRandomValues(new Uint32Array(1))
-  return items[n % items.length]
-}
-
-const app = document.querySelector<HTMLDivElement>('#app')!
-app.innerHTML = `
-  <main class="machine">
-    <div class="reels">
-      ${reels.map((r) => `<div class="reel" aria-label="${r.name}"><span>?</span></div>`).join('')}
-    </div>
-    <button class="spin" type="button">Spin</button>
-  </main>
-`
-
-const windows = [...app.querySelectorAll<HTMLSpanElement>('.reel span')]
-const button = app.querySelector<HTMLButtonElement>('.spin')!
-
-button.addEventListener('click', () => {
-  button.disabled = true
-  const results = reels.map((r) => pick(r.items))
-  windows.forEach((el, i) => {
-    const ticker = setInterval(() => (el.textContent = pick(reels[i].items)), 60)
-    setTimeout(() => {
-      clearInterval(ticker)
-      el.textContent = results[i]
-      if (i === windows.length - 1) button.disabled = false
-    }, 800 + i * 500)
-  })
-})
+const requested = new URLSearchParams(location.search).get('theme') ?? defaultTheme
+const load = themes[requested] ?? themes[defaultTheme]
+load().then(({ default: theme }) => theme.mount(document.querySelector('#app')!, machine))
