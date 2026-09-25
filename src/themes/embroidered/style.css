@@ -35,6 +35,7 @@
   --sp-5: clamp(16px, 3vh, 28px);
   --gap: var(--sp-3);
   --running: 2px dashed; /* running-stitch outline */
+  --seam: rgb(90 63 166 / 0.55); /* one thread colour for every plain seam */
 
   color-scheme: light;
   background: var(--linen), var(--weave), var(--custard);
@@ -90,9 +91,8 @@
   content: "";
   position: absolute;
   inset: 6px;
-  border: var(--running) var(--violet);
+  border: var(--running) var(--seam);
   border-radius: 3px;
-  opacity: 0.55;
   pointer-events: none;
 }
 
@@ -109,7 +109,8 @@
 .marquee h1 { margin: 0; line-height: 0; min-width: 0; }
 .marquee .title { --s: clamp(4px, 0.75vh, 6px); color: var(--aubergine); max-width: 100%; }
 
-/* ---------- Reels: violet felt with cream running stitch ---------- */
+/* ---------- Reels: stitched straight into the cabinet cloth ----------
+   Felt is reserved for things you can press; the reel frames are just outlined. */
 .reels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-4); }
 .reel { display: grid; gap: var(--gap); min-width: 0; }
 
@@ -118,21 +119,19 @@
   display: grid;
   justify-items: center;
   gap: var(--sp-2);
-  /* Top: 4px to the stitching + 1px thread + 8px breathing room to the label. */
-  padding: 13px var(--sp-3) var(--sp-3);
-  background: var(--felt), var(--violet);
+  /* Top: 4px to the stitching + 2px thread + 8px breathing room to the label. */
+  padding: 14px var(--sp-3) var(--sp-3);
   border-radius: 12px;
-  box-shadow: 2px 3px 0 rgb(46 26 71 / 0.35);
 }
 .frame::before {
   content: "";
   position: absolute;
   inset: 4px;
-  border: 1px dashed rgb(246 239 207 / 0.45);
+  border: var(--running) var(--seam);
   border-radius: 9px;
   pointer-events: none;
 }
-.frame h2 { --s: calc(12px / 7); margin: 0; color: var(--cream); line-height: 0; }
+.frame h2 { --s: calc(12px / 7); margin: 0; color: var(--aubergine); line-height: 0; }
 
 /* Drum: linen, shaded top and bottom, satin-stitched edge */
 .window {
@@ -241,7 +240,7 @@
   justify-items: center;
   gap: var(--sp-2);
   padding: var(--sp-3) var(--sp-2) var(--sp-5);
-  border-top: var(--running) rgb(46 26 71 / 0.55);
+  border-top: var(--running) var(--seam);
   text-align: center;
 }
 .status { --s: 1.7px; margin: 0; min-height: calc(7 * var(--s)); opacity: 0.8; line-height: 0; }
@@ -277,7 +276,6 @@
   .reel { grid-template-columns: minmax(0, 1fr) 64px; align-items: stretch; gap: 10px; }
   .frame { justify-items: start; padding: 14px 12px 12px; gap: 8px; }
   .frame h2 { --s: 1.7px; padding-left: 6px; }
-  .frame::before { border: var(--running) rgb(246 239 207 / 0.7); }
   .window { height: auto; min-height: 76px; grid-template-rows: none; align-items: center; grid-template-columns: auto minmax(0, 1fr); gap: 12px; justify-items: start; align-items: center; border-radius: 16px / 10px; }
   .badge, .result { align-self: center; }
   .result { text-align: left; font-size: 0.95rem; }
