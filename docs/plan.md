@@ -65,6 +65,11 @@ Built in `engine/brief.ts`; tests check every item fits without broken grammar.
 
 ## Theme 1: Embroidered arcade
 
+Layout reference: [docs/reference/arcade-layout.webp](reference/arcade-layout.webp) —
+marquee title, violet reel frames with curved cream drums (badge + text), HOLD row,
+wide SPIN IDEA, footer microcopy, stitched flowers either side. Built as pixel-art
+first; the embroidered texture pass comes on top of this structure.
+
 A 1990s arcade fruit machine imagined by a textile artist. Custard-yellow fabric
 background, cream linen cabinet, violet felt appliqué reel frames, aubergine thread
 instead of black outlines, raspberry stitched controls. HOLD buttons are sewn fabric
