@@ -36,9 +36,15 @@
   --gap: var(--sp-3);
   --running: 2px dashed; /* running-stitch outline */
   --seam: rgb(90 63 166 / 0.55); /* one thread colour for every plain seam */
+  /* Yellow-and-white gingham: translucent yellow bands cross to make the darker squares. */
+  --check: 28px;
+  --gingham:
+    linear-gradient(90deg, rgb(232 221 140 / 0.65) 50%, transparent 0) 0 0 / var(--check) var(--check),
+    linear-gradient(rgb(232 221 140 / 0.65) 50%, transparent 0) 0 0 / var(--check) var(--check),
+    #fbf7e6;
 
   color-scheme: light;
-  background: var(--linen), var(--weave), var(--custard);
+  background: var(--linen), var(--weave), var(--gingham);
   color: var(--aubergine);
   font-family: var(--type);
 }
