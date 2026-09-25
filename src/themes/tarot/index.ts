@@ -79,7 +79,6 @@ const theme: Theme = {
         <header class="sign">
           <span class="corner tl" aria-hidden="true">✦</span><span class="corner tr" aria-hidden="true">✦</span>
           <span class="corner bl" aria-hidden="true">✦</span><span class="corner br" aria-hidden="true">✦</span>
-          <p class="sign-top">❦ Pier End · Est. 1887 ❦</p>
           <h1><span class="the">The</span> Creative Oracle</h1>
           <p class="sign-sub">~ Visions Curated &amp; Futures Pitched ~</p>
         </header>

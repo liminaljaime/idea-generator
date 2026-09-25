@@ -93,8 +93,7 @@
   text-transform: lowercase;
   margin-bottom: -2px;
 }
-.sign-top, .sign-sub { margin: 0; font: italic 0.9rem var(--mystic); color: #c9a45e; letter-spacing: 0.1em; }
-.sign-top { font-style: normal; font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase; }
+.sign-sub { margin: 0; font: italic 0.9rem var(--mystic); color: #c9a45e; letter-spacing: 0.1em; }
 
 /* The reading table */
 .table {
