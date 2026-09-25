@@ -83,10 +83,10 @@ Title "HOMESPUN IDEAS" (formerly Idea Machine) drawn with the cross-stitch rende
 copy. Purple display panel: INSERT CURIOSITY / NO COINS REQUIRED / IDEA READY. Sparse
 sewn flowers, stars, hearts, cherries, loose threads. No plastic, gradients, casino cues.
 
-## Theme 2: Madame Idea (tarot)
+## Theme 2: The Creative Oracle (tarot)
 
 A tongue-in-cheek pier-end fortune-teller's booth: striped awning, bulb-lit sign,
-velvet table. Three decks (sun = what to make, moon = premise, star = direction).
+navy velvet curtain printed with gold stars (1800s spiritualist). Three decks (sun = what to make, moon = premise, star = direction).
 SHUFFLE & DEAL sweeps unkept cards back, riffles the decks, deals and flips one at a
 time; HOLD keeps a card face up. Card faces reuse the cross-stitch badges, with a
 Roman numeral (the item's position in its list). The reader's lines live in

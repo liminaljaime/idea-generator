@@ -6,7 +6,7 @@ import { prefersReducedMotion } from '../../shell/controls'
 import { badgeSvg } from '../embroidered/badges'
 import voice from '../../data/tarot-reader.csv?raw'
 
-// Madame Idea: a pier-end fortune-teller's booth. Three decks, shuffled and dealt
+// The Creative Oracle: a pier-end fortune-teller's booth. Three decks, shuffled and dealt
 // like a game of patience; the cross-stitch badges become the cards' pictures.
 let cleanup: (() => void)[] = []
 
@@ -38,14 +38,14 @@ const theme: Theme = {
   voice,
   mount(root: HTMLElement, machine: Machine) {
     document.documentElement.dataset.theme = 'tarot'
-    document.title = 'Madame Idea'
+    document.title = 'The Creative Oracle'
     root.innerHTML = `
       <div class="booth">
         <div class="awning" aria-hidden="true"></div>
         <header class="sign">
-          <p class="sign-top">Pier End · Est. Yesterday</p>
-          <h1>Madame Idea</h1>
-          <p class="sign-sub">Fortunes told · Ideas sold</p>
+          <p class="sign-top">Pier End · Est. 1887</p>
+          <h1>The Creative Oracle</h1>
+          <p class="sign-sub">Visions curated · Futures pitched</p>
         </header>
         <main class="table">
           <div class="spread">
@@ -134,7 +134,7 @@ const theme: Theme = {
 
     cleanup.push(machine.on('ready', (e) => {
       setBusy(false)
-      status.textContent = 'Madame Idea sees…'
+      status.textContent = 'The Oracle sees…'
       brief.textContent = e.brief
       brief.classList.remove('waiting')
     }))

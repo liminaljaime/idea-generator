@@ -1,8 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Rye&family=IM+Fell+English:ital@0;1&display=swap');
 
 :root[data-theme="tarot"] {
-  --velvet: #2a1640;
-  --velvet-deep: #160b24;
+  --velvet: #1a2a5e;       /* navy velvet */
+  --velvet-deep: #0b1433;
+  --stars: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cg fill='%23d9ae52'%3E%3Cpath transform='translate%2828 30%29 scale%280.9%29' d='M0-10 2.4-3.1 9.5-3.1 3.8 1.2 5.9 8.1 0 4 -5.9 8.1 -3.8 1.2 -9.5-3.1 -2.4-3.1Z'/%3E%3Cpath transform='translate%28108 74%29 scale%280.6%29' d='M0-10 2.4-3.1 9.5-3.1 3.8 1.2 5.9 8.1 0 4 -5.9 8.1 -3.8 1.2 -9.5-3.1 -2.4-3.1Z'/%3E%3Cpath transform='translate%2858 122%29 scale%280.75%29' d='M0-10 2.4-3.1 9.5-3.1 3.8 1.2 5.9 8.1 0 4 -5.9 8.1 -3.8 1.2 -9.5-3.1 -2.4-3.1Z'/%3E%3Cpath transform='translate%28140 142%29 scale%280.45%29' d='M0-10 2.4-3.1 9.5-3.1 3.8 1.2 5.9 8.1 0 4 -5.9 8.1 -3.8 1.2 -9.5-3.1 -2.4-3.1Z'/%3E%3Cpath transform='translate%28142 18%29 scale%280.4%29' d='M0-10 2.4-3.1 9.5-3.1 3.8 1.2 5.9 8.1 0 4 -5.9 8.1 -3.8 1.2 -9.5-3.1 -2.4-3.1Z'/%3E%3Ccircle cx='84' cy='22' r='1.2'/%3E%3Ccircle cx='12' cy='92' r='1'/%3E%3Ccircle cx='98' cy='128' r='1.1'/%3E%3Ccircle cx='130' cy='104' r='0.9'/%3E%3Ccircle cx='44' cy='70' r='1'/%3E%3C/g%3E%3C/svg%3E");
   --gold: #e2b34a;
   --gold-soft: #f3d98c;
   --parchment: #f7ecd2;
@@ -19,10 +20,15 @@
 
   color-scheme: dark;
   color: var(--parchment);
+  /* A navy velvet curtain: vertical folds catching the light, printed with gold stars,
+     darkening towards the edges like a dim parlour. */
   background:
-    radial-gradient(1px 1px at 12% 20%, #fff8 50%, transparent 51%) 0 0 / 180px 160px,
-    radial-gradient(1.5px 1.5px at 70% 60%, #ffe9a877 50%, transparent 51%) 0 0 / 230px 210px,
-    radial-gradient(ellipse at 50% 40%, var(--velvet), var(--velvet-deep) 75%);
+    radial-gradient(ellipse at 50% 35%, transparent 35%, rgb(3 6 20 / 0.7) 100%),
+    var(--stars) 0 0 / 160px 160px,
+    repeating-linear-gradient(90deg,
+      rgb(0 0 0 / 0.28) 0, rgb(255 255 255 / 0.05) 34px, rgb(0 0 0 / 0.1) 58px, rgb(255 255 255 / 0.03) 80px, rgb(0 0 0 / 0.28) 110px),
+    var(--velvet);
+  background-attachment: fixed;
   font-family: var(--mystic);
 }
 [data-theme="tarot"] body { margin: 0; }
