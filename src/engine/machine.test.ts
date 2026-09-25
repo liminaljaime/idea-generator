@@ -7,7 +7,7 @@ import type { Reel } from './types'
 const reel = (id: string, n: number): Reel => ({
   id, label: id, items: Array.from({ length: n }, (_, i) => ({ family: 'F', item: `${id}${i}`, badge: '' })),
 })
-const make = () => new Machine([reel('a', 5), reel('b', 5), reel('c', 5)])
+const make = () => new Machine([reel("a", 5), reel("b", 5), reel("c", 5)])
 
 describe('Machine', () => {
   it('starts with a result on every reel', () => {

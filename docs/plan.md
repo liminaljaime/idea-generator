@@ -36,6 +36,15 @@ Each reel is a voice in a creative brief: WHAT TO MAKE is the client, PREMISE th
 writer, DIRECTION the art director (visual style, behaviour, technical limits, and
 psychological mechanisms). Themes may give each reel a small character or patch.
 
+## Art director's line
+
+Under the machine, a spoken brief in the voice of an absurd agency art director:
+optional opener (or a remark about a held reel) + the grammatical brief built by
+`engine/brief.ts` + a closer. Openers, closers and held-reel remarks live in
+`src/data/art-director.csv` (columns `kind, line`; kinds `opener`, `closer`,
+`held-what`, `held-premise`, `held-direction`; `{item}` inserts the held item).
+The machine writes it with each spin; themes only display it.
+
 ## Badges
 
 - Per-item motif names in the CSV `badge` column (expect ~250–300 distinct motifs;

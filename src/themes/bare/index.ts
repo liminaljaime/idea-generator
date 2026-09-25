@@ -20,11 +20,14 @@ const theme: Theme = {
             </section>`).join('')}
         </div>
         <button type="button" class="spin">SPIN IDEA</button>
+        <p class="brief" aria-hidden="true"></p>
       </main>`
     const results = [...root.querySelectorAll<HTMLElement>('[data-reel]')]
     const families = [...root.querySelectorAll<HTMLElement>('[data-family]')]
     const holds = [...root.querySelectorAll<HTMLButtonElement>('[data-hold]')]
     const spin = root.querySelector<HTMLButtonElement>('.spin')!
+    const brief = root.querySelector<HTMLElement>('.brief')!
+    brief.textContent = machine.brief
 
     const show = (i: number, item = machine.results[i]) => {
       results[i].textContent = item.item
@@ -42,6 +45,7 @@ const theme: Theme = {
 
     cleanup.push(machine.on('spin', ({ spinning, results: final }) => {
       spin.disabled = true
+      brief.textContent = '…'
       holds.forEach((b) => (b.disabled = true))
       if (prefersReducedMotion()) {
         spinning.forEach((i) => show(i, final[i]))
@@ -58,7 +62,8 @@ const theme: Theme = {
       })
     }))
 
-    cleanup.push(machine.on('ready', () => {
+    cleanup.push(machine.on('ready', (e) => {
+      brief.textContent = e.brief
       spin.disabled = false
       holds.forEach((b) => (b.disabled = false))
       spin.disabled = !machine.canSpin

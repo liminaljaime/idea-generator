@@ -1,10 +1,10 @@
 import { Machine } from './engine/machine'
-import { reels } from './data/reels'
+import { reels, artDirectorBrief } from './data/reels'
 import { attachShell } from './shell/controls'
 import { themes, defaultTheme } from './themes/types'
 import './shell/base.css'
 
-const machine = new Machine(reels)
+const machine = new Machine(reels, artDirectorBrief)
 attachShell(machine)
 
 const requested = new URLSearchParams(location.search).get('theme') ?? defaultTheme

@@ -18,8 +18,8 @@ export function attachShell(machine: Machine): () => void {
   }
   document.addEventListener('keydown', onKey)
 
-  const offReady = machine.on('ready', ({ results }) => {
-    live.textContent = machine.reels.map((r, i) => `${r.label}: ${results[i].item}`).join('. ')
+  const offReady = machine.on('ready', ({ results, brief }) => {
+    live.textContent = machine.reels.map((r, i) => `${r.label}: ${results[i].item}`).join('. ') + `. ${brief}`
   })
   const offHold = machine.on('hold', ({ index, held }) => {
     live.textContent = `${machine.reels[index].label} ${held ? 'held' : 'released'}`
