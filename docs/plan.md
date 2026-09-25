@@ -38,12 +38,16 @@ psychological mechanisms). Themes may give each reel a small character or patch.
 
 ## Art director's line
 
-Under the machine, a spoken brief in the voice of an absurd agency art director:
-optional opener (or a remark about a held reel) + the grammatical brief built by
-`engine/brief.ts` + a closer. Openers, closers and held-reel remarks live in
-`src/data/art-director.csv` (columns `kind, line`; kinds `opener`, `closer`,
-`held-what`, `held-premise`, `held-direction`; `{item}` inserts the held item).
-The machine writes it with each spin; themes only display it.
+Under the machine, the spin is played back by an absurd agency art director who
+speaks in Gen Z / Gen Alpha slang. It only reacts to what the reels chose and never
+adds new creative direction. One remark per reel (a held reel gets a held remark),
+then sometimes a closing reaction.
+
+Templates live in `src/data/art-director.csv` (`kind, line`). Kinds: `what`,
+`premise`, `direction-visual|behaviour|mechanism|technical`, `held-what|premise|direction`,
+`closer`. Placeholders: `{what}` (with a/an), `{thing}` (without), `{premise}`,
+`{style}`, `{behaviour}`, `{mechanism}`, `{technical}`, `{direction}`; capitalise the
+first letter (`{What}`) for the start of a sentence. Built in `engine/brief.ts`.
 
 ## Badges
 

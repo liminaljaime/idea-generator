@@ -1,47 +1,49 @@
-import { describe as group, expect, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import { readFileSync } from 'node:fs'
-import { describe, parseLines, writeBrief } from './brief'
+import { parseLines, slots, writeBrief } from './brief'
 import { parseCsv } from './csv'
 import type { Item } from './types'
 
-const it_ = (family: string, item: string): Item => ({ family, item, badge: '' })
+const item = (family: string, text: string): Item => ({ family, item: text, badge: '' })
 const load = (name: string) => parseCsv(readFileSync(`src/data/${name}.csv`, 'utf8')) as Item[]
+const lines = parseLines(readFileSync('src/data/art-director.csv', 'utf8'))
 
-group('describe', () => {
-  it('joins each direction family grammatically', () => {
-    const what = it_('Personal space', 'Digital garden')
-    const premise = it_('Digital life', 'Endless consumption')
-    expect(describe([what, premise, it_('Behaviour', 'It gets bored of you')]))
-      .toBe('A digital garden about endless consumption, where it gets bored of you.')
-    expect(describe([it_('Toy', 'Oracle'), it_('Ritual', 'Queuing'), it_('Mechanism', 'Plays on the sunk cost fallacy')]))
-      .toBe('An oracle about queuing that plays on the sunk cost fallacy.')
-    expect(describe([what, it_('State', 'The Sunday scaries'), it_('Visual reference', 'In the style of a lost cat poster')]))
-      .toBe('A digital garden about the Sunday scaries, in the style of a lost cat poster.')
-    expect(describe([what, premise, it_('Technical constraint', 'CSS only')]))
-      .toBe('A digital garden about endless consumption. CSS only.')
-  })
-
-  it('produces a clean sentence for every combination family', () => {
-    const [w, p, d] = ['what-to-make', 'premises', 'constraints'].map(load)
-    for (const a of w) for (const c of d) {
-      const s = describe([a, p[0], c])
-      expect(s).toMatch(/^[A-Z].*[.!?…]$/)
-      expect(s).not.toMatch(/\s{2}|\.\.| ,/)
-    }
+describe('slots', () => {
+  it('shapes each result for use inside a sentence', () => {
+    const s = slots([
+      item('Creative studio', 'Writing space'),
+      item('Social', 'Gossip'),
+      item('Visual reference', 'In the style of MS Paint'),
+    ])
+    expect(s.what).toBe('a writing space')
+    expect(s.What).toBe('A writing space')
+    expect(s.premise).toBe('gossip')
+    expect(s.style).toBe('MS Paint')
+    const m = slots([item('Toy', 'Oracle'), item('Ritual', 'Queuing'), item('Mechanism', 'Plays on the sunk cost fallacy')])
+    expect(m.what).toBe('an oracle')
+    expect(m.mechanism).toBe('the sunk cost fallacy')
   })
 })
 
-group('writeBrief', () => {
-  const lines = parseLines(readFileSync('src/data/art-director.csv', 'utf8'))
-  const results = [it_('Toy', 'Oracle'), it_('Ritual', 'Queuing'), it_('Technical constraint', 'No JavaScript')]
-
-  it('loads every kind of line', () => {
-    for (const pool of Object.values(lines)) expect(pool.length).toBeGreaterThan(0)
+describe('writeBrief', () => {
+  it('has lines for every slot, direction family and held reel', () => {
+    for (const k of ['what', 'premise', 'direction-visual', 'direction-behaviour', 'direction-mechanism',
+      'direction-technical', 'held-what', 'held-premise', 'held-direction', 'closer']) {
+      expect(lines[k]?.length, k).toBeGreaterThan(0)
+    }
   })
 
-  it('mentions a held reel when the intro is a held remark', () => {
-    const s = writeBrief(results, [true, false, false], lines, () => 0)
-    expect(s).toContain('oracle')
-    expect(s).not.toContain('{item}')
+  it('names all three results and leaves no placeholders, for every template and item', () => {
+    const [w, p, d] = ['what-to-make', 'premises', 'constraints'].map(load)
+    let n = 0
+    const seq = () => ((n = (n * 9301 + 49297) % 233280) / 233280)
+    for (const direction of d) for (let k = 0; k < 20; k++) {
+      const results = [w[k % w.length], p[(k * 7) % p.length], direction]
+      const s = writeBrief(results, [k % 3 === 0, k % 5 === 0, k % 7 === 0], lines, seq)
+      expect(s).not.toMatch(/[{}]|\s{2}/)
+      expect(s).not.toMatch(/\b(the|our|same|an?) (an?|the) /i)
+      expect(s.toLowerCase()).toContain(results[0].item.toLowerCase())
+      expect(s.toLowerCase()).toContain(results[1].item.toLowerCase())
+    }
   })
 })
