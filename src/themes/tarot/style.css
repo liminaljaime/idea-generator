@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Rye&family=IM+Fell+English:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rye&family=IM+Fell+English:ital@0;1&family=Cinzel:wght@700;800&display=swap');
 
 :root[data-theme="tarot"] {
   --velvet: #1a2a5e;       /* navy velvet */
@@ -16,6 +16,7 @@
   --cobalt: #3a55c4; --turquoise: #2fa8a0; --pink: #ee94ae; --leaf: #4f9a58; --stone: #9189a6;
   --display: 'Rye', serif;
   --mystic: 'IM Fell English', Georgia, serif;
+  --rws: 'Cinzel', 'Trajan Pro', Georgia, serif; /* close to the Rider-Waite card lettering */
   --card-w: clamp(116px, 19vh, 172px);
 
   color-scheme: dark;
@@ -135,17 +136,25 @@
   border: 3px double var(--gold);
   box-shadow: 0 6px 14px #0008, inset 0 0 0 4px var(--parchment), inset 0 0 0 5px var(--suit);
 }
-.numeral { font: 400 0.8rem var(--display); color: var(--suit-deep); letter-spacing: 0.06em; }
+.numeral { font: 800 0.85rem var(--rws); color: var(--ink); letter-spacing: 0.12em; }
 .art { display: grid; place-items: center; --s: calc(var(--card-w) / 24); }
 .name {
-  margin: 0;
-  font: 400 clamp(0.72rem, 1.6vh, 0.88rem) / 1.15 var(--display);
+  /* Rider-Waite style: bold spaced capitals in a ruled box, ending in a full stop. */
+  margin: 0 -2px;
+  align-self: end;
+  justify-self: stretch;
+  padding: 5px 4px 4px;
+  font: 800 clamp(0.62rem, 1.45vh, 0.8rem) / 1.2 var(--rws);
+  letter-spacing: 0.1em;
   text-align: center;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  color: var(--ink);
+  background: #efe6d0;
+  border: 1.5px solid var(--ink);
   overflow-wrap: break-word;
   hyphens: auto;
 }
+.name::after { content: " ."; }
 /* Swept back onto the deck before a deal */
 .card.away { transform: translateY(calc(var(--card-w) * -0.9)) scale(0.42); opacity: 0; transition: none; }
 .card.kept .front { box-shadow: 0 0 0 3px var(--gold), 0 0 22px rgb(226 179 74 / 0.7), inset 0 0 0 4px var(--parchment), inset 0 0 0 5px var(--suit); }
@@ -165,7 +174,7 @@
 
 /* Shuffle: a Victorian brass bell-push — press the pearl, and it glows while the cards deal */
 .shuffle {
-  width: clamp(108px, 16vh, 136px);
+  width: clamp(96px, 14vh, 128px);
   aspect-ratio: 1;
   border-radius: 50%;
   filter: drop-shadow(0 6px 10px #000b);
@@ -206,7 +215,7 @@
   .spread { gap: 12px; }
   .deck { display: none; }
   .card.away { transform: translateY(-30px) scale(0.8); }
-  .name { font-size: 0.58rem; letter-spacing: 0; }
+  .name { font-size: 0.52rem; letter-spacing: 0.02em; padding: 3px 2px; }
   .suit-name { font-size: 0.58rem; letter-spacing: 0.04em; }
   .front { padding: 6px 5px 8px; }
   .sign h1 { font-size: 1.9rem; }
