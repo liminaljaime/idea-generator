@@ -129,18 +129,20 @@
   display: grid;
   grid-template-rows: auto 1fr auto;
   justify-items: center;
-  padding: 8px 8px 10px;
+  /* 8px white margin + 2px frame line + 4px breathing room inside the frame. */
+  padding: 14px 14px 16px;
   box-sizing: border-box;
   color: var(--ink);
   background: linear-gradient(160deg, #fff8e6, var(--parchment) 60%, #ead8b0);
-  border: 3px double var(--gold);
-  box-shadow: 0 6px 14px #0008, inset 0 0 0 4px var(--parchment), inset 0 0 0 5px var(--suit);
+  /* Rider-Waite style: a thin white margin, then one black line framing picture and name. */
+  box-shadow: 0 6px 14px #0008, inset 0 0 0 8px #fffaf0, inset 0 0 0 10px var(--ink);
 }
 .numeral { font: 800 0.85rem var(--rws); color: var(--ink); letter-spacing: 0.12em; }
 .art { display: grid; place-items: center; --s: calc(var(--card-w) / 24); }
 .name {
   /* Rider-Waite style: bold spaced capitals in a ruled box, ending in a full stop. */
-  margin: 0 -2px;
+  /* The name panel shares the card's outline: a single ruled line above it. */
+  margin: 0 -4px -6px; /* reach out to the frame line */
   align-self: end;
   justify-self: stretch;
   padding: 5px 4px 4px;
@@ -150,14 +152,14 @@
   text-transform: uppercase;
   color: var(--ink);
   background: #efe6d0;
-  border: 1.5px solid var(--ink);
+  border-top: 2px solid var(--ink);
   overflow-wrap: break-word;
   hyphens: auto;
 }
-.name::after { content: " ."; }
+.name::after { content: "\00a0."; } /* non-breaking, so the full stop never drops to its own line */
 /* Swept back onto the deck before a deal */
 .card.away { transform: translateY(calc(var(--card-w) * -0.9)) scale(0.42); opacity: 0; transition: none; }
-.card.kept .front { box-shadow: 0 0 0 3px var(--gold), 0 0 22px rgb(226 179 74 / 0.7), inset 0 0 0 4px var(--parchment), inset 0 0 0 5px var(--suit); }
+.card.kept .front { box-shadow: 0 0 0 3px var(--gold), 0 0 22px rgb(226 179 74 / 0.7), inset 0 0 0 8px #fffaf0, inset 0 0 0 10px var(--ink); }
 
 /* Keep: a little brass tab */
 .keep {
@@ -217,7 +219,8 @@
   .card.away { transform: translateY(-30px) scale(0.8); }
   .name { font-size: 0.52rem; letter-spacing: 0.02em; padding: 3px 2px; }
   .suit-name { font-size: 0.58rem; letter-spacing: 0.04em; }
-  .front { padding: 6px 5px 8px; }
+  .front { padding: 12px 11px 13px; }
+  .name { margin: 0 -1px -3px; }
   .sign h1 { font-size: 1.9rem; }
 }
 
