@@ -1,5 +1,6 @@
 import type { Item } from '../../engine/types'
 import { stitchSvg } from './stitch'
+import motifText from './motifs.txt?raw'
 
 /**
  * Badge motifs as cross-stitch grids (colour key in stitch.ts).
@@ -693,6 +694,17 @@ const motifs: Record<string, string[]> = {
     '....t....',
   ],
 }
+
+/** Parses motifs.txt: blocks of `name` then stitch rows, separated by blank lines. */
+function parseMotifs(text: string): Record<string, string[]> {
+  const out: Record<string, string[]> = {}
+  for (const block of text.split(/\n\s*\n/)) {
+    const lines = block.split('\n').map((l) => l.trim()).filter((l) => l && !l.startsWith('#'))
+    if (lines.length > 1) out[lines[0]] = lines.slice(1)
+  }
+  return out
+}
+Object.assign(motifs, parseMotifs(motifText))
 
 /** Until every item has its own motif, families borrow a shared one. */
 const familyMotif: Record<string, string> = {
