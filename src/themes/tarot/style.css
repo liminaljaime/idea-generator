@@ -163,19 +163,51 @@
 .keep[aria-pressed="true"] { background: var(--gold); color: var(--velvet-deep); }
 .keep:disabled:not([aria-pressed="true"]) { opacity: 0.5; }
 
-/* Shuffle: a coin-op brass button */
+/* Shuffle: a parchment scroll sealed with wax — press it and the seal stamps down */
 .shuffle {
-  padding: 12px 34px;
-  font: 400 clamp(1.1rem, 2.6vh, 1.5rem) var(--display);
-  letter-spacing: 0.06em;
-  color: var(--velvet-deep);
-  background: linear-gradient(180deg, var(--gold-soft), var(--gold) 55%, #b9832a);
-  border-radius: 999px;
-  box-shadow: inset 0 2px 0 #fff8, 0 4px 0 #7a4b12, 0 8px 18px #0009;
-  transition: transform 80ms ease, box-shadow 80ms ease;
+  display: flex;
+  align-items: center;
+  filter: drop-shadow(0 6px 10px #000a);
 }
-.shuffle:active:not(:disabled) { transform: translateY(3px); box-shadow: inset 0 2px 0 #fff8, 0 1px 0 #7a4b12, 0 3px 8px #0009; }
-.shuffle:disabled { filter: saturate(0.4) brightness(0.8); cursor: default; }
+.scroll {
+  position: relative;
+  margin-left: -22px;
+  padding: 10px 30px 10px 34px;
+  font: italic 400 clamp(1.15rem, 2.6vh, 1.45rem) var(--mystic);
+  letter-spacing: 0.02em;
+  color: #3b2410;
+  background:
+    radial-gradient(ellipse at 30% 40%, transparent 60%, rgb(140 90 30 / 0.25)),
+    linear-gradient(180deg, #f6e8c6, #e9d3a0 60%, #dcc085);
+  border-radius: 3px;
+  box-shadow: inset 0 0 10px rgb(120 80 20 / 0.35);
+  transition: transform 90ms ease;
+}
+.scroll::before, .scroll::after { /* the rolled ends */
+  content: "";
+  position: absolute;
+  top: -5px;
+  bottom: -5px;
+  width: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #b8904a, #f6e7c3 45%, #c9a765);
+  box-shadow: 0 2px 4px #0006;
+}
+.scroll::before { left: -6px; }
+.scroll::after { right: -6px; }
+.seal {
+  position: relative;
+  z-index: 1;
+  width: clamp(52px, 8vh, 66px);
+  aspect-ratio: 1;
+  filter: drop-shadow(1px 3px 2px #0009);
+  transition: transform 110ms cubic-bezier(.3, 1.6, .5, 1);
+}
+.seal svg { display: block; width: 100%; height: 100%; }
+.shuffle:hover:not(:disabled) .seal { transform: rotate(-6deg); }
+.shuffle:active:not(:disabled) .seal { transform: scale(0.88) rotate(-10deg); filter: drop-shadow(0 1px 1px #0009); }
+.shuffle:active:not(:disabled) .scroll { transform: translateY(1px); }
+.shuffle:disabled { cursor: default; opacity: 0.6; }
 
 /* The reading */
 .reading { max-width: 60ch; text-align: center; display: grid; gap: 6px; }

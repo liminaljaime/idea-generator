@@ -13,6 +13,20 @@ let cleanup: (() => void)[] = []
 const suits = ['sun', 'moon', 'star'] as const
 const IDLE = 'Cross my palm with curiosity'
 
+// A burgundy wax seal stamped with a star, pressed onto the end of the parchment scroll.
+const waxSeal = `
+  <svg viewBox="0 0 64 64" aria-hidden="true">
+    <defs>
+      <radialGradient id="wax" cx="38%" cy="32%" r="75%">
+        <stop offset="0" stop-color="#b3283f"/><stop offset="0.6" stop-color="#7d1424"/><stop offset="1" stop-color="#4e0a16"/>
+      </radialGradient>
+    </defs>
+    <path fill="url(#wax)" d="M32 3c4 0 6 3 9 4s7 0 9 3 1 6 3 9 5 5 5 9-3 6-4 9 0 7-3 9-6 1-9 3-5 5-9 5-6-3-9-4-7 0-9-3-1-6-3-9-5-5-5-9 3-6 4-9 0-7 3-9 6-1 9-3 5-5 9-5z"/>
+    <circle cx="32" cy="32" r="17" fill="none" stroke="#4e0a16" stroke-width="1.5" opacity="0.7"/>
+    <circle cx="32" cy="32" r="17" fill="none" stroke="#d45a6c" stroke-width="0.8" opacity="0.5" transform="translate(-0.8 -0.8)"/>
+    <path fill="#e2b34a" d="M32 21l3 7.5 8 .6-6.1 5.1 1.9 7.8L32 37.7 25.2 42l1.9-7.8-6.1-5.1 8-.6z"/>
+  </svg>`
+
 const suitMark: Record<(typeof suits)[number], string> = {
   sun: '<circle cx="30" cy="45" r="9"/><g stroke-width="2.4" stroke-linecap="round"><path d="M30 28v-6M30 68v-6M13 45h-6M53 45h-6M18 33l-4-4M46 61l-4-4M42 33l4-4M14 61l4-4"/></g>',
   moon: '<path d="M36 28a17 17 0 1 0 0 34a13 13 0 1 1 0-34z"/>',
@@ -66,7 +80,7 @@ const theme: Theme = {
                 <button type="button" class="keep" data-keep="${i}" aria-pressed="false" aria-label="Hold the ${r.label.toLowerCase()} card">Hold</button>
               </section>`).join('')}
           </div>
-          <button type="button" class="shuffle">Shuffle &amp; deal</button>
+          <button type="button" class="shuffle"><span class="seal">${waxSeal}</span><span class="scroll">Shuffle &amp; Deal</span></button>
           <div class="reading">
             <p class="status" data-status>${IDLE}</p>
             <p class="brief" aria-hidden="true"></p>
