@@ -77,7 +77,7 @@
 .globe-wrap { display: grid; justify-items: center; }
 .glass {
   position: relative;
-  width: clamp(150px, 26vh, 220px);
+  width: clamp(170px, 30vh, 250px);
   aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(circle at 32% 26%, rgb(255 255 255 / 0.6), rgb(255 255 255 / 0.08) 45%, rgb(255 255 255 / 0.02) 70%);
@@ -166,9 +166,9 @@
   100% { top: 95%; opacity: 0; }
 }
 
-/* --- The numbered slot the ball drops into --- */
+/* --- The slot the ball drops into: bigger now, since the ball carries the text --- */
 .slot {
-  width: clamp(56px, 9vh, 74px);
+  width: clamp(96px, 17vh, 140px);
   aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(circle at 50% 100%, rgb(0 0 0 / 0.3), transparent 60%), #efe6ff;
@@ -180,14 +180,14 @@
   margin-top: -6px;
 }
 .ball-drop {
-  width: 82%;
+  width: 88%;
   aspect-ratio: 1;
   border-radius: 50%;
   background: radial-gradient(circle at 32% 28%, #fff, var(--lc) 55%, color-mix(in srgb, var(--lc) 70%, #000) 100%);
   display: grid;
   place-items: center;
-  font: 800 1.1rem var(--display);
-  color: var(--ink);
+  padding: 14%;
+  box-sizing: border-box;
   box-shadow: inset 0 -3px 5px rgb(0 0 0 / 0.25), 0 3px 6px rgb(0 0 0 / 0.3);
   transform: translateY(-140%) scale(0.6);
   opacity: 0;
@@ -197,33 +197,14 @@
   opacity: 1;
   transition: transform 0.32s cubic-bezier(.34,1.56,.64,1), opacity 0.15s ease;
 }
-
-/* --- The nameplate that slides in beneath the ball --- */
-.plate {
-  width: 100%;
-  min-height: 2.4em;
-  padding: 6px 10px;
-  border-radius: 10px;
-  background: var(--cream);
-  border: 3px solid var(--ink);
-  box-shadow: 0 4px 0 rgb(0 0 0 / 0.25);
-  display: grid;
-  place-items: center;
-  text-align: center;
-  transform: translateY(-8px) scale(0.9);
-  opacity: 0;
-}
-.plate.shown {
-  transform: translateY(0) scale(1);
-  opacity: 1;
-  transition: transform 0.3s cubic-bezier(.34,1.56,.64,1) 0.08s, opacity 0.25s ease 0.08s;
-}
-.plate-text {
-  font: 700 clamp(0.72rem, 1.6vh, 0.95rem) / 1.15 var(--display);
+.ball-text {
+  font: 800 clamp(0.62rem, 1.55vh, 0.82rem) / 1.12 var(--display);
   color: var(--ink);
+  text-align: center;
   text-transform: uppercase;
   letter-spacing: 0.01em;
   overflow-wrap: break-word;
+  hyphens: auto;
 }
 
 .lane-name {
@@ -301,15 +282,15 @@
 /* --- Phones --- */
 @media (max-width: 720px) {
   .lanes { gap: 8px; }
-  .glass { width: clamp(120px, 34vw, 160px); }
+  .glass { width: clamp(130px, 38vw, 175px); }
   .bubble { font-size: clamp(1.9rem, 8.5vw, 2.6rem); }
-  .slot { width: clamp(48px, 14vw, 62px); }
+  .slot { width: clamp(78px, 24vw, 100px); }
   .draw { width: clamp(92px, 25vw, 122px); }
-  .plate-text { font-size: 0.66rem; }
+  .ball-text { font-size: 0.6rem; }
   .manifold { width: 80%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .ball, .rays, .travelling { animation: none; }
-  .ball-drop, .plate, .draw { transition: none; }
+  .ball-drop, .draw { transition: none; }
 }

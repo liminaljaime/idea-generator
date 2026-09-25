@@ -37,7 +37,7 @@ function mulberry32(seed: number) {
 const globeBalls = () => {
   const rng = mulberry32(42)
   return Array.from({ length: FILLER_BALLS }, (_, i) => {
-    const size = rand(rng, 20, 32)
+    const size = rand(rng, 30, 46)
     const x = rand(rng, 6, 94)
     const y = rand(rng, 6, 92)
     const colour = allColours[i % allColours.length]
@@ -102,9 +102,8 @@ const theme: Theme = {
                     <span class="travelling" data-travel="${i}"></span>
                   </div>
                   <div class="slot" data-slot="${i}" style="--lc:${laneColours[lanes[i]]}">
-                    <div class="ball-drop" data-drop="${i}"><span class="drop-num" data-num="${i}"></span></div>
+                    <div class="ball-drop" data-drop="${i}"><span class="ball-text" data-drop-text="${i}"></span></div>
                   </div>
-                  <div class="plate" data-plate="${i}"><span class="plate-text" data-plate-text="${i}"></span></div>
                   <p class="lane-name">${r.label}</p>
                   <button type="button" class="lock" data-lock="${i}" aria-pressed="false" aria-label="Lock ${r.label.toLowerCase()}">Lock</button>
                 </section>`).join('')}
@@ -121,20 +120,15 @@ const theme: Theme = {
     const globe = root.querySelector<HTMLElement>('[data-globe]')!
     const travellers = [...root.querySelectorAll<HTMLElement>('[data-travel]')]
     const drops = [...root.querySelectorAll<HTMLElement>('[data-drop]')]
-    const nums = [...root.querySelectorAll<HTMLElement>('[data-num]')]
-    const plates = [...root.querySelectorAll<HTMLElement>('[data-plate]')]
-    const plateTexts = [...root.querySelectorAll<HTMLElement>('[data-plate-text]')]
+    const dropTexts = [...root.querySelectorAll<HTMLElement>('[data-drop-text]')]
     const locks = [...root.querySelectorAll<HTMLButtonElement>('[data-lock]')]
     const draw = root.querySelector<HTMLButtonElement>('.draw')!
     const status = root.querySelector<HTMLElement>('[data-status]')!
     const brief = root.querySelector<HTMLElement>('.brief')!
 
     const show = (i: number, item: Item) => {
-      const n = machine.reels[i].items.indexOf(item) + 1
-      nums[i].textContent = String(n)
-      plateTexts[i].textContent = item.item
+      dropTexts[i].textContent = item.item
       drops[i].classList.add('settled')
-      plates[i].classList.add('shown')
     }
     machine.reels.forEach((_, i) => show(i, machine.results[i]))
     brief.textContent = machine.brief
@@ -163,10 +157,7 @@ const theme: Theme = {
         return machine.settle()
       }
       // The whole globe shuffles for everyone to see, even lanes that are locked.
-      spinning.forEach((i) => {
-        drops[i].classList.remove('settled')
-        plates[i].classList.remove('shown')
-      })
+      spinning.forEach((i) => drops[i].classList.remove('settled'))
       globe.classList.add('churning')
       await wait(1000)
       globe.classList.remove('churning')
