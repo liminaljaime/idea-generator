@@ -1,6 +1,6 @@
-# Slot Machine
+# Idea Generator
 
-A small arcade slot-machine web game. Each spin picks one item from each of three reels.
+The slot machine of creativity. Each spin picks one item from each of three reels.
 
 ## Editing the reels
 
