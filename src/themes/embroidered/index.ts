@@ -35,6 +35,7 @@ const theme: Theme = {
       ${filters}
       <div class="scene">
         ${deco('left')}
+        <div class="napkin">
         <main class="cabinet">
           <header class="marquee">
             ${motifSvg('plus')}${motifSvg('flower')}
@@ -63,6 +64,7 @@ const theme: Theme = {
             <p class="brief" aria-hidden="true"></p>
           </footer>
         </main>
+        </div>
         ${deco('right')}
       </div>`
 

@@ -82,29 +82,47 @@
   box-sizing: border-box;
 }
 
-/* ---------- Cabinet: sheer white cotton laid over the gingham ---------- */
-.cabinet {
+/* ---------- Cabinet: a scalloped cotton napkin laid over the gingham ---------- */
+/* The wrapper carries the shadow, because the scallop mask would clip it off the cabinet. */
+.napkin {
   grid-area: cabinet;
+  min-width: 0;
+  filter: drop-shadow(0 10px 14px rgb(46 26 71 / 0.16)) drop-shadow(0 1px 1px rgb(46 26 71 / 0.1));
+}
+.cabinet {
+  --scallop: 9px;
   position: relative;
   min-width: 0;
   display: grid;
   gap: var(--gap);
-  padding: var(--sp-5) var(--sp-5) 0;
+  padding: calc(var(--sp-5) + var(--scallop)) calc(var(--sp-5) + var(--scallop)) var(--scallop);
   /* Voile: mostly white, a fine weave, the tablecloth faintly visible and softened through it. */
-  background: var(--voile), rgb(255 253 246 / 0.4);
+  background: var(--voile), rgb(255 253 246 / 0.62);
   backdrop-filter: blur(0.6px);
   -webkit-backdrop-filter: blur(0.6px);
-  border-radius: 6px;
-  /* No hard outline: a soft lift, like fabric resting on cloth. */
-  box-shadow: 0 1px 2px rgb(46 26 71 / 0.08), 0 8px 24px -6px rgb(46 26 71 / 0.18);
+  /* Scalloped edge: a rounded bump every 2 × --scallop along all four sides. */
+  --bump: radial-gradient(var(--scallop) at 50% 50%, #000 96%, #0000);
+  -webkit-mask:
+    var(--bump) 0 0 / calc(2 * var(--scallop)) calc(2 * var(--scallop)) repeat-x,
+    var(--bump) 0 100% / calc(2 * var(--scallop)) calc(2 * var(--scallop)) repeat-x,
+    var(--bump) 0 0 / calc(2 * var(--scallop)) calc(2 * var(--scallop)) repeat-y,
+    var(--bump) 100% 0 / calc(2 * var(--scallop)) calc(2 * var(--scallop)) repeat-y,
+    linear-gradient(#000 0 0) center / calc(100% - 2 * var(--scallop)) calc(100% - 2 * var(--scallop)) no-repeat;
+  mask:
+    var(--bump) 0 0 / calc(2 * var(--scallop)) calc(2 * var(--scallop)) repeat-x,
+    var(--bump) 0 100% / calc(2 * var(--scallop)) calc(2 * var(--scallop)) repeat-x,
+    var(--bump) 0 0 / calc(2 * var(--scallop)) calc(2 * var(--scallop)) repeat-y,
+    var(--bump) 100% 0 / calc(2 * var(--scallop)) calc(2 * var(--scallop)) repeat-y,
+    linear-gradient(#000 0 0) center / calc(100% - 2 * var(--scallop)) calc(100% - 2 * var(--scallop)) no-repeat;
   filter: url(#handmade);
 }
-.cabinet::before { /* running stitch just inside the edge */
+.cabinet::before { /* white hem stitch just inside the scallops */
   content: "";
   position: absolute;
-  inset: 6px;
-  border: var(--running) var(--seam);
-  border-radius: 3px;
+  inset: calc(var(--scallop) + 6px);
+  border: 2px dashed rgb(255 255 255 / 0.95);
+  border-radius: 2px;
+  filter: drop-shadow(0 1px 0 rgb(46 26 71 / 0.18));
   pointer-events: none;
 }
 
@@ -280,7 +298,7 @@
   :root[data-theme="embroidered"] { --s: 3px; }
   .scene { grid-template-columns: minmax(0, 1fr); grid-template-areas: "cabinet"; height: auto; min-height: 100dvh; align-items: start; padding: 16px 14px; }
   .deco { display: none; }
-  .cabinet { padding: 18px 16px 0; gap: 14px; }
+  .cabinet { --scallop: 7px; padding: calc(18px + var(--scallop)) calc(16px + var(--scallop)) var(--scallop); gap: 14px; }
   .marquee { gap: 8px; padding: 10px 8px; }
   .marquee > .stitch { display: none; }
   .marquee .title { --s: 3.6px; }
