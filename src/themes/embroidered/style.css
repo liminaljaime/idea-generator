@@ -118,7 +118,8 @@
   display: grid;
   justify-items: center;
   gap: var(--sp-2);
-  padding: calc(var(--sp-3) + 4px) var(--sp-3) var(--sp-3);
+  /* Top: 4px to the stitching + 1px thread + 8px breathing room to the label. */
+  padding: 13px var(--sp-3) var(--sp-3);
   background: var(--felt), var(--violet);
   border-radius: 12px;
   box-shadow: 2px 3px 0 rgb(46 26 71 / 0.35);
@@ -127,11 +128,11 @@
   content: "";
   position: absolute;
   inset: 4px;
-  border: var(--running) rgb(246 239 207 / 0.7);
+  border: 1px dashed rgb(246 239 207 / 0.45);
   border-radius: 9px;
   pointer-events: none;
 }
-.frame h2 { --s: clamp(1.6px, 0.26vh, 2px); margin: 0; color: var(--cream); line-height: 0; }
+.frame h2 { --s: calc(12px / 7); margin: 0; color: var(--cream); line-height: 0; }
 
 /* Drum: linen, shaded top and bottom, satin-stitched edge */
 .window {
@@ -276,6 +277,7 @@
   .reel { grid-template-columns: minmax(0, 1fr) 64px; align-items: stretch; gap: 10px; }
   .frame { justify-items: start; padding: 14px 12px 12px; gap: 8px; }
   .frame h2 { --s: 1.7px; padding-left: 6px; }
+  .frame::before { border: var(--running) rgb(246 239 207 / 0.7); }
   .window { height: auto; min-height: 76px; grid-template-rows: none; align-items: center; grid-template-columns: auto minmax(0, 1fr); gap: 12px; justify-items: start; align-items: center; border-radius: 16px / 10px; }
   .badge, .result { align-self: center; }
   .result { text-align: left; font-size: 0.95rem; }
