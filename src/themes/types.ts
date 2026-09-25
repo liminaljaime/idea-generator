@@ -8,5 +8,6 @@ export interface Theme {
 
 export const themes: Record<string, () => Promise<{ default: Theme }>> = {
   bare: () => import('./bare'),
+  embroidered: () => import('./embroidered'),
 }
-export const defaultTheme = 'bare'
+export const defaultTheme = 'embroidered'
