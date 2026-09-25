@@ -13,18 +13,35 @@ let cleanup: (() => void)[] = []
 const suits = ['sun', 'moon', 'star'] as const
 const IDLE = 'Cross my palm with curiosity'
 
-// A burgundy wax seal stamped with a star, pressed onto the end of the parchment scroll.
-const waxSeal = `
-  <svg viewBox="0 0 64 64" aria-hidden="true">
+// A Victorian brass bell-push: an engraved brass plate with a mother-of-pearl button.
+const bellPush = `
+  <svg viewBox="0 0 120 120" aria-hidden="true">
     <defs>
-      <radialGradient id="wax" cx="38%" cy="32%" r="75%">
-        <stop offset="0" stop-color="#b3283f"/><stop offset="0.6" stop-color="#7d1424"/><stop offset="1" stop-color="#4e0a16"/>
+      <radialGradient id="brass" cx="35%" cy="30%" r="80%">
+        <stop offset="0" stop-color="#fbe7a6"/><stop offset="0.35" stop-color="#e2b34a"/>
+        <stop offset="0.75" stop-color="#a8741f"/><stop offset="1" stop-color="#6e4a12"/>
       </radialGradient>
+      <radialGradient id="well" cx="50%" cy="45%" r="55%">
+        <stop offset="0.7" stop-color="#6e4a12"/><stop offset="1" stop-color="#e2b34a"/>
+      </radialGradient>
+      <radialGradient id="pearl" cx="38%" cy="32%" r="70%">
+        <stop offset="0" stop-color="#ffffff"/><stop offset="0.35" stop-color="#f4eef8"/>
+        <stop offset="0.6" stop-color="#e9dcef"/><stop offset="0.8" stop-color="#d7e6ee"/><stop offset="1" stop-color="#b9a9c4"/>
+      </radialGradient>
+      <path id="rim-top" d="M 18 60 A 42 42 0 0 1 102 60"/>
+      <path id="rim-bottom" d="M 13 60 A 47 47 0 0 0 107 60"/>
     </defs>
-    <path fill="url(#wax)" d="M32 3c4 0 6 3 9 4s7 0 9 3 1 6 3 9 5 5 5 9-3 6-4 9 0 7-3 9-6 1-9 3-5 5-9 5-6-3-9-4-7 0-9-3-1-6-3-9-5-5-5-9 3-6 4-9 0-7 3-9 6-1 9-3 5-5 9-5z"/>
-    <circle cx="32" cy="32" r="17" fill="none" stroke="#4e0a16" stroke-width="1.5" opacity="0.7"/>
-    <circle cx="32" cy="32" r="17" fill="none" stroke="#d45a6c" stroke-width="0.8" opacity="0.5" transform="translate(-0.8 -0.8)"/>
-    <path fill="#e2b34a" d="M32 21l3 7.5 8 .6-6.1 5.1 1.9 7.8L32 37.7 25.2 42l1.9-7.8-6.1-5.1 8-.6z"/>
+    <circle cx="60" cy="60" r="58" fill="url(#brass)"/>
+    <circle cx="60" cy="60" r="56" fill="none" stroke="#6e4a12" stroke-width="1" opacity="0.6"/>
+    <circle cx="60" cy="60" r="33" fill="none" stroke="#6e4a12" stroke-width="0.8" opacity="0.6"/>
+    <text class="engrave"><textPath href="#rim-top" startOffset="50%" text-anchor="middle">SHUFFLE &amp; DEAL</textPath></text>
+    <text class="engrave small"><textPath href="#rim-bottom" startOffset="50%" text-anchor="middle">✦ ring for a reading ✦</textPath></text>
+    <circle cx="60" cy="60" r="24" fill="url(#well)"/>
+    <g class="pearl">
+      <circle cx="60" cy="60" r="19" fill="url(#pearl)"/>
+      <ellipse cx="54" cy="53" rx="7" ry="4" fill="#fff" opacity="0.8" transform="rotate(-30 54 53)"/>
+      <circle class="pearl-glow" cx="60" cy="60" r="19" fill="#ffe9a8" opacity="0"/>
+    </g>
   </svg>`
 
 const suitMark: Record<(typeof suits)[number], string> = {
@@ -80,7 +97,7 @@ const theme: Theme = {
                 <button type="button" class="keep" data-keep="${i}" aria-pressed="false" aria-label="Hold the ${r.label.toLowerCase()} card">Hold</button>
               </section>`).join('')}
           </div>
-          <button type="button" class="shuffle"><span class="seal">${waxSeal}</span><span class="scroll">Shuffle &amp; Deal</span></button>
+          <button type="button" class="shuffle"><span class="visually-hidden">Shuffle and deal</span>${bellPush}</button>
           <div class="reading">
             <p class="status" data-status>${IDLE}</p>
             <p class="brief" aria-hidden="true"></p>
@@ -122,6 +139,7 @@ const theme: Theme = {
     cleanup.push(machine.on('spin', async ({ spinning, results }) => {
       setBusy(true)
       status.textContent = 'The cards are shuffling…'
+      shuffle.classList.add('ringing')
       brief.classList.add('waiting')
       if (prefersReducedMotion()) {
         spinning.forEach((i) => show(i, results[i]))
@@ -147,6 +165,7 @@ const theme: Theme = {
     }))
 
     cleanup.push(machine.on('ready', (e) => {
+      shuffle.classList.remove('ringing')
       setBusy(false)
       status.textContent = 'The Oracle sees…'
       brief.textContent = e.brief
