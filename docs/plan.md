@@ -1,7 +1,7 @@
 # Idea Machine — plan
 
 A slot machine for internet-project ideas. Three reels — WHAT TO MAKE, PREMISE,
-CONSTRAINT — each with a HOLD, and one SPIN IDEA action that spins the unheld reels.
+DIRECTION — each with a HOLD, and one SPIN IDEA action that spins the unheld reels.
 
 ## Principles
 
@@ -29,6 +29,12 @@ src/
 Spin flow: `machine.spin()` picks new results for unheld reels immediately and emits
 `spin`; the theme animates, then calls `machine.settle()`, which emits `ready`.
 Spins and holds are ignored while spinning. A spin never lands on the item already showing.
+
+## Reel roles
+
+Each reel is a voice in a creative brief: WHAT TO MAKE is the client, PREMISE the
+writer, DIRECTION the art director (visual style, behaviour, technical limits, and
+psychological mechanisms). Themes may give each reel a small character or patch.
 
 ## Badges
 

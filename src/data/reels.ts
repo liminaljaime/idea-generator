@@ -10,5 +10,5 @@ const items = (csv: string): Item[] =>
 export const reels: Reel[] = [
   { id: 'what', label: 'WHAT TO MAKE', items: items(whatToMake) },
   { id: 'premise', label: 'PREMISE', items: items(premises) },
-  { id: 'constraint', label: 'CONSTRAINT', items: items(constraints) },
+  { id: 'direction', label: 'DIRECTION', items: items(constraints) },
 ]
