@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Rye&family=IM+Fell+English:ital@0;1&family=Cinzel:wght@700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Rye&family=IM+Fell+English:ital@0;1&family=Cinzel:wght@700;800&family=Cinzel+Decorative:wght@700&display=swap');
 
 :root[data-theme="tarot"] {
   --velvet: #1a2a5e;       /* navy velvet */
@@ -53,37 +53,45 @@
   mask: radial-gradient(18px at 18px 100%, #0000 98%, #000) 0 0 / 36px 100%;
 }
 
-/* Bulb-lit sign */
+/* Sign: an engraved Victorian theatre bill — fine double rules, corner ornaments, antique gold */
 .sign {
-  margin-top: clamp(6px, 1.5vh, 16px);
-  padding: clamp(8px, 1.4vh, 12px) clamp(20px, 3vw, 40px);
-  text-align: center;
-  border: 3px solid var(--gold);
-  border-radius: 14px;
-  background: var(--velvet-deep);
-  box-shadow: 0 0 0 6px var(--velvet-deep),
-    0 0 0 8px transparent;
   position: relative;
-}
-.sign::before { /* marquee bulbs */
-  content: "";
-  position: absolute;
-  inset: -9px;
-  border-radius: 20px;
-  border: 5px dotted var(--bulb);
-  filter: drop-shadow(0 0 3px var(--bulb));
-  animation: twinkle 1.6s steps(2) infinite;
-  pointer-events: none;
-}
-@keyframes twinkle { 50% { filter: brightness(0.6); } }
-.sign h1 {
-  margin: 0;
-  font: 400 clamp(1.8rem, 5.5vh, 3rem) var(--display);
+  margin-top: clamp(8px, 1.8vh, 18px);
+  padding: clamp(8px, 1.4vh, 12px) clamp(28px, 4vw, 48px) clamp(8px, 1.3vh, 12px);
+  text-align: center;
   color: var(--gold);
-  letter-spacing: 0.04em;
-  text-shadow: 0 0 12px rgb(226 179 74 / 0.45);
+  border: 1px solid rgb(226 179 74 / 0.8);
+  outline: 1px solid rgb(226 179 74 / 0.8);
+  outline-offset: 4px;
+  background: rgb(8 14 36 / 0.55);
 }
-.sign-top, .sign-sub { margin: 0; font: italic 0.95rem var(--mystic); color: var(--gold-soft); letter-spacing: 0.08em; }
+.corner {
+  position: absolute;
+  font-size: 0.7rem;
+  line-height: 1;
+  color: var(--gold);
+  background: var(--velvet-deep);
+  padding: 0 2px;
+}
+.corner.tl { top: -9px; left: -9px; }
+.corner.tr { top: -9px; right: -9px; }
+.corner.bl { bottom: -9px; left: -9px; }
+.corner.br { bottom: -9px; right: -9px; }
+.sign h1 {
+  margin: 2px 0 4px;
+  font: 700 clamp(1.6rem, 4.8vh, 2.6rem) / 1.05 'Cinzel Decorative', var(--rws);
+  letter-spacing: 0.04em;
+  color: #d9ae52;
+}
+.sign h1 .the {
+  display: block;
+  font: italic 400 clamp(0.9rem, 2.2vh, 1.15rem) var(--mystic);
+  letter-spacing: 0.2em;
+  text-transform: lowercase;
+  margin-bottom: -2px;
+}
+.sign-top, .sign-sub { margin: 0; font: italic 0.9rem var(--mystic); color: #c9a45e; letter-spacing: 0.1em; }
+.sign-top { font-style: normal; font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase; }
 
 /* The reading table */
 .table {
@@ -221,9 +229,10 @@
   .suit-name { font-size: 0.58rem; letter-spacing: 0.04em; }
   .front { padding: 12px 11px 13px; }
   .name { margin: 0 -1px -3px; }
-  .sign h1 { font-size: 1.9rem; }
+  .sign h1 { font-size: 1.5rem; }
+  .sign { padding: 8px 18px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card, .card .inner, .deck.shuffling, .sign::before { transition: none; animation: none; }
+  .card, .card .inner, .deck.shuffling { transition: none; animation: none; }
 }

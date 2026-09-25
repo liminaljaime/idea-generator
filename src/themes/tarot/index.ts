@@ -74,9 +74,11 @@ const theme: Theme = {
       <div class="booth">
         <div class="awning" aria-hidden="true"></div>
         <header class="sign">
-          <p class="sign-top">Pier End · Est. 1887</p>
-          <h1>The Creative Oracle</h1>
-          <p class="sign-sub">Visions curated · Futures pitched</p>
+          <span class="corner tl" aria-hidden="true">✦</span><span class="corner tr" aria-hidden="true">✦</span>
+          <span class="corner bl" aria-hidden="true">✦</span><span class="corner br" aria-hidden="true">✦</span>
+          <p class="sign-top">❦ Pier End · Est. 1887 ❦</p>
+          <h1><span class="the">The</span> Creative Oracle</h1>
+          <p class="sign-sub">~ Visions Curated &amp; Futures Pitched ~</p>
         </header>
         <main class="table">
           <div class="spread">
