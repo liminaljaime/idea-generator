@@ -44,7 +44,7 @@ describe('writeBrief', () => {
       expect(s).not.toMatch(/\b(the|our|same|an?) (an?|the) /i)
       expect(s).not.toMatch(/,[,.]|\.,|\.\.|\S—|it's (is|only|uses|fits|loads|controlled|built|sound|two|keyboard|monospace|under|everything)\b/i)
       expect(s).toMatch(/^[A-Z].*[.]$/)
-      expect(lines.nod.filter((nod) => s.includes(nod.trim().replace(/^[,—] ?/, ''))).length).toBeGreaterThanOrEqual(1)
+      expect(lines.nod.some((nod) => s.endsWith(` ${nod}`))).toBe(true)
       expect(s.toLowerCase()).toContain(results[0].item.toLowerCase())
       expect(s.toLowerCase()).toContain(results[1].item.toLowerCase())
     }

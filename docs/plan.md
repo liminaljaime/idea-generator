@@ -42,14 +42,14 @@ Under the machine, the spin is played back by a Nathan Barley-ish art director:
 self-important agency-speak that only reacts to what the reels chose, never adding
 new creative direction, with exactly one Gen Z / Gen Alpha nod per line.
 
-Shape: `<what> <premise>.` then `<direction><nod>` — e.g. "It's essentially a shared
-board that's basically a meditation on taste. Very Web 2.0 gloss, in a knowing way,
-it's giving main character."
+Shape: `<what> <premise>. <direction>. <nod>` — e.g. "It's essentially a shared
+board that's basically a meditation on taste. Very Web 2.0 gloss, in a knowing way.
+It's giving main character."
 
 Templates live in `src/data/art-director.csv` (`kind, line`). Kinds: `what`,
 `premise` (ends with a full stop), `direction-visual|behaviour|mechanism|technical`
 (no end punctuation), `held-what|premise|direction` (used when that reel is held),
-and `nod` (starts with `,` or `—`, ends with `.`). Placeholders: `{what}` (with a/an),
+and `nod` (a short standalone sentence). Placeholders: `{what}` (with a/an),
 `{thing}` (without), `{premise}`, `{style}`, `{behaviour}`, `{mechanism}`,
 `{technical}`, `{direction}`; capitalise (`{What}`) at the start of a sentence.
 Built in `engine/brief.ts`; tests check every item fits without broken grammar.
