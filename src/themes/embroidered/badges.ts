@@ -1,8 +1,8 @@
 import type { Item } from '../../engine/types'
+import { stitchSvg } from './stitch'
 
 /**
- * Badge motifs drawn as pixel grids. Each character is one stitch:
- * r raspberry · p violet · g aubergine thread · w cream · b cobalt · t turquoise · . empty
+ * Badge motifs as cross-stitch grids (colour key in stitch.ts).
  */
 const motifs: Record<string, string[]> = {
   flower: [
@@ -91,22 +91,12 @@ const familyMotif: Record<string, string> = {
   Behaviour: 'heart', Mechanism: 'infinity', 'Technical constraint': 'hourglass', 'Visual reference': 'star',
 }
 
-const colours: Record<string, string> = {
-  r: 'var(--raspberry)', p: 'var(--violet)', g: 'var(--aubergine)',
-  w: 'var(--cream)', b: 'var(--cobalt)', t: 'var(--turquoise)',
-}
-
 export function motifFor(item: Item): string {
   return motifs[item.badge] ? item.badge : familyMotif[item.family] ?? 'sparkle'
 }
 
 export function motifSvg(name: string): string {
-  const grid = motifs[name] ?? motifs.sparkle
-  const w = Math.max(...grid.map((r) => r.length))
-  const cells = grid.flatMap((row, y) =>
-    [...row].flatMap((c, x) => (colours[c] ? [`<rect x="${x}" y="${y}" width="1" height="1" fill="${colours[c]}"/>`] : [])),
-  )
-  return `<svg viewBox="0 0 ${w} ${grid.length}" width="${w * 4}" height="${grid.length * 4}" shape-rendering="crispEdges" aria-hidden="true">${cells.join('')}</svg>`
+  return stitchSvg(motifs[name] ?? motifs.sparkle)
 }
 
 export const badgeSvg = (item: Item) => motifSvg(motifFor(item))

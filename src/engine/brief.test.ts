@@ -41,7 +41,7 @@ describe('writeBrief', () => {
       const results = [w[k % w.length], p[(k * 7) % p.length], direction]
       const s = writeBrief(results, [k % 3 === 0, k % 5 === 0, k % 7 === 0], lines, seq)
       expect(s).not.toMatch(/[{}]|\s{2}/)
-      expect(s).not.toMatch(/\b(the|our|same|an?) (an?|the) /i)
+      expect(s).not.toMatch(/\b(the|our|same|very|full|an?) (an?|the) /i)
       expect(s).not.toMatch(/,[,.]|\.,|\.\.|\S—|it's (is|only|uses|fits|loads|controlled|built|sound|two|keyboard|monospace|under|everything)\b/i)
       expect(s).toMatch(/^[A-Z].*[.]$/)
       expect(lines.nod.some((nod) => s.endsWith(` ${nod}`))).toBe(true)

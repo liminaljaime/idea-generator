@@ -4,12 +4,12 @@ import type { Machine } from '../../engine/machine'
 import type { Item } from '../../engine/types'
 import { prefersReducedMotion } from '../../shell/controls'
 import { badgeSvg, motifSvg } from './badges'
+import { stitchText } from './stitch'
 
 // Embroidered arcade: a 90s fruit machine imagined by a textile artist.
 let cleanup: (() => void)[] = []
 
 const lock = `<svg viewBox="0 0 7 8" width="14" height="16" shape-rendering="crispEdges" aria-hidden="true"><path fill="currentColor" d="M2 0h3v1H2zM1 1h1v3H1zM5 1h1v3H5zM0 3h7v5H0z"/><path fill="var(--raspberry)" d="M3 5h1v2H3z"/></svg>`
-const stem = `<svg class="stem" viewBox="0 0 7 14" width="28" height="56" shape-rendering="crispEdges" aria-hidden="true"><path fill="var(--aubergine)" d="M3 6h1v8H3zM0 9h1v1H0zM1 10h1v1H1zM2 11h1v1H2zM6 9h1v1H6zM5 10h1v1H5zM4 11h1v1H4z"/><path fill="var(--raspberry)" d="M2 0h3v1H2zM1 1h5v3H1zM2 4h3v1H2z"/><path fill="var(--cream)" d="M3 2h1v1H3z"/></svg>`
 
 function flicker(el: HTMLElement) {
   el.classList.remove('landed')
@@ -20,14 +20,16 @@ function flicker(el: HTMLElement) {
 const theme: Theme = {
   mount(root: HTMLElement, machine: Machine) {
     document.documentElement.dataset.theme = 'embroidered'
+    const deco = (side: string) =>
+      `<div class="deco deco-${side}" aria-hidden="true"><span class="plus">+</span><span class="thread"></span>${motifSvg('flower')}</div>`
     root.innerHTML = `
       <div class="scene">
-        <div class="deco deco-left" aria-hidden="true"><span class="plus">+</span><span class="thread"></span>${stem}</div>
+        ${deco('left')}
         <main class="cabinet">
           <header class="marquee">
             <span class="sparkles" aria-hidden="true">+<sub>+</sub></span>
             ${motifSvg('flower')}
-            <h1>Idea Machine</h1>
+            <h1><span class="visually-hidden">Idea Machine</span>${stitchText('Idea Machine', 'title')}</h1>
             ${motifSvg('flower')}
             <span class="sparkles" aria-hidden="true"><sub>+</sub>+</span>
           </header>
@@ -37,10 +39,8 @@ const theme: Theme = {
                 <div class="frame">
                   <h2>${r.label}</h2>
                   <div class="window" data-window="${i}">
-                    <span class="tick" aria-hidden="true">+</span>
                     <div class="badge" data-badge="${i}"></div>
                     <p class="result" data-result="${i}"></p>
-                    <span class="tick" aria-hidden="true">+</span>
                   </div>
                 </div>
                 <button type="button" class="hold" data-hold="${i}" aria-pressed="false">
@@ -50,16 +50,11 @@ const theme: Theme = {
           </div>
           <button type="button" class="spin">SPIN IDEA</button>
           <footer class="panel">
-            <span class="dither" aria-hidden="true"></span>
-            <span class="status" data-status>INSERT CURIOSITY ${motifSvg('flower')} NO COINS REQUIRED</span>
-            <span class="dither" aria-hidden="true"></span>
+            <p class="status" data-status>INSERT CURIOSITY ${motifSvg('flower')} NO COINS REQUIRED</p>
+            <p class="brief" aria-hidden="true"></p>
           </footer>
         </main>
-        <div class="deco deco-right" aria-hidden="true"><span class="plus">+</span><span class="thread"></span>${stem}</div>
-        <figure class="director">
-          <figcaption>THE ART DIRECTOR SAYS</figcaption>
-          <blockquote class="brief" aria-hidden="true"></blockquote>
-        </figure>
+        ${deco('right')}
       </div>`
 
     const windows = [...root.querySelectorAll<HTMLElement>('[data-window]')]
@@ -117,7 +112,7 @@ const theme: Theme = {
 
     cleanup.push(machine.on('ready', (e) => {
       setBusy(false)
-      status.textContent = 'IDEA READY'
+      status.textContent = 'IDEA READY · THE ART DIRECTOR SAYS'
       brief.textContent = e.brief
       brief.classList.remove('waiting')
     }))

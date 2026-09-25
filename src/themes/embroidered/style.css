@@ -12,7 +12,11 @@
   --turquoise: #2fa8a0;
   --display: 'Silkscreen', monospace;
   --terminal: 'VT323', monospace;
-  --px: 4px;            /* one "stitch" */
+  --px: 4px;            /* outline weight */
+
+  /* Desktop sizes scale with window height so the machine never needs scrolling. */
+  --drum: clamp(120px, 21vh, 200px);
+  --gap: clamp(8px, 1.6vh, 16px);
 
   color-scheme: light;
   background: var(--custard);
@@ -20,104 +24,100 @@
   font-family: var(--terminal);
 }
 
-[data-theme="embroidered"] body { margin: 0; min-height: 100vh; background: var(--custard); }
+[data-theme="embroidered"] body { margin: 0; background: var(--custard); }
 /* Zero-specificity defaults so component rules below always win. */
 :where([data-theme="embroidered"]) :where(button) { font: inherit; color: inherit; cursor: pointer; }
 :where([data-theme="embroidered"]) :where(button:disabled) { cursor: default; }
 [data-theme="embroidered"] :focus-visible { outline: var(--px) dashed var(--cobalt); outline-offset: var(--px); }
 
+.stitch { display: block; overflow: visible; }
+
 .scene {
   display: grid;
-  grid-template-columns: 1fr min(820px, 100vw - 200px) 1fr;
-  grid-template-areas: "left cabinet right" ". director .";
+  grid-template-columns: 1fr min(720px, 100vw - 180px) 1fr;
+  grid-template-areas: "left cabinet right";
   align-items: center;
-  align-content: center;
-  gap: 32px 24px;
-  padding: 48px 16px;
+  gap: 24px;
+  height: 100vh;
+  height: 100dvh;
+  padding: clamp(12px, 3vh, 32px) 16px;
   box-sizing: border-box;
-  min-height: 100vh;
 }
 
 /* ---------- Cabinet ---------- */
 .cabinet {
   grid-area: cabinet;
   min-width: 0;
+  max-height: 100%;
   display: grid;
-  gap: 20px;
-  padding: 16px 20px 0;
+  gap: var(--gap);
+  padding: var(--gap) 16px 0;
   background: var(--cream);
   border: var(--px) solid var(--aubergine);
   box-shadow: calc(var(--px) * 2) calc(var(--px) * 2) 0 var(--aubergine);
+  box-sizing: border-box;
 }
 
 .marquee {
+  min-width: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 14px 16px;
-  border: calc(var(--px) / 2) solid var(--aubergine);
-  outline: calc(var(--px) / 2) solid var(--aubergine);
-  outline-offset: 5px;
-  margin: 6px;
+  gap: 14px;
+  padding: clamp(6px, 1.2vh, 12px) 14px;
+  margin: 5px;
+  border: 2px solid var(--aubergine);
+  outline: 2px solid var(--aubergine);
+  outline-offset: 4px;
 }
-.marquee h1 {
-  margin: 0;
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: clamp(1.5rem, 7vw, 3.4rem);
-  line-height: 1;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-.marquee svg { width: 36px; height: auto; flex: none; }
-.sparkles { font-family: var(--display); font-size: 1.6rem; line-height: 1; }
-.sparkles sub { font-size: 1.2rem; }
+.marquee h1 { margin: 0; line-height: 0; flex: 0 1 auto; min-width: 0; width: min(100%, 9 * clamp(30px, 6vh, 50px)); }
+.marquee .title { width: 100%; height: auto; color: var(--aubergine); }
+.marquee > .stitch { height: clamp(22px, 3.6vh, 30px); width: auto; flex: none; }
+.sparkles { font-family: var(--display); font-size: 1.3rem; line-height: 1; }
+.sparkles sub { font-size: 1rem; }
 
 /* ---------- Reels ---------- */
-.reels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-.reel { display: grid; gap: 14px; min-width: 0; }
+.reels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.reel { display: grid; gap: var(--gap); min-width: 0; }
 
 .frame {
   display: grid;
-  gap: 10px;
-  padding: 10px 12px 14px;
+  gap: 8px;
+  padding: 8px 10px 10px;
   background: var(--violet);
   border: var(--px) solid var(--aubergine);
 }
 .frame h2 {
   margin: 0;
   color: var(--cream);
-  font: 400 0.95rem var(--display);
+  font: 400 0.85rem var(--display);
   letter-spacing: 0.08em;
   text-align: center;
 }
 
-/* Curved drum: lighter in the middle, shaded top and bottom, stepped bands. */
+/* Curved drum: shaded top and bottom bands, lighter in the middle. */
 .window {
   display: grid;
-  grid-template-rows: auto 64px auto auto;
+  grid-template-rows: 40% auto;
   justify-items: center;
   align-content: center;
-  gap: 10px;
-  min-height: 240px;
-  padding: 8px 10px;
+  gap: 6px;
+  height: var(--drum);
+  padding: 6px 8px;
   border: var(--px) solid var(--aubergine);
   border-radius: 10px / 22px;
   background: linear-gradient(to bottom,
-    var(--cream-shade) 0 8%, #f1e8c4 8% 18%, var(--cream) 18% 82%, #f1e8c4 82% 92%, var(--cream-shade) 92%);
+    var(--cream-shade) 0 7%, #f1e8c4 7% 15%, var(--cream) 15% 85%, #f1e8c4 85% 93%, var(--cream-shade) 93%);
   overflow: hidden;
+  box-sizing: border-box;
 }
-.tick { font-family: var(--display); font-size: 0.8rem; line-height: 1; }
-.badge { display: grid; place-items: center; height: 64px; }
-.badge svg { width: auto; height: 100%; max-width: 72px; }
+.badge { display: grid; place-items: end center; height: 100%; min-height: 0; }
+.badge .stitch { height: 100%; max-height: 58px; width: auto; max-width: 70px; }
 .result {
   margin: 0;
-  min-height: 3.3em;
-  display: grid;
-  place-items: center;
-  font-size: 1.45rem;
-  line-height: 1.1;
+  align-self: start;
+  font-size: clamp(1.1rem, 2.4vh, 1.35rem);
+  line-height: 1.05;
   letter-spacing: 0.04em;
   text-align: center;
   text-transform: uppercase;
@@ -126,24 +126,23 @@
 
 .window.spinning .badge,
 .window.spinning .result { animation: roll 0.14s steps(2) infinite; filter: blur(0.6px); }
-@keyframes roll { from { transform: translateY(-6px); } to { transform: translateY(6px); } }
+@keyframes roll { from { transform: translateY(-5px); } to { transform: translateY(5px); } }
 .window.landed .badge,
 .window.landed .result { animation: land 0.28s steps(3); }
-@keyframes land { 0% { transform: translateY(-10px); } 60% { transform: translateY(3px); } 100% { transform: none; } }
+@keyframes land { 0% { transform: translateY(-8px); } 60% { transform: translateY(2px); } 100% { transform: none; } }
 
 /* ---------- Hold ---------- */
 .hold {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  min-height: 56px;
-  font: 700 1.2rem var(--display);
+  gap: 10px;
+  min-height: clamp(36px, 5.5vh, 48px);
+  font: 700 1rem var(--display);
   letter-spacing: 0.08em;
   background: var(--custard);
   border: var(--px) solid var(--aubergine);
   box-shadow: 0 var(--px) 0 var(--aubergine);
-  transition: transform 60ms steps(1);
 }
 .hold .lock { display: none; }
 .hold[aria-pressed="true"] {
@@ -158,75 +157,88 @@
 
 /* ---------- Spin ---------- */
 .spin {
-  padding: 18px 16px;
-  font: 700 clamp(1.8rem, 5vw, 3rem) var(--display);
+  padding: clamp(8px, 1.6vh, 14px) 16px;
+  font: 700 clamp(1.5rem, 4.4vh, 2.4rem) var(--display);
   letter-spacing: 0.06em;
   color: var(--cream);
   background: var(--raspberry);
   border: var(--px) solid var(--aubergine);
   box-shadow: inset 0 calc(var(--px) * -2) 0 var(--raspberry-dark), 0 calc(var(--px) * 2) 0 var(--aubergine);
-  margin: 0 -8px;
+  margin: 0 -6px;
 }
 .spin:active:not(:disabled) { transform: translateY(var(--px)); box-shadow: inset 0 calc(var(--px) * -1) 0 var(--raspberry-dark), 0 var(--px) 0 var(--aubergine); }
 .spin:disabled { filter: saturate(0.4); }
 
-/* ---------- Footer panel ---------- */
+/* ---------- Footer panel: status + the art director ---------- */
 .panel {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin: 0 -20px;
-  padding: 14px 24px;
-  border-top: calc(var(--px) / 2) solid var(--aubergine);
-  font-size: 1.25rem;
-  letter-spacing: 0.1em;
+  display: grid;
+  gap: 4px;
+  margin: 0 -16px;
+  padding: clamp(8px, 1.4vh, 12px) 20px clamp(10px, 1.8vh, 16px);
+  border-top: 2px solid var(--aubergine);
+  text-align: center;
 }
-.status { display: inline-flex; align-items: center; gap: 12px; text-align: center; }
-.status svg { width: 24px; height: auto; }
-.dither {
-  width: 64px; height: 24px; flex: none;
-  background: conic-gradient(var(--aubergine) 25%, transparent 0 50%, var(--aubergine) 0 75%, transparent 0) 0 0 / var(--px) var(--px);
+.status {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font: 400 0.75rem var(--display);
+  letter-spacing: 0.12em;
   opacity: 0.8;
 }
-
-/* ---------- Side decorations ---------- */
-.deco { display: grid; justify-items: center; gap: 12px; align-self: center; }
-.deco-left { grid-area: left; justify-self: end; }
-.deco-right { grid-area: right; justify-self: start; }
-.deco .plus { font: 700 2rem var(--display); line-height: 1; }
-.deco .thread { width: var(--px); height: 96px; background: repeating-linear-gradient(var(--aubergine) 0 var(--px), transparent 0 calc(var(--px) * 3)); }
-
-/* ---------- Art director ---------- */
-.director { grid-area: director; margin: 0; text-align: center; }
-.director figcaption { font: 400 0.8rem var(--display); letter-spacing: 0.12em; opacity: 0.75; }
-.brief { margin: 8px auto 0; max-width: 60ch; font-size: 1.45rem; line-height: 1.25; min-height: 2.5em; transition: opacity 0.2s; }
+.status .stitch { height: 14px; width: auto; }
+/* Room for four lines is always reserved so the machine never jumps or overflows. */
+.brief {
+  margin: 0 auto;
+  max-width: 62ch;
+  font-size: clamp(1.1rem, 2.3vh, 1.3rem);
+  line-height: 1.15;
+  min-height: 4.6em;
+  display: grid;
+  place-items: center;
+  transition: opacity 0.2s;
+}
 .brief.waiting { opacity: 0.3; }
 
-/* ---------- Small screens: reels become rows ---------- */
+/* ---------- Side decorations ---------- */
+.deco { display: grid; justify-items: center; gap: 10px; }
+.deco-left { grid-area: left; justify-self: end; }
+.deco-right { grid-area: right; justify-self: start; }
+.deco .plus { font: 700 1.8rem var(--display); line-height: 1; }
+.deco .thread { width: 3px; height: 12vh; background: repeating-linear-gradient(var(--aubergine) 0 3px, transparent 0 9px); }
+.deco .stitch { width: 30px; height: auto; }
+
+/* ---------- Small screens: reels become rows; scrolling is fine ---------- */
 @media (max-width: 720px) {
-  .scene { grid-template-columns: minmax(0, 1fr); align-content: start; grid-template-areas: "cabinet" "director"; padding: 16px; }
+  .scene { grid-template-columns: minmax(0, 1fr); grid-template-areas: "cabinet"; height: auto; min-height: 100dvh; align-items: start; padding: 16px; }
   .deco { display: none; }
-  .cabinet { padding: 12px 12px 0; gap: 14px; }
+  .cabinet { padding: 12px 12px 0; gap: 12px; max-height: none; }
   .marquee { gap: 8px; padding: 10px 8px; }
-  .marquee svg, .sparkles { display: none; }
-  .marquee h1 { white-space: normal; text-align: center; }
+  .marquee > .stitch, .sparkles { display: none; }
+  .marquee .title { height: auto; width: 100%; }
+  .marquee h1 { width: 100%; }
   .reels { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .reel { grid-template-columns: minmax(0, 1fr) 68px; align-items: stretch; gap: 10px; }
   .frame { padding: 6px 8px 8px; gap: 6px; }
   .frame h2 { text-align: left; font-size: 0.8rem; }
-  .window { grid-template-rows: none; grid-template-columns: 44px minmax(0, 1fr); min-height: 88px; gap: 10px; justify-items: start; border-radius: 16px / 8px; }
-  .tick { display: none; }
-  .badge { height: 44px; }
-  .badge svg { max-width: 44px; }
-  .result { min-height: 0; font-size: 1.2rem; text-align: left; place-items: center start; }
+  .window { height: auto; min-height: 84px; grid-template-rows: none; grid-template-columns: 44px minmax(0, 1fr); gap: 10px; justify-items: start; align-items: center; border-radius: 16px / 8px; }
+  .badge { height: 40px; place-items: center; }
+  .badge .stitch { max-width: 44px; }
+  .result { align-self: center; font-size: 1.2rem; text-align: left; }
   .hold { flex-direction: column; gap: 4px; font-size: 0.8rem; min-height: 0; padding: 0; }
-  .spin { margin: 0; font-size: 1.8rem; padding: 14px; }
-  .panel { margin: 0 -12px; padding: 10px 12px; font-size: 1rem; }
-  .dither { display: none; }
-  .status { margin: 0 auto; flex-wrap: wrap; justify-content: center; }
+  .spin { margin: 0; font-size: 1.8rem; padding: 12px; }
+  .panel { margin: 0 -12px; padding: 10px 14px 14px; }
+  .brief { font-size: 1.2rem; min-height: 0; }
+  .status { font-size: 0.6rem; letter-spacing: 0.08em; gap: 6px; white-space: nowrap; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .window.spinning .badge, .window.spinning .result, .window.landed .badge, .window.landed .result { animation: none; filter: none; }
+}
+
+/* Desktop: the machine is sized to fit, so absorb sub-pixel rounding rather than scroll. */
+@media (min-width: 721px) and (min-height: 560px) {
+  :root[data-theme="embroidered"] { overflow: hidden; }
 }
