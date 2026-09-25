@@ -1,133 +1,133 @@
 family,item,badge
-Behaviour,Everything is in the wrong order,
-Behaviour,Everything scrolls sideways,
-Behaviour,Every action costs something,
-Behaviour,Gravity gets stronger the longer you stay,
-Behaviour,It apologises constantly,
-Behaviour,It asks permission for everything,
-Behaviour,It gets bored of you,hourglass
-Behaviour,It gossips about other visitors,
-Behaviour,It has an unnecessary sense of urgency,
-Behaviour,It has read too many productivity books,
-Behaviour,It has one tiny grudge,
-Behaviour,It is convinced it is helping,
-Behaviour,It is extremely proud of one small feature,
-Behaviour,It is far too eager,
-Behaviour,It is having a minor crisis,
-Behaviour,It is in denial about what it is,
-Behaviour,It is on a break,
-Behaviour,It is passive-aggressive,
-Behaviour,It is quietly judging your choices,
-Behaviour,It is running out of ink,
-Behaviour,It is shy and hides when you look,
-Behaviour,It is trying to look more expensive than it is,
-Behaviour,It is run by a committee that disagrees,
-Behaviour,It keeps changing the subject,
-Behaviour,It narrates everything you do,
-Behaviour,It needs two people to use,
-Behaviour,It only works if you go slowly,
-Behaviour,It rearranges itself when you are not looking,
-Behaviour,It refuses to move on from 2007,
-Behaviour,It remembers a grudge,
-Behaviour,It suspects you are cheating,
-Behaviour,It takes everything personally,
-Behaviour,It thinks it is a different website,
-Behaviour,It thinks you work here,
-Behaviour,It wants to be your best friend immediately,
-Behaviour,Navigation is a negotiation,
-Behaviour,The cursor is heavy,
-Behaviour,There is only one button,
-Mechanism,Plays on anchoring,
-Mechanism,Plays on the availability heuristic,
-Mechanism,Plays on the bandwagon effect,
-Mechanism,Plays on choice overload,
-Mechanism,Plays on confirmation bias,
-Mechanism,Plays on the Dunning–Kruger effect,
-Mechanism,Plays on the endowment effect,
-Mechanism,Plays on the halo effect,
-Mechanism,Plays on the IKEA effect,
-Mechanism,Plays on loss aversion,
-Mechanism,Plays on recency bias,
-Mechanism,Plays on the sunk cost fallacy,
-Mechanism,Plays on survivorship bias,
-Technical constraint,Built entirely in a canvas,
-Technical constraint,CSS only,
-Technical constraint,Controlled by tilting your phone,
-Technical constraint,"Emoji only, no words",
-Technical constraint,Everything lives in one table,
-Technical constraint,Fits a 240px screen,
-Technical constraint,Keyboard only,
-Technical constraint,Loads like it is on dial-up,
-Technical constraint,Monospace only,
-Technical constraint,No hover states,
-Technical constraint,No images,
-Technical constraint,No JavaScript,
-Technical constraint,No scrolling,
-Technical constraint,One font size,
-Technical constraint,Only works at night,
-Technical constraint,Sound is the main interface,
-Technical constraint,Two colours,
-Technical constraint,Under 10KB,
-Technical constraint,Uses the microphone,
-Technical constraint,Uses the webcam,
-Visual reference,In the style of 2014 flat design,
-Visual reference,In the style of a 60s psychedelic poster,
-Visual reference,In the style of 80s Postmodern,
-Visual reference,In the style of an 8-bit game,
-Visual reference,In the style of a 90s infomercial,
-Visual reference,In the style of airport signage,
-Visual reference,In the style of an arcade cabinet,
-Visual reference,In the style of Art Deco,
-Visual reference,In the style of Art Nouveau,
-Visual reference,In the style of Bauhaus,
-Visual reference,In the style of Brutalism,
-Visual reference,In the style of a bus timetable,
-Visual reference,In the style of a car boot sale flyer,
-Visual reference,In the style of a cassette inlay card,
-Visual reference,In the style of a CD-ROM encyclopaedia,
-Visual reference,In the style of a cereal box,
-Visual reference,In the style of a children's picture book,
-Visual reference,In the style of a church newsletter,
-Visual reference,In the style of a command-line terminal,
-Visual reference,In the style of a corporate annual report,
-Visual reference,In the style of a cult wellness brand,
-Visual reference,In the style of a Dada collage,
-Visual reference,In the style of De Stijl,
-Visual reference,In the style of early iPhone skeuomorphism,
-Visual reference,In the style of an estate agent window,
-Visual reference,In the style of a fax,
-Visual reference,In the style of a Flash intro,
-Visual reference,In the style of flat-pack assembly instructions,
-Visual reference,In the style of Geocities,
-Visual reference,In the style of a heavy metal album,
-Visual reference,In the style of a lost cat poster,
-Visual reference,In the style of a luxury fashion editorial,
-Visual reference,In the style of Mac OS 9 platinum,
-Visual reference,In the style of Memphis,
-Visual reference,In the style of MS Paint,
-Visual reference,In the style of a museum wall label,
-Visual reference,In the style of a MySpace profile,
-Visual reference,In the style of newspaper classifieds,
-Visual reference,In the style of a nutrition label,
-Visual reference,In the style of Office 97 WordArt and clip art,
-Visual reference,In the style of a parking ticket,
-Visual reference,In the style of a pharmacy leaflet,
-Visual reference,In the style of a Polaroid album,
-Visual reference,In the style of Pop Art,
-Visual reference,In the style of a private bank,
-Visual reference,In the style of a public information campaign,
-Visual reference,In the style of a punk photocopy,
-Visual reference,In the style of a riot grrrl zine,
-Visual reference,In the style of road signs,
-Visual reference,In the style of Russian Constructivism,
-Visual reference,In the style of a school exercise book,
-Visual reference,In the style of a supermarket receipt,
-Visual reference,In the style of Swiss International,
-Visual reference,In the style of a tabloid front page,
-Visual reference,In the style of a takeaway menu,
-Visual reference,In the style of Teletext,
-Visual reference,In the style of a VHS menu,
-Visual reference,In the style of Web 2.0 gloss,
-Visual reference,In the style of a wedding invitation,
-Visual reference,In the style of Windows 95,
-Visual reference,In the style of Y2K chrome,
+Behaviour,Everything is in the wrong order,upside-down-house
+Behaviour,Everything scrolls sideways,crab
+Behaviour,Every action costs something,coin-slot
+Behaviour,Gravity gets stronger the longer you stay,anvil
+Behaviour,It apologises constantly,sorry-bow
+Behaviour,It asks permission for everything,raised-hand
+Behaviour,It gets bored of you,sleepy-moon
+Behaviour,It gossips about other visitors,parrot
+Behaviour,It has an unnecessary sense of urgency,siren
+Behaviour,It has read too many productivity books,books-glasses
+Behaviour,It has one tiny grudge,tiny-storm
+Behaviour,It is convinced it is helping,busy-bee
+Behaviour,It is extremely proud of one small feature,button-rosette
+Behaviour,It is far too eager,puppy
+Behaviour,It is having a minor crisis,melting-face
+Behaviour,It is in denial about what it is,duck-moustache
+Behaviour,It is on a break,coffee-steam
+Behaviour,It is passive-aggressive,polite-note
+Behaviour,It is quietly judging your choices,raised-eyebrow
+Behaviour,It is running out of ink,dry-pen
+Behaviour,It is shy and hides when you look,mouse-hole
+Behaviour,It is trying to look more expensive than it is,tin-pearls
+Behaviour,It is run by a committee that disagrees,three-heads
+Behaviour,It keeps changing the subject,weathervane
+Behaviour,It narrates everything you do,megaphone
+Behaviour,It needs two people to use,tandem
+Behaviour,It only works if you go slowly,tortoise
+Behaviour,It rearranges itself when you are not looking,shell-game
+Behaviour,It refuses to move on from 2007,flip-phone
+Behaviour,It remembers a grudge,elephant
+Behaviour,It suspects you are cheating,deerstalker
+Behaviour,It takes everything personally,wilting-flower
+Behaviour,It thinks it is a different website,groucho-glasses
+Behaviour,It thinks you work here,staff-lanyard
+Behaviour,It wants to be your best friend immediately,friendship-bracelet
+Behaviour,Navigation is a negotiation,arrow-handshake
+Behaviour,The cursor is heavy,cursor-kettlebell
+Behaviour,There is only one button,one-button
+Mechanism,Plays on anchoring,anchor
+Mechanism,Plays on the availability heuristic,shark-fin
+Mechanism,Plays on the bandwagon effect,bandwagon
+Mechanism,Plays on choice overload,jam-jars
+Mechanism,Plays on confirmation bias,nodding-dog
+Mechanism,Plays on the Dunning–Kruger effect,dunce-crown
+Mechanism,Plays on the endowment effect,hugged-mug
+Mechanism,Plays on the halo effect,halo
+Mechanism,Plays on the IKEA effect,allen-key
+Mechanism,Plays on loss aversion,dropped-ice-cream
+Mechanism,Plays on recency bias,fresh-bread
+Mechanism,Plays on the sunk cost fallacy,sinking-ship
+Mechanism,Plays on survivorship bias,dotted-plane
+Technical constraint,Built entirely in a canvas,easel
+Technical constraint,CSS only,paint-roller
+Technical constraint,Controlled by tilting your phone,tilted-phone
+Technical constraint,"Emoji only, no words",smiley
+Technical constraint,Everything lives in one table,picnic-table
+Technical constraint,Fits a 240px screen,tiny-screen
+Technical constraint,Keyboard only,keycap
+Technical constraint,Loads like it is on dial-up,rotary-phone
+Technical constraint,Monospace only,typewriter-key
+Technical constraint,No hover states,ufo-no
+Technical constraint,No images,crossed-frame
+Technical constraint,No JavaScript,crossed-coffee
+Technical constraint,No scrolling,stop-hand
+Technical constraint,One font size,one-size-sock
+Technical constraint,Only works at night,owl
+Technical constraint,Sound is the main interface,ear-trumpet
+Technical constraint,Two colours,two-swatches
+Technical constraint,Under 10KB,feather
+Technical constraint,Uses the microphone,microphone
+Technical constraint,Uses the webcam,webcam
+Visual reference,In the style of 2014 flat design,long-shadow
+Visual reference,In the style of a 60s psychedelic poster,psychedelic-swirl
+Visual reference,In the style of 80s Postmodern,pastel-column
+Visual reference,In the style of an 8-bit game,space-invader
+Visual reference,In the style of a 90s infomercial,but-wait-phone
+Visual reference,In the style of airport signage,plane-pictogram
+Visual reference,In the style of an arcade cabinet,arcade-cabinet
+Visual reference,In the style of Art Deco,deco-fan
+Visual reference,In the style of Art Nouveau,nouveau-lily
+Visual reference,In the style of Bauhaus,bauhaus-shapes
+Visual reference,In the style of Brutalism,concrete-block
+Visual reference,In the style of a bus timetable,bus
+Visual reference,In the style of a car boot sale flyer,car-boot
+Visual reference,In the style of a cassette inlay card,cassette
+Visual reference,In the style of a CD-ROM encyclopaedia,cd
+Visual reference,In the style of a cereal box,cereal-bowl
+Visual reference,In the style of a children's picture book,teddy
+Visual reference,In the style of a church newsletter,church
+Visual reference,In the style of a command-line terminal,terminal-prompt
+Visual reference,In the style of a corporate annual report,rising-chart
+Visual reference,In the style of a cult wellness brand,healing-crystal
+Visual reference,In the style of a Dada collage,dada-moustache
+Visual reference,In the style of De Stijl,mondrian
+Visual reference,In the style of early iPhone skeuomorphism,leather-stitch
+Visual reference,In the style of an estate agent window,for-sale
+Visual reference,In the style of a fax,fax-machine
+Visual reference,In the style of a Flash intro,spinning-loader
+Visual reference,In the style of flat-pack assembly instructions,flatpack-man
+Visual reference,In the style of Geocities,construction-digger
+Visual reference,In the style of a heavy metal album,devil-horns
+Visual reference,In the style of a lost cat poster,lost-cat
+Visual reference,In the style of a luxury fashion editorial,stiletto
+Visual reference,In the style of Mac OS 9 platinum,happy-computer
+Visual reference,In the style of Memphis,memphis-squiggle
+Visual reference,In the style of MS Paint,paint-bucket
+Visual reference,In the style of a museum wall label,museum-label
+Visual reference,In the style of a MySpace profile,top-eight
+Visual reference,In the style of newspaper classifieds,newspaper
+Visual reference,In the style of a nutrition label,nutrition-label
+Visual reference,In the style of Office 97 WordArt and clip art,paperclip-eyes
+Visual reference,In the style of a parking ticket,parking-ticket
+Visual reference,In the style of a pharmacy leaflet,capsule
+Visual reference,In the style of a Polaroid album,photo-corners
+Visual reference,In the style of Pop Art,pow
+Visual reference,In the style of a private bank,vault
+Visual reference,In the style of a public information campaign,thumbs-poster
+Visual reference,In the style of a punk photocopy,safety-pin
+Visual reference,In the style of a riot grrrl zine,lipstick
+Visual reference,In the style of road signs,road-sign
+Visual reference,In the style of Russian Constructivism,red-wedge
+Visual reference,In the style of a school exercise book,exercise-book
+Visual reference,In the style of a supermarket receipt,long-receipt
+Visual reference,In the style of Swiss International,swiss-grid
+Visual reference,In the style of a tabloid front page,shocked-face
+Visual reference,In the style of a takeaway menu,noodle-box
+Visual reference,In the style of Teletext,teletext-blocks
+Visual reference,In the style of a VHS menu,vhs
+Visual reference,In the style of Web 2.0 gloss,beta-starburst
+Visual reference,In the style of a wedding invitation,wedding-rings
+Visual reference,In the style of Windows 95,window-flag
+Visual reference,In the style of Y2K chrome,chrome-heart

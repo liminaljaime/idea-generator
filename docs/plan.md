@@ -56,12 +56,17 @@ Built in `engine/brief.ts`; tests check every item fits without broken grammar.
 
 ## Badges
 
-- Per-item motif names in the CSV `badge` column (expect ~250–300 distinct motifs;
-  items may share one when the idea genuinely matches).
-- Fallback chain per theme: item motif → family motif (27 families) → plain default.
-- Each embroidered motif is a 16×16 stitch grid rendered as cross-stitch SVG, same
-  thread palette, no text.
-- `?view=badges` gallery shows every item with its badge and what is still undrawn.
+- Every item has its own motif (367, a mix of literal and witty/knowing — e.g.
+  *Unearned confidence* is a snail wearing a tiny crown). Items point to a motif in
+  their CSV `badge` column; `src/data/badges.csv` describes each motif
+  (`motif, description, tone`) independent of any theme.
+- Each theme draws motifs its own way. Fallback chain: item motif → family motif →
+  plain default, so undrawn badges never leave a gap.
+- Embroidered motifs are cross-stitch grids (about 11×11), shared stitch size, two or
+  three palette threads, no text. Concrete objects may start from Kenney's CC0
+  1-Bit Pack converted to stitch grids; abstract ones are drawn by hand in batches.
+- `?view=badges` is the review gallery: every item, its motif and description, tone,
+  and whether it is stitched yet, with filters.
 
 ## Theme 1: Embroidered arcade
 

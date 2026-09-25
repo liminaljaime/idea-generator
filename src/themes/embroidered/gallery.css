@@ -1,0 +1,33 @@
+/* The gallery scrolls, unlike the machine. */
+:root.gallery-page[data-theme="embroidered"] { overflow: auto; }
+
+.gallery { max-width: 1100px; margin: 0 auto; padding: 32px 16px 64px; --s: 2.2px; }
+.gallery-head { display: grid; gap: 12px; justify-items: start; margin-bottom: 24px; }
+.gallery-head h1 { margin: 0; line-height: 0; }
+.gallery-head .title { --s: 5px; }
+.gallery-head p { margin: 0; }
+.filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.filters button { padding: 6px 12px; border: 2px dashed var(--aubergine); border-radius: 999px; background: var(--cream); }
+.filters button[aria-pressed="true"] { background: var(--raspberry); color: var(--cream); border-style: solid; }
+
+.reel-group { margin-top: 32px; }
+.reel-group h2 { margin: 0 0 8px; line-height: 0; --s: 3px; }
+.reel-group h3 { margin: 20px 0 8px; font-size: 1rem; }
+.cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.card {
+  display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 12px; align-items: center;
+  padding: 10px 12px; background: var(--aida), var(--cream); border: 2px dashed rgb(46 26 71 / 0.35); border-radius: 10px;
+}
+.card[data-done="false"] .card-badge { opacity: 0.35; }
+.card[data-done="true"] { border-style: solid; border-color: var(--violet); }
+.card-badge { display: grid; place-items: center; --s: 3.2px; }
+.card-text p { margin: 0; }
+.card-item { font-weight: 700; }
+.card-motif { font-size: 0.85rem; }
+.card-motif code { font-size: 0.75rem; background: rgb(90 63 166 / 0.12); padding: 0 4px; border-radius: 4px; }
+.card-meta { font-size: 0.75rem; opacity: 0.7; }
+
+.gallery[data-filter="todo"] .card[data-done="true"],
+.gallery[data-filter="drawn"] .card[data-done="false"],
+.gallery[data-filter="witty"] .card:not([data-tone="witty"]),
+.gallery[data-filter="literal"] .card:not([data-tone="literal"]) { display: none; }

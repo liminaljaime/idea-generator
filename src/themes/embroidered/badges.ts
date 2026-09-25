@@ -101,6 +101,8 @@ const familyMotif: Record<string, string> = {
   Behaviour: 'heart', Mechanism: 'infinity', 'Technical constraint': 'hourglass', 'Visual reference': 'star',
 }
 
+export const isDrawn = (name: string) => name in motifs
+
 export function motifFor(item: Item): string {
   return motifs[item.badge] ? item.badge : familyMotif[item.family] ?? 'sparkle'
 }

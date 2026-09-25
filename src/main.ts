@@ -4,9 +4,14 @@ import { attachShell } from './shell/controls'
 import { themes, defaultTheme } from './themes/types'
 import './shell/base.css'
 
-const machine = new Machine(reels, artDirectorBrief)
-attachShell(machine)
+const params = new URLSearchParams(location.search)
+const root = document.querySelector<HTMLElement>('#app')!
 
-const requested = new URLSearchParams(location.search).get('theme') ?? defaultTheme
-const load = themes[requested] ?? themes[defaultTheme]
-load().then(({ default: theme }) => theme.mount(document.querySelector('#app')!, machine))
+if (params.get('view') === 'badges') {
+  import('./themes/embroidered/gallery').then(({ mountGallery }) => mountGallery(root))
+} else {
+  const machine = new Machine(reels, artDirectorBrief)
+  attachShell(machine)
+  const load = themes[params.get('theme') ?? defaultTheme] ?? themes[defaultTheme]
+  load().then(({ default: theme }) => theme.mount(root, machine))
+}

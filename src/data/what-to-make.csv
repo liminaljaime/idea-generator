@@ -1,96 +1,96 @@
 family,item,badge
-Ambient,Cursor-reactive experience,
-Ambient,Digital sky,
-Ambient,Digital snow globe,
-Ambient,Digital sculpture,
-Ambient,Digital window,
-Ambient,Endless loop,
-Ambient,Generative pattern,
-Ambient,Living texture,
-Ambient,Mirror,
-Ambient,Screensaver,
-Ambient,Slow-motion scene,
-Ambient,Sound-reactive field,
-Ambient,Tiny diorama,
-Collection,Archive,
-Collection,Catalogue,
-Collection,Curated collection,
-Collection,Directory,
-Collection,Gallery,
-Commerce,Made-to-order service,
-Commerce,Marketplace,
-Commerce,Product catalogue,
-Commerce,Shop,
-Community,Exchange,
-Community,Forum,
-Community,Guestbook,
-Community,Shared board,
-Community,Social ritual,
-Creative studio,Collaborative canvas,
-Creative studio,Design tool,
-Creative studio,Image maker,
-Creative studio,Music maker,
-Creative studio,Writing space,
-Game,Adventure game,
-Game,Arcade game,
-Game,Puzzle game,
-Game,Rhythm game,
-Game,Simulation game,
-Game,Strategy game,
-Game,Trivia game,
-Game,Word game,
-Learning,Challenge,
-Learning,Guide,
-Learning,Lesson,
-Learning,Practice space,
-Learning,Reference library,
-Live experience,Collective visualisation,
-Live experience,Live dashboard,
-Live experience,Living feed,
-Live experience,Time-based experience,
-Live experience,Weather-reactive experience,
-Map & explorer,Data explorer,
-Map & explorer,Digital tour,
-Map & explorer,Map,
-Map & explorer,Timeline,
-Map & explorer,Topic explorer,
+Ambient,Cursor-reactive experience,cursor-flowers
+Ambient,Digital sky,cloud-sun
+Ambient,Digital snow globe,snow-globe
+Ambient,Digital sculpture,bust-sunglasses
+Ambient,Digital window,window-curtains
+Ambient,Endless loop,ouroboros
+Ambient,Generative pattern,checker-bloom
+Ambient,Living texture,breathing-knit
+Ambient,Mirror,hand-mirror
+Ambient,Screensaver,bouncing-logo
+Ambient,Slow-motion scene,snail-trail
+Ambient,Sound-reactive field,flowers-ears
+Ambient,Tiny diorama,shoebox-scene
+Collection,Archive,archive-box
+Collection,Catalogue,catalogue
+Collection,Curated collection,pinned-butterfly
+Collection,Directory,signpost
+Collection,Gallery,picture-frame
+Commerce,Made-to-order service,chef-hat
+Commerce,Marketplace,market-stall
+Commerce,Product catalogue,price-tag
+Commerce,Shop,shopfront
+Community,Exchange,swap-arrows
+Community,Forum,soapbox
+Community,Guestbook,quill-book
+Community,Shared board,corkboard
+Community,Social ritual,clinking-cups
+Creative studio,Collaborative canvas,two-brushes
+Creative studio,Design tool,pen-tool
+Creative studio,Image maker,camera
+Creative studio,Music maker,keys-note
+Creative studio,Writing space,typewriter
+Game,Adventure game,treasure-map
+Game,Arcade game,joystick
+Game,Puzzle game,jigsaw
+Game,Rhythm game,drum
+Game,Simulation game,sim-house
+Game,Strategy game,chess-knight
+Game,Trivia game,question-block
+Game,Word game,letter-tiles
+Learning,Challenge,trophy
+Learning,Guide,compass
+Learning,Lesson,apple-books
+Learning,Practice space,dumbbell
+Learning,Reference library,bookshelf
+Live experience,Collective visualisation,dot-heart
+Live experience,Live dashboard,gauge
+Live experience,Living feed,phone-goldfish
+Live experience,Time-based experience,sundial
+Live experience,Weather-reactive experience,umbrella
+Map & explorer,Data explorer,magnifier-chart
+Map & explorer,Digital tour,tour-flag
+Map & explorer,Map,folded-map
+Map & explorer,Timeline,timeline
+Map & explorer,Topic explorer,binoculars
 Personal space,Digital garden,flower
-Personal space,Digital room,
-Personal space,Journal,
-Personal space,Personal homepage,
-Personal space,Profile,
-Publication,Almanac,
-Publication,Exhibition,
-Publication,Fanzine,
-Publication,Field guide,
-Publication,Newsletter,
-Publication,Visual essay,
-Publication,Zine,
-Self-discovery,Compatibility experience,
-Self-discovery,Daily reading,
-Self-discovery,Interactive assessment,
-Self-discovery,Quiz,
-Self-discovery,Reflection prompt,
-Simulator,Scenario simulator,
-Simulator,Virtual environment,
-Simulator,What-if tool,
-Simulator,World model,
-Story,Branching story,
-Story,Interactive story,
-Story,Scrollable story,
-Story,Story world,
-Tool,Calculator,
-Tool,Converter,
-Tool,Decision tool,
-Tool,Planner,
-Tool,Prompt tool,
-Tool,Randomizer,
-Tool,Timer,
-Tool,Tracker,
-Toy,Digital fidget toy,
-Toy,Drawing toy,
-Toy,Fortune teller,
-Toy,Generator,
-Toy,Oracle,
-Toy,Remix toy,
-Toy,Soundboard,
+Personal space,Digital room,armchair-lamp
+Personal space,Journal,diary-lock
+Personal space,Personal homepage,house-cursor
+Personal space,Profile,cameo
+Publication,Almanac,moon-phases
+Publication,Exhibition,velvet-rope
+Publication,Fanzine,stapled-zine
+Publication,Field guide,beetle
+Publication,Newsletter,envelope
+Publication,Visual essay,eye-quill
+Publication,Zine,scissors-glue
+Self-discovery,Compatibility experience,heart-seesaw
+Self-discovery,Daily reading,tarot-sun
+Self-discovery,Interactive assessment,clipboard
+Self-discovery,Quiz,pencil-circle
+Self-discovery,Reflection prompt,pond-moon
+Simulator,Scenario simulator,dice-branches
+Simulator,Virtual environment,vr-goggles
+Simulator,What-if tool,thought-question
+Simulator,World model,globe
+Story,Branching story,forked-path
+Story,Interactive story,book-arrows
+Story,Scrollable story,scroll
+Story,Story world,castle
+Tool,Calculator,calculator
+Tool,Converter,cat-to-dog
+Tool,Decision tool,coin-flip
+Tool,Planner,calendar
+Tool,Prompt tool,bulb-question
+Tool,Randomizer,dice
+Tool,Timer,egg-timer
+Tool,Tracker,footprints
+Toy,Digital fidget toy,fidget-spinner
+Toy,Drawing toy,sketch-toy
+Toy,Fortune teller,paper-fortune
+Toy,Generator,crank-sparkles
+Toy,Oracle,crystal-ball
+Toy,Remix toy,cassette-scissors
+Toy,Soundboard,big-buttons
