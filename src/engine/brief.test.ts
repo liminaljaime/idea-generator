@@ -28,7 +28,7 @@ describe('slots', () => {
 describe('writeBrief', () => {
   it('has lines for every slot, direction family and held reel', () => {
     for (const k of ['what', 'premise', 'direction-visual', 'direction-behaviour', 'direction-mechanism',
-      'direction-technical', 'held-what', 'held-premise', 'held-direction', 'closer']) {
+      'direction-technical', 'held-what', 'held-premise', 'held-direction', 'nod']) {
       expect(lines[k]?.length, k).toBeGreaterThan(0)
     }
   })
@@ -42,6 +42,9 @@ describe('writeBrief', () => {
       const s = writeBrief(results, [k % 3 === 0, k % 5 === 0, k % 7 === 0], lines, seq)
       expect(s).not.toMatch(/[{}]|\s{2}/)
       expect(s).not.toMatch(/\b(the|our|same|an?) (an?|the) /i)
+      expect(s).not.toMatch(/,[,.]|\.,|\.\.|\S—|it's (is|only|uses|fits|loads|controlled|built|sound|two|keyboard|monospace|under|everything)\b/i)
+      expect(s).toMatch(/^[A-Z].*[.]$/)
+      expect(lines.nod.filter((nod) => s.includes(nod.trim().replace(/^[,—] ?/, ''))).length).toBeGreaterThanOrEqual(1)
       expect(s.toLowerCase()).toContain(results[0].item.toLowerCase())
       expect(s.toLowerCase()).toContain(results[1].item.toLowerCase())
     }

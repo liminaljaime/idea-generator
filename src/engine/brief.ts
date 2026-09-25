@@ -48,14 +48,19 @@ export function slots([what, premise, direction]: Item[]): Record<string, string
 const fill = (template: string, values: Record<string, string>) =>
   template.replace(/\{(\w+)\}/g, (m, k: string) => values[k] ?? m)
 
+/**
+ * Two flowing sentences: "<what> <premise>." then "<direction><nod>" — exactly one
+ * slang nod per line, so it reads as a Nathan Barley type, not a slang generator.
+ */
 export function writeBrief(results: Item[], held: boolean[], lines: Lines, rng: Rng): string {
   const values = slots(results)
   const kinds = ['what', 'premise', directionKind[results[2].family] ?? 'direction-technical']
   const heldKinds = ['held-what', 'held-premise', 'held-direction']
-  const parts = kinds.map((kind, i) => {
+  const [what, premise, direction] = kinds.map((kind, i) => {
     const pool = held[i] && lines[heldKinds[i]]?.length ? lines[heldKinds[i]] : lines[kind]
     return pool?.length ? fill(pick(pool, rng), values) : ''
   })
-  if (rng() < 0.5 && lines.closer?.length) parts.push(pick(lines.closer, rng))
-  return parts.filter(Boolean).join(' ')
+  // CSV fields are trimmed, so dash-led nods need their space restored.
+  const nod = (lines.nod?.length ? pick(lines.nod, rng) : '.').replace(/^—/, ' —')
+  return `${what} ${premise} ${direction}${nod}`.replace(/,+ /g, ', ').replace(/\s+/g, ' ').trim()
 }
