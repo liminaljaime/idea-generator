@@ -1,1 +1,7 @@
 .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* Theme switcher: positioned here, styled by each theme. */
+.theme-switcher { position: fixed; top: 12px; right: 12px; z-index: 20; display: flex; gap: 6px; }
+.theme-switcher a { padding: 4px 10px; border-radius: 999px; text-decoration: none; font-size: 0.8rem; }
+.theme-switcher a[aria-current="page"] { pointer-events: none; }
+@media (max-width: 720px) { .theme-switcher { position: static; justify-content: center; padding: 10px 0 0; } }

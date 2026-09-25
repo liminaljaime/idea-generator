@@ -323,3 +323,7 @@
 .stitch.text path { stroke-width: 0.5; }
 .stitch.text path[opacity] { opacity: 0.85; }
 .title.text path { stroke-width: 0.4; }
+
+/* Theme switcher, embroidered style */
+[data-theme="embroidered"] .theme-switcher a { color: var(--aubergine); background: rgb(255 253 246 / 0.8); border: 2px dashed var(--seam); font-family: var(--type); }
+[data-theme="embroidered"] .theme-switcher a[aria-current="page"] { background: var(--raspberry); color: var(--cream); border-style: solid; border-color: var(--raspberry); }

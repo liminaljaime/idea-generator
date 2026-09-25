@@ -34,6 +34,7 @@ function flicker(el: HTMLElement) {
 const theme: Theme = {
   mount(root: HTMLElement, machine: Machine) {
     document.documentElement.dataset.theme = 'embroidered'
+    document.title = 'Homespun Ideas'
     const deco = (side: string) =>
       `<div class="deco deco-${side}" aria-hidden="true">${motifSvg('plus')}<span class="thread"></span>${motifSvg('flower')}</div>`
     root.innerHTML = `

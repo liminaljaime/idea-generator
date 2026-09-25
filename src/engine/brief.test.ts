@@ -6,7 +6,6 @@ import type { Item } from './types'
 
 const item = (family: string, text: string): Item => ({ family, item: text, badge: '' })
 const load = (name: string) => parseCsv(readFileSync(`src/data/${name}.csv`, 'utf8')) as Item[]
-const lines = parseLines(readFileSync('src/data/art-director.csv', 'utf8'))
 
 describe('slots', () => {
   it('shapes each result for use inside a sentence', () => {
@@ -25,7 +24,8 @@ describe('slots', () => {
   })
 })
 
-describe('writeBrief', () => {
+describe.each(['art-director', 'tarot-reader'])('writeBrief with %s', (voice) => {
+  const lines = parseLines(readFileSync(`src/data/${voice}.csv`, 'utf8'))
   it('has lines for every slot, direction family and held reel', () => {
     for (const k of ['what', 'premise', 'direction-visual', 'direction-behaviour', 'direction-mechanism',
       'direction-technical', 'held-what', 'held-premise', 'held-direction', 'nod']) {

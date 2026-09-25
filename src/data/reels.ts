@@ -16,5 +16,9 @@ export const reels: Reel[] = [
   { id: 'direction', label: 'DIRECTION', items: items(constraints) },
 ]
 
-const lines = parseLines(artDirector)
-export const artDirectorBrief: BriefWriter = (results, held, rng) => writeBrief(results, held, lines, rng)
+/** Builds the spoken line from a voice CSV; the art director is the default voice. */
+export function voiceBrief(csv: string = artDirector): BriefWriter {
+  const lines = parseLines(csv)
+  return (results, held, rng) => writeBrief(results, held, lines, rng)
+}
+export const artDirectorBrief = voiceBrief()

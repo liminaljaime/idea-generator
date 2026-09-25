@@ -1,0 +1,199 @@
+@import url('https://fonts.googleapis.com/css2?family=Rye&family=IM+Fell+English:ital@0;1&display=swap');
+
+:root[data-theme="tarot"] {
+  --velvet: #2a1640;
+  --velvet-deep: #160b24;
+  --gold: #e2b34a;
+  --gold-soft: #f3d98c;
+  --parchment: #f7ecd2;
+  --ink: #2a1a2e;
+  --bulb: #ffe9a8;
+  --stripe-a: #c8243f;
+  --stripe-b: #f6efcf;
+  /* Badge threads (shared with the embroidered theme's cross-stitch art). */
+  --raspberry: #d8284a; --violet: #5a3fa6; --aubergine: #2e1a47; --cream: #f6efcf;
+  --cobalt: #3a55c4; --turquoise: #2fa8a0; --pink: #ee94ae; --leaf: #4f9a58; --stone: #9189a6;
+  --display: 'Rye', serif;
+  --mystic: 'IM Fell English', Georgia, serif;
+  --card-w: clamp(116px, 19vh, 172px);
+
+  color-scheme: dark;
+  color: var(--parchment);
+  background:
+    radial-gradient(1px 1px at 12% 20%, #fff8 50%, transparent 51%) 0 0 / 180px 160px,
+    radial-gradient(1.5px 1.5px at 70% 60%, #ffe9a877 50%, transparent 51%) 0 0 / 230px 210px,
+    radial-gradient(ellipse at 50% 40%, var(--velvet), var(--velvet-deep) 75%);
+  font-family: var(--mystic);
+}
+[data-theme="tarot"] body { margin: 0; }
+:where([data-theme="tarot"]) :where(button) { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
+[data-theme="tarot"] :focus-visible { outline: 2px dashed var(--gold); outline-offset: 4px; }
+
+.booth {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  justify-items: center;
+}
+
+/* Striped pier awning with a scalloped hem */
+.awning {
+  width: 100%;
+  height: clamp(28px, 5vh, 44px);
+  background: repeating-linear-gradient(90deg, var(--stripe-a) 0 36px, var(--stripe-b) 36px 72px);
+  -webkit-mask: radial-gradient(18px at 18px 100%, #0000 98%, #000) 0 0 / 36px 100%;
+  mask: radial-gradient(18px at 18px 100%, #0000 98%, #000) 0 0 / 36px 100%;
+}
+
+/* Bulb-lit sign */
+.sign {
+  margin-top: clamp(6px, 1.5vh, 16px);
+  padding: clamp(8px, 1.4vh, 12px) clamp(20px, 3vw, 40px);
+  text-align: center;
+  border: 3px solid var(--gold);
+  border-radius: 14px;
+  background: var(--velvet-deep);
+  box-shadow: 0 0 0 6px var(--velvet-deep),
+    0 0 0 8px transparent;
+  position: relative;
+}
+.sign::before { /* marquee bulbs */
+  content: "";
+  position: absolute;
+  inset: -9px;
+  border-radius: 20px;
+  border: 5px dotted var(--bulb);
+  filter: drop-shadow(0 0 3px var(--bulb));
+  animation: twinkle 1.6s steps(2) infinite;
+  pointer-events: none;
+}
+@keyframes twinkle { 50% { filter: brightness(0.6); } }
+.sign h1 {
+  margin: 0;
+  font: 400 clamp(1.8rem, 5.5vh, 3rem) var(--display);
+  color: var(--gold);
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 12px rgb(226 179 74 / 0.45);
+}
+.sign-top, .sign-sub { margin: 0; font: italic 0.95rem var(--mystic); color: var(--gold-soft); letter-spacing: 0.08em; }
+
+/* The reading table */
+.table {
+  width: min(760px, 100% - 32px);
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: clamp(10px, 2vh, 20px);
+  padding: clamp(10px, 2vh, 20px) 0 clamp(14px, 2.5vh, 28px);
+}
+.spread { display: grid; grid-template-columns: repeat(3, var(--card-w)); gap: clamp(16px, 4vw, 48px); }
+.slot { display: grid; justify-items: center; gap: clamp(6px, 1vh, 10px); position: relative; }
+.suit-name { margin: 0; font: 400 0.8rem var(--display); letter-spacing: 0.12em; color: var(--gold-soft); white-space: nowrap; }
+.suit-sun { --suit: #e2b34a; --suit-deep: #7a4b12; }
+.suit-moon { --suit: #9b86e8; --suit-deep: #34236b; }
+.suit-star { --suit: #f08aa6; --suit-deep: #6d1f3a; }
+
+/* The deck: a small squared-up pile the cards are dealt from */
+.deck {
+  width: calc(var(--card-w) * 0.42);
+  aspect-ratio: 60 / 90;
+  border-radius: 5px;
+  color: var(--suit);
+  background: var(--suit-deep);
+  box-shadow: 1px 1px 0 var(--suit-deep), 2px 2px 0 #0006, 3px 3px 0 var(--suit-deep), 4px 4px 0 #0006;
+}
+.deck svg { display: block; width: 100%; height: 100%; }
+.deck.shuffling { animation: riffle 0.22s ease-in-out 3; }
+@keyframes riffle {
+  25% { transform: translateX(-5px) rotate(-5deg); }
+  75% { transform: translateX(5px) rotate(5deg); }
+}
+
+/* Cards: a two-sided flip */
+.card { width: var(--card-w); aspect-ratio: 60 / 98; perspective: 900px; transition: transform 0.32s cubic-bezier(.2,.8,.3,1), opacity 0.32s; }
+.card .inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.45s ease; transform: rotateY(0deg); }
+.card.up .inner { transform: rotateY(180deg); }
+.face { position: absolute; inset: 0; border-radius: 8px; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; }
+.back { color: var(--suit); background: var(--suit-deep); box-shadow: 0 6px 14px #0008; }
+.back svg { width: 100%; height: 100%; display: block; }
+.front {
+  transform: rotateY(180deg);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  justify-items: center;
+  padding: 8px 8px 10px;
+  box-sizing: border-box;
+  color: var(--ink);
+  background: linear-gradient(160deg, #fff8e6, var(--parchment) 60%, #ead8b0);
+  border: 3px double var(--gold);
+  box-shadow: 0 6px 14px #0008, inset 0 0 0 4px var(--parchment), inset 0 0 0 5px var(--suit);
+}
+.numeral { font: 400 0.8rem var(--display); color: var(--suit-deep); letter-spacing: 0.06em; }
+.art { display: grid; place-items: center; --s: calc(var(--card-w) / 24); }
+.name {
+  margin: 0;
+  font: 400 clamp(0.72rem, 1.6vh, 0.88rem) / 1.15 var(--display);
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+/* Swept back onto the deck before a deal */
+.card.away { transform: translateY(calc(var(--card-w) * -0.9)) scale(0.42); opacity: 0; transition: none; }
+.card.kept .front { box-shadow: 0 0 0 3px var(--gold), 0 0 22px rgb(226 179 74 / 0.7), inset 0 0 0 4px var(--parchment), inset 0 0 0 5px var(--suit); }
+
+/* Keep: a little brass tab */
+.keep {
+  padding: 4px 14px;
+  font: 400 0.8rem var(--display);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  border: 1.5px solid var(--gold);
+  border-radius: 999px;
+}
+.keep[aria-pressed="true"] { background: var(--gold); color: var(--velvet-deep); }
+.keep:disabled:not([aria-pressed="true"]) { opacity: 0.5; }
+
+/* Shuffle: a coin-op brass button */
+.shuffle {
+  padding: 12px 34px;
+  font: 400 clamp(1.1rem, 2.6vh, 1.5rem) var(--display);
+  letter-spacing: 0.06em;
+  color: var(--velvet-deep);
+  background: linear-gradient(180deg, var(--gold-soft), var(--gold) 55%, #b9832a);
+  border-radius: 999px;
+  box-shadow: inset 0 2px 0 #fff8, 0 4px 0 #7a4b12, 0 8px 18px #0009;
+  transition: transform 80ms ease, box-shadow 80ms ease;
+}
+.shuffle:active:not(:disabled) { transform: translateY(3px); box-shadow: inset 0 2px 0 #fff8, 0 1px 0 #7a4b12, 0 3px 8px #0009; }
+.shuffle:disabled { filter: saturate(0.4) brightness(0.8); cursor: default; }
+
+/* The reading */
+.reading { max-width: 60ch; text-align: center; display: grid; gap: 6px; }
+.status { margin: 0; font: 400 0.8rem var(--display); letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
+.brief { margin: 0; font: italic clamp(1rem, 2.2vh, 1.2rem) / 1.35 var(--mystic); min-height: 4em; transition: opacity 0.2s; }
+.brief.waiting { opacity: 0.25; }
+
+/* Theme switcher, tarot style */
+[data-theme="tarot"] .theme-switcher { top: calc(clamp(28px, 5vh, 44px) + 8px); }
+[data-theme="tarot"] .theme-switcher a { color: var(--gold-soft); background: var(--velvet-deep); border: 1px solid rgb(226 179 74 / 0.6); font-family: var(--mystic); }
+[data-theme="tarot"] .theme-switcher a[aria-current="page"] { background: var(--gold); color: var(--velvet-deep); }
+
+/* Phones: smaller cards, decks hidden (cards still flip) */
+@media (max-width: 720px) {
+  :root[data-theme="tarot"] { --card-w: calc((100vw - 64px) / 3); }
+  .spread { gap: 12px; }
+  .deck { display: none; }
+  .card.away { transform: translateY(-30px) scale(0.8); }
+  .name { font-size: 0.58rem; letter-spacing: 0; }
+  .suit-name { font-size: 0.58rem; letter-spacing: 0.04em; }
+  .front { padding: 6px 5px 8px; }
+  .sign h1 { font-size: 1.9rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .card .inner, .deck.shuffling, .sign::before { transition: none; animation: none; }
+}
