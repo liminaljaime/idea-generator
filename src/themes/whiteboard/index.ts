@@ -89,21 +89,24 @@ const handDrawnBox = (seed: number) => {
   return `<path d="${handDrawnRect(rng, 3)}"/><path d="${handDrawnRect(rng, 4)}"/>`
 }
 
-// Same idea for the "keep" ring: an imperfect oval, not a clean ellipse.
+// Same idea for the circle round "Run with it": an imperfect oval, not a clean
+// ellipse — a bit messier than the box strokes since it's drawn as one quick loop.
 function handDrawnOval(rng: () => number): string {
   const j = (n: number) => (rng() - 0.5) * n
-  const pts: [number, number][] = [
-    [50 + j(4), 4 + j(4)],
-    [96 + j(4), 23 + j(4)],
-    [50 + j(4), 42 + j(4)],
-    [4 + j(4), 23 + j(4)],
+  // Eight points round the ellipse (not just 4) so the curve stays recognisably
+  // round even with jitter, instead of collapsing into a diamond/bowtie.
+  const ring: [number, number][] = [
+    [50, 4], [75, 8], [96, 23], [75, 38],
+    [50, 42], [25, 38], [4, 23], [25, 8],
   ]
+  const pts = ring.map(([x, y]) => [x + j(4), y + j(4)] as [number, number])
   const [sx, sy] = pts[0]
   let d = `M ${sx} ${sy}`
-  for (let i = 1; i <= 4; i++) {
+  const n = pts.length
+  for (let i = 1; i <= n; i++) {
     const [px, py] = pts[i - 1]
-    const [x, y] = pts[i % 4]
-    d += ` Q ${(px + x) / 2 + j(10)} ${(py + y) / 2 + j(10)} ${x} ${y}`
+    const [x, y] = pts[i % n]
+    d += ` Q ${(px + x) / 2 + j(4)} ${(py + y) / 2 + j(4)} ${x} ${y}`
   }
   d += ` L ${sx + j(5)} ${sy + j(5)}`
   return d
@@ -139,14 +142,14 @@ const theme: Theme = {
   voice,
   mount(root: HTMLElement, machine: Machine) {
     document.documentElement.dataset.theme = 'whiteboard'
-    document.title = 'Idea Workshop'
+    document.title = 'Concept Jam'
     root.innerHTML = `
       ${inkFilter}
       <div class="board">
         <div class="wall">
           <header class="board-head">
-            <h1>Idea Workshop</h1>
-            <p class="board-sub">let's riff on something</p>
+            <h1>Concept Jam</h1>
+            <p class="board-sub">How might we align perspectives and unlock synergistic possibilities?</p>
           </header>
           <main class="slots">
             ${machine.reels.map((r, i) => `
@@ -157,8 +160,8 @@ const theme: Theme = {
                   <div class="note-well">
                     <div class="note" data-note="${i}"><p class="note-text" data-text="${i}"></p></div>
                   </div>
-                  <button type="button" class="keep" data-keep="${i}" aria-pressed="false" aria-label="Keep the ${r.label.toLowerCase()}">
-                    <span class="keep-word">keep</span>
+                  <button type="button" class="keep" data-keep="${i}" aria-pressed="false" aria-label="Run with the ${r.label.toLowerCase()}">
+                    <span class="keep-word" data-keep-word="${i}">Run with it</span>
                     <svg class="keep-ring" viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true">${handDrawnRing(boxSeeds[i])}</svg>
                   </button>
                 </div>
@@ -212,8 +215,10 @@ const theme: Theme = {
       keeps.forEach((b) => (b.disabled = busy))
     }
 
+    const keepWords = [...root.querySelectorAll<HTMLElement>('[data-keep-word]')]
     cleanup.push(machine.on('hold', ({ index, held }) => {
       keeps[index].setAttribute('aria-pressed', String(held))
+      keepWords[index].textContent = held ? "This one's got legs!" : 'Run with it'
       slots[index].classList.toggle('kept', held)
       reroll.disabled = !machine.canSpin
       status.textContent = machine.canSpin ? IDLE : 'Everything is kept — let one go to reroll'
