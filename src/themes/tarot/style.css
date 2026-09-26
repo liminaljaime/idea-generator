@@ -130,9 +130,26 @@
 .suit-moon { --suit: #9b86e8; --suit-deep: #34236b; }
 .suit-star { --suit: #f08aa6; --suit-deep: #6d1f3a; }
 
-/* Cards: a two-sided flip. They start and rest face-down; shuffling wiggles them in
-   place, then each flips over as it's dealt. */
-.card { width: var(--card-w); aspect-ratio: 60 / 98; perspective: 900px; }
+/* Cards: a two-sided flip, sitting on its own little deck. Two plain card-backs peek
+   out behind it — squared up neatly while showing its own back (at rest, and while
+   being shuffled), fanning out only once it turns face-up to reveal its result, so the
+   deck visibly "settles" as the card is dealt. */
+.card { position: relative; width: var(--card-w); aspect-ratio: 60 / 98; perspective: 900px; }
+.card::before, .card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+  background: var(--suit-deep);
+  border: 1px solid rgb(255 255 255 / 0.15);
+  box-shadow: 0 4px 10px #0006;
+  transform: translate(0, 0) rotate(0deg);
+  transition: transform 0.4s ease;
+  z-index: -1;
+}
+.card::after { opacity: 0.85; z-index: -2; }
+.card.up::before { transform: translate(3px, 4px) rotate(1.5deg); }
+.card.up::after { transform: translate(6px, 8px) rotate(3deg); }
 @keyframes card-wiggle {
   0%, 100% { transform: rotate(0deg) translateX(0); }
   15% { transform: rotate(-4deg) translateX(-3px); }
