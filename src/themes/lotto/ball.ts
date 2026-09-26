@@ -67,13 +67,22 @@ export function drawBall(ctx: CanvasRenderingContext2D, ball: BallLook) {
   if (ball.text && (ball.textOpacity ?? 1) > 0.02) {
     ctx.save()
     ctx.globalAlpha = ball.textOpacity ?? 1
-    const fontPx = Math.max(9, r * 0.24)
-    ctx.font = `800 ${fontPx}px 'Baloo 2', sans-serif`
     ctx.fillStyle = 'rgb(30 15 45 / 0.92)'
     ctx.textAlign = 'center'
     ctx.textBaseline = 'middle'
-    const lines = wrapText(ctx, ball.text.toUpperCase(), r * 1.6)
-    const lineHeight = fontPx * 1.18
+    // Shrink to fit: start at a comfortable size and step down until the longest item
+    // wraps to 3 lines or fewer, so it stays readable whatever the ball's actual size.
+    const text = ball.text.toUpperCase()
+    const maxWidth = r * 1.7
+    let fontPx = Math.max(9, r * 0.26)
+    ctx.font = `800 ${fontPx}px 'Baloo 2', sans-serif`
+    let lines = wrapText(ctx, text, maxWidth)
+    while (lines.length > 3 && fontPx > 9) {
+      fontPx -= 1
+      ctx.font = `800 ${fontPx}px 'Baloo 2', sans-serif`
+      lines = wrapText(ctx, text, maxWidth)
+    }
+    const lineHeight = fontPx * 1.16
     const startY = y - ((lines.length - 1) * lineHeight) / 2
     lines.forEach((line, i) => ctx.fillText(line, x, startY + i * lineHeight))
     ctx.restore()

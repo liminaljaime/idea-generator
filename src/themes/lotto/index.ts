@@ -15,7 +15,8 @@ import { drawBall } from './ball'
 // how it looks — see drum.ts.
 let cleanup: (() => void)[] = []
 
-const lanes = ['teal', 'pink', 'gold'] as const // left-to-right: blue, pink, yellow
+// Fixed everywhere: What to make is yellow, Premise is pink, Direction is teal.
+const lanes = ['gold', 'pink', 'teal'] as const
 type Lane = (typeof lanes)[number]
 const IDLE = "It's anyone's game! Press DRAW to find out."
 const MIXING = 'Mixing it up, folks…'
@@ -101,8 +102,8 @@ const theme: Theme = {
                         <div class="stand-base"><span class="stand-label">${r.label}</span></div>
                       </div>
                     </div>
-                    <button type="button" class="throwback" data-throwback="${i}" aria-label="Throw back the ${r.label.toLowerCase()} ball">Throw back</button>
                     <p class="detail-line" data-detail="${i}"></p>
+                    <button type="button" class="throwback" data-throwback="${i}" aria-label="Throw back the ${r.label.toLowerCase()} ball">Throw back</button>
                   </div>`).join('')}
               </div>
               <div class="bottom-row">
@@ -132,6 +133,12 @@ const theme: Theme = {
     const drum = new Drum(drumCanvas, lanes.map((l) => laneColours[l]), reduced)
     drum.start()
 
+    // The drawn result is the largest object on the page: 1.8× the diameter of a drum
+    // ball. The pedestals are sized to match via a CSS variable, so the stand always
+    // scales to fit whatever the drum works out its own ball size to be.
+    const fullRadius = () => drum.pileRadius * 1.8
+    layout.style.setProperty('--ball-d', `${fullRadius() * 2}px`)
+
     // Size the overlay to the whole layout (drum + pedestals) so one coordinate space
     // covers the entire flight; work out each fixed point once layout has settled.
     const layoutRect = layout.getBoundingClientRect()
@@ -144,15 +151,10 @@ const theme: Theme = {
       x: drumRect.left - layoutRect.left + drum.openingPoint.x,
       y: drumRect.top - layoutRect.top + drum.openingPoint.y,
     }
-    // Sized and positioned from the cup's own rendered box, so the ball sits neatly in
-    // it — slightly overflowing the rim, like a real ball in an egg cup — rather than
-    // swallowing the base and its printed label below.
-    // A slightly smaller ball-to-cup ratio on narrow layouts keeps it clear of the label
-    // on the base below, where there's much less room to spare than on desktop.
-    const fullRadius = () => cups[0].getBoundingClientRect().width * (layoutRect.width < 500 ? 0.42 : 0.62)
+    // The ball rests just above the cup — its own rendered box already follows --ball-d.
     const pedestalPoint = (i: number): Point => {
       const r = cups[i].getBoundingClientRect()
-      return { x: r.left - layoutRect.left + r.width / 2, y: r.top - layoutRect.top + r.height * 0.2 }
+      return { x: r.left - layoutRect.left + r.width / 2, y: r.top - layoutRect.top + r.height * 0.15 }
     }
 
     const pedestals: PedestalBall[] = [null, null, null]

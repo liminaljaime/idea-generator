@@ -10,7 +10,8 @@ const { Engine, World, Bodies, Body } = Matter
 // looks; the result (which item is drawn) is always chosen beforehand by the shared
 // engine's family-balanced random pick.
 
-const BALL_COUNT = 46
+const BALL_COUNT = 38 // enough to pile in the bottom ~40% of the drum, with room above to swirl
+const NUMBER_RANGE = 90 // classic bingo range — comfortably more than BALL_COUNT, so numbers never run out
 const WALL_SEGMENTS = 30
 const SUBSTEPS = 4 // more, smaller physics steps per frame so fast balls can't tunnel through walls
 const SOLVER_ITERATIONS = 10
@@ -18,6 +19,24 @@ const SOLVER_ITERATIONS = 10
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 type Ball = { body: Matter.Body; colour: string; number: number }
+
+/** Hands out unique numbers 1..NUMBER_RANGE, shuffled, so no two balls ever match. */
+class NumberPool {
+  private pool: number[]
+  constructor(size: number) {
+    this.pool = Array.from({ length: size }, (_, i) => i + 1)
+    for (let i = this.pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[this.pool[i], this.pool[j]] = [this.pool[j], this.pool[i]]
+    }
+  }
+  take(): number {
+    return this.pool.pop() ?? 1 + Math.floor(Math.random() * NUMBER_RANGE) // pool exhausted: shouldn't happen at this scale
+  }
+  release(n: number) {
+    this.pool.push(n)
+  }
+}
 
 export class Drum {
   private engine = Engine.create({
@@ -27,6 +46,7 @@ export class Drum {
   })
   private ctx: CanvasRenderingContext2D
   private balls: Ball[] = []
+  private numbers = new NumberPool(NUMBER_RANGE)
   private raf = 0
   private agitating = false
   private reduced: boolean
@@ -85,7 +105,7 @@ export class Drum {
     const y = insidePile ? cy + Math.sin(angle) * dist : cy - r - 20
     const body = Bodies.circle(x, y, this.pileRadius, { restitution: 0.78, friction: 0.06, frictionAir: 0.012, density: 0.0016 })
     World.add(this.engine.world, body)
-    this.balls.push({ body, colour: this.colours[colourIndex], number: 1 + Math.floor(Math.random() * 98) })
+    this.balls.push({ body, colour: this.colours[colourIndex], number: this.numbers.take() })
   }
 
   /** Removes the nearest ball of `colour` from the pile — called when a flight begins. */
@@ -101,9 +121,7 @@ export class Drum {
     if (chosen) {
       World.remove(this.engine.world, chosen.body)
       this.balls = this.balls.filter((b) => b !== chosen)
-    } else {
-      // Shouldn't happen (each colour always has plenty of balls), but never leave the
-      // pile short — spawn a replacement so the count stays stable either way.
+      this.numbers.release(chosen.number) // free for reuse by the ball that backfills the pile
     }
     this.spawn(colourIndex, true) // keep the pile topped back up straight away
     return colour
@@ -137,13 +155,17 @@ export class Drum {
     ctx.clearRect(0, 0, this.W, this.H)
     const { cx, cy, r } = { cx: this.center.x, cy: this.center.y, r: this.radius }
 
-    // The neck: a short tube at the top of the drum, like a real lottery machine.
-    const neckW = r * 0.34
-    ctx.fillStyle = 'rgb(255 255 255 / 0.35)'
-    ctx.fillRect(cx - neckW / 2, this.openingPoint.y, neckW, cy - r - this.openingPoint.y + 6)
-    ctx.strokeStyle = 'rgb(255 255 255 / 0.7)'
-    ctx.lineWidth = 3
-    ctx.strokeRect(cx - neckW / 2, this.openingPoint.y, neckW, cy - r - this.openingPoint.y + 6)
+    // The neck's geometry: a gap in the rim, with two straight walls rising from its
+    // edges to the opening — the ball emerges through the gap between them.
+    const neckHalfW = r * 0.17
+    const gapHalfAngle = Math.asin(Math.min(0.9, neckHalfW / r))
+    const top = -Math.PI / 2
+    const angleRight = top + gapHalfAngle
+    const angleLeft = top - gapHalfAngle
+    const rimRight = { x: cx + Math.cos(angleRight) * r, y: cy + Math.sin(angleRight) * r }
+    const rimLeft = { x: cx + Math.cos(angleLeft) * r, y: cy + Math.sin(angleLeft) * r }
+    const topRight = { x: rimRight.x, y: this.openingPoint.y }
+    const topLeft = { x: rimLeft.x, y: this.openingPoint.y }
 
     // The drum's glass sphere, drawn behind the pile so the balls read as being inside it.
     ctx.save()
@@ -155,10 +177,30 @@ export class Drum {
     glass.addColorStop(1, 'rgb(255 255 255 / 0.02)')
     ctx.fillStyle = glass
     ctx.fill()
+    ctx.restore()
+
+    // The neck's own glassy interior, matching the sphere's material.
+    ctx.beginPath()
+    ctx.moveTo(topLeft.x, topLeft.y)
+    ctx.lineTo(topRight.x, topRight.y)
+    ctx.lineTo(rimRight.x, rimRight.y)
+    ctx.lineTo(rimLeft.x, rimLeft.y)
+    ctx.closePath()
+    ctx.fillStyle = 'rgb(255 255 255 / 0.14)'
+    ctx.fill()
+
+    // One continuous outline: up the neck's right wall, the long way round the rim, and
+    // back up the left wall — the same stroke throughout, with the gap at the top left
+    // open as the opening the ball emerges through.
+    ctx.beginPath()
+    ctx.moveTo(topRight.x, topRight.y)
+    ctx.lineTo(rimRight.x, rimRight.y)
+    ctx.arc(cx, cy, r, angleRight, angleLeft + Math.PI * 2, false)
+    ctx.lineTo(topLeft.x, topLeft.y)
     ctx.lineWidth = 4
     ctx.strokeStyle = 'rgb(255 255 255 / 0.7)'
+    ctx.lineJoin = 'round'
     ctx.stroke()
-    ctx.restore()
 
     for (const b of this.balls) {
       const rad = (b.body as unknown as { circleRadius: number }).circleRadius
