@@ -29,10 +29,11 @@ function mulberry32(seed: number) {
   }
 }
 
-// One imperfect rectangle stroke in a 0-100 viewBox: corners are nudged independently
-// and the path overshoots its start instead of closing neatly, the way a hand actually
-// draws a box (see the reference sketches — no two sides are quite parallel or square).
-function handDrawnRect(rng: () => number, inset: number): string {
+// One imperfect rectangle stroke in a 0-100 viewBox: corners are nudged independently,
+// slightly rounded rather than sharp, and the path overshoots its start instead of
+// closing neatly — the way a hand actually draws a box (no two sides are quite
+// parallel or square; see the reference sketches).
+function handDrawnRect(rng: () => number, inset: number, radius = 2): string {
   const j = (n: number) => (rng() - 0.5) * n
   const corners: [number, number][] = [
     [inset + j(3), inset + j(3)],
@@ -40,12 +41,24 @@ function handDrawnRect(rng: () => number, inset: number): string {
     [100 - inset + j(3), 100 - inset + j(3)],
     [inset + j(3), 100 - inset + j(3)],
   ]
-  const [sx, sy] = corners[0]
+  const along = (a: [number, number], b: [number, number], d: number): [number, number] => {
+    const dx = b[0] - a[0]
+    const dy = b[1] - a[1]
+    const len = Math.hypot(dx, dy) || 1
+    return [a[0] + (dx / len) * d, a[1] + (dy / len) * d]
+  }
+  const n = corners.length
+  const inPt = corners.map((c, i) => along(c, corners[(i + n - 1) % n], radius))
+  const outPt = corners.map((c, i) => along(c, corners[(i + 1) % n], radius))
+  const [sx, sy] = outPt[0]
   let d = `M ${sx + j(2)} ${sy + j(2)}`
-  for (let i = 1; i <= 4; i++) {
-    const [px, py] = corners[i - 1]
-    const [x, y] = corners[i % 4]
-    d += ` Q ${(px + x) / 2 + j(5)} ${(py + y) / 2 + j(5)} ${x + j(1.5)} ${y + j(1.5)}`
+  for (let i = 0; i < n; i++) {
+    const next = (i + 1) % n
+    const a = outPt[i]
+    const b = inPt[next]
+    d += ` Q ${(a[0] + b[0]) / 2 + j(5)} ${(a[1] + b[1]) / 2 + j(5)} ${b[0] + j(1)} ${b[1] + j(1)}` // edge
+    const c = corners[next]
+    d += ` Q ${c[0]} ${c[1]} ${outPt[next][0] + j(1)} ${outPt[next][1] + j(1)}` // rounded corner
   }
   d += ` L ${sx + j(4)} ${sy + j(4)}` // overshoot the start rather than closing on it
   return d
