@@ -1,0 +1,218 @@
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap');
+
+:root[data-theme="whiteboard"] {
+  --postit-pink: #ff9fc0;
+  --postit-yellow: #ffe066;
+  --postit-green: #9be89a;
+  --marker-black: #232323;
+  --marker-blue: #1f5fbf;
+  --marker-grey: #6b6b68;
+  --display: 'Kalam', 'Comic Sans MS', cursive;
+
+  color-scheme: light;
+  color: var(--marker-black);
+  font-family: var(--display);
+}
+[data-theme="whiteboard"] body { margin: 0; background: #cfcfcb; }
+:where([data-theme="whiteboard"]) :where(button) { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
+[data-theme="whiteboard"] :focus-visible { outline: 3px solid var(--marker-blue); outline-offset: 3px; }
+
+.board {
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  display: grid;
+  place-items: center;
+  padding: clamp(12px, 3vh, 28px);
+  background: #cfcfcb;
+}
+
+/* The whiteboard itself: a bright, faintly smudged surface in an aluminium-grey frame. */
+.wall {
+  position: relative;
+  width: min(1080px, 100%);
+  box-sizing: border-box;
+  background:
+    radial-gradient(ellipse at 25% 15%, rgb(255 255 255 / 0.9), transparent 45%),
+    radial-gradient(ellipse at 80% 85%, rgb(0 0 0 / 0.04), transparent 50%),
+    linear-gradient(160deg, #fbfbf9, #f0f0ed 60%, #e6e6e2 100%);
+  border: 10px solid #c3c3bf;
+  border-radius: 10px;
+  box-shadow: 0 20px 44px rgb(0 0 0 / 0.28), inset 0 0 50px rgb(0 0 0 / 0.04);
+  padding: clamp(18px, 3.6vh, 34px) clamp(16px, 4vw, 44px);
+  display: grid;
+  gap: clamp(10px, 2vh, 18px);
+}
+
+.board-head { text-align: center; }
+.board-head h1 {
+  margin: 0;
+  font: 700 clamp(1.8rem, 4.2vh, 2.6rem) var(--display);
+  color: var(--marker-black);
+  transform: rotate(-1deg);
+}
+.board-sub {
+  margin: 2px 0 0;
+  font: 400 clamp(0.85rem, 1.8vh, 1rem) var(--display);
+  color: var(--marker-grey);
+}
+
+.slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 3vw, 30px); }
+
+.frame {
+  position: relative;
+  padding: clamp(12px, 2.2vh, 18px) clamp(10px, 2vw, 16px) clamp(30px, 5vh, 42px);
+  display: grid;
+  justify-items: center;
+  gap: clamp(8px, 1.6vh, 12px);
+}
+.frame::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 3px solid var(--marker-black);
+  border-radius: 6px;
+  filter: url(#board-wobble);
+  pointer-events: none;
+  transition: border-color 0.15s ease;
+}
+.slot.kept .frame::before { border-color: var(--marker-blue); border-width: 4px; }
+
+.frame-label {
+  position: relative;
+  align-self: start;
+  justify-self: start;
+  margin: -2px 0 0 6px;
+  font: 400 clamp(0.8rem, 1.7vw, 0.98rem) var(--display);
+  color: var(--marker-black);
+}
+
+.note-well { width: 100%; aspect-ratio: 1 / 0.85; display: flex; align-items: center; justify-content: center; }
+
+.note {
+  position: relative;
+  width: 82%;
+  aspect-ratio: 1;
+  box-sizing: border-box;
+  padding: 12%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-radius: 2px;
+  box-shadow: 2px 6px 10px rgb(0 0 0 / 0.25), 0 1px 0 rgb(255 255 255 / 0.4) inset;
+  transform: rotate(var(--note-rot, -2deg));
+}
+.note::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 22%;
+  height: 22%;
+  background: linear-gradient(135deg, transparent 50%, rgb(0 0 0 / 0.12) 50%);
+  border-radius: 0 0 2px 0;
+}
+.slot:nth-of-type(1) .note { --note-rot: -3deg; }
+.slot:nth-of-type(2) .note { --note-rot: 2deg; }
+.slot:nth-of-type(3) .note { --note-rot: -1.5deg; }
+.cat-pink .note { background: linear-gradient(160deg, #ffb7d4, var(--postit-pink)); }
+.cat-yellow .note { background: linear-gradient(160deg, #fff1a8, var(--postit-yellow)); }
+.cat-green .note { background: linear-gradient(160deg, #c3f2c0, var(--postit-green)); }
+
+.note-text { margin: 0; font: 400 clamp(0.9rem, 1.7vw, 1.1rem) var(--display); color: #232323; line-height: 1.25; }
+
+/* The "keep" control: a plain scrawled word until held, when a hand-drawn ring
+   appears round it, like it's just been circled in the meeting. */
+.keep {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(2px, 1vh, 8px);
+  transform: translateX(-50%);
+  display: grid;
+  place-items: center;
+  padding: 2px 4px;
+}
+.keep-word {
+  position: relative;
+  z-index: 1;
+  font: 400 clamp(0.82rem, 1.6vw, 1rem) var(--display);
+  color: var(--marker-blue);
+}
+.keep-ring {
+  position: absolute;
+  inset: -8px -18px;
+  width: calc(100% + 36px);
+  height: calc(100% + 16px);
+  color: var(--marker-blue);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  filter: url(#board-wobble);
+}
+.keep-ring ellipse { fill: none; stroke: currentColor; stroke-width: 3; }
+.keep[aria-pressed="true"] .keep-ring { opacity: 1; }
+.keep:disabled { cursor: default; }
+
+.reroll { justify-self: center; margin-top: 2px; }
+.reroll-box { position: relative; display: inline-flex; padding: 10px 28px; }
+.reroll-box::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 3px solid var(--marker-black);
+  border-radius: 6px;
+  filter: url(#board-wobble);
+  transition: border-color 0.15s ease;
+}
+.reroll-text { position: relative; font: 700 clamp(1rem, 2vw, 1.2rem) var(--display); color: var(--marker-blue); }
+.reroll:active:not(:disabled) .reroll-box { transform: translateY(2px); }
+.reroll:disabled .reroll-text { color: #9aa3ad; }
+.reroll:disabled .reroll-box::before { border-color: #9aa3ad; }
+
+.reading { text-align: center; }
+.status {
+  margin: 0;
+  font: 400 clamp(0.78rem, 1.5vh, 0.9rem) var(--display);
+  color: var(--marker-grey);
+}
+.brief {
+  margin: 4px 0 0;
+  font: 400 clamp(0.95rem, 1.8vw, 1.15rem) var(--display);
+  color: var(--marker-black);
+  min-height: 1.6em;
+}
+
+/* Theme switcher, whiteboard style */
+[data-theme="whiteboard"] .theme-switcher a { color: var(--marker-black); background: #fff; border: 2px solid var(--marker-black); font-family: var(--display); font-weight: 700; }
+[data-theme="whiteboard"] .theme-switcher a[aria-current="page"] { background: var(--postit-yellow); }
+
+/* --- Redraw: the old note peels, tumbles off the bottom of the board, and the new
+   one gets stuck straight up with a little overshoot. --- */
+@keyframes note-fall {
+  0% { transform: translate(0, 0) rotate(var(--note-rot, -2deg)); opacity: 1; }
+  10% { transform: translate(-8px, -10px) rotate(calc(var(--note-rot, -2deg) - 8deg)); opacity: 1; }
+  38% { transform: translate(12px, 90px) rotate(22deg); }
+  68% { transform: translate(-8px, 320px) rotate(-28deg); }
+  100% { transform: translate(30px, 760px) rotate(58deg); opacity: 0; }
+}
+.note.falling { animation: note-fall 650ms cubic-bezier(0.55, 0, 0.85, 0.35) forwards; }
+
+@keyframes note-land {
+  0% { transform: scale(0.82) rotate(-8deg); opacity: 0; }
+  55% { transform: scale(1.08) rotate(var(--note-rot, -2deg)); opacity: 1; }
+  100% { transform: scale(1) rotate(var(--note-rot, -2deg)); opacity: 1; }
+}
+.note.landing { animation: note-land 320ms ease-out forwards; }
+
+@media (max-width: 720px) {
+  .slots { grid-template-columns: 1fr; gap: 16px; }
+  .wall { padding: 18px 16px 26px; }
+  .frame { padding: 10px 10px 30px; }
+  .note-well { aspect-ratio: 1 / 0.6; }
+  .note { width: 58%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .note.falling, .note.landing { animation: none; }
+  .reroll:active .reroll-box { transform: none; }
+}

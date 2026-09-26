@@ -14,6 +14,7 @@ export const themes: Record<string, ThemeEntry> = {
   embroidered: { label: 'Homespun Ideas', load: () => import('./embroidered') },
   tarot: { label: 'The Creative Oracle', load: () => import('./tarot') },
   lotto: { label: 'Lucky Ideas', load: () => import('./lotto') },
+  whiteboard: { label: 'Idea Workshop', load: () => import('./whiteboard') },
   bare: { label: 'Bare', load: () => import('./bare'), hidden: true },
 }
 export const defaultTheme = 'embroidered'
