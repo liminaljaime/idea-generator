@@ -11,20 +11,97 @@ let cleanup: (() => void)[] = []
 
 const categories = ['pink', 'yellow', 'green'] as const
 const IDLE = 'Ready when you are'
-
-// Three seeds so the three boxes don't all wobble in exactly the same pattern.
-const wobble = `
-  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    ${[6, 17, 29, 41].map((seed) => `
-      <filter id="board-wobble-${seed}" x="-8%" y="-8%" width="116%" height="116%">
-        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.045" numOctaves="2" seed="${seed}"/>
-        <feDisplacementMap in="SourceGraphic" scale="6"/>
-      </filter>`).join('')}
-  </svg>`
-const boxSeeds = [6, 17, 29] as const
+const boxSeeds = [6, 17, 29, 41] as const
 
 const sentence = (s: string) => s.charAt(0) + s.slice(1).toLowerCase()
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+// A tiny deterministic PRNG so each box's wobble is fixed for the session (not
+// re-randomised on every re-render) but different from its neighbours.
+function mulberry32(seed: number) {
+  let s = seed
+  return () => {
+    s |= 0
+    s = (s + 0x6d2b79f5) | 0
+    let t = Math.imul(s ^ (s >>> 15), 1 | s)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+// One imperfect rectangle stroke in a 0-100 viewBox: corners are nudged independently
+// and the path overshoots its start instead of closing neatly, the way a hand actually
+// draws a box (see the reference sketches — no two sides are quite parallel or square).
+function handDrawnRect(rng: () => number, inset: number): string {
+  const j = (n: number) => (rng() - 0.5) * n
+  const corners: [number, number][] = [
+    [inset + j(3), inset + j(3)],
+    [100 - inset + j(3), inset + j(3)],
+    [100 - inset + j(3), 100 - inset + j(3)],
+    [inset + j(3), 100 - inset + j(3)],
+  ]
+  const [sx, sy] = corners[0]
+  let d = `M ${sx + j(2)} ${sy + j(2)}`
+  for (let i = 1; i <= 4; i++) {
+    const [px, py] = corners[i - 1]
+    const [x, y] = corners[i % 4]
+    d += ` Q ${(px + x) / 2 + j(5)} ${(py + y) / 2 + j(5)} ${x + j(1.5)} ${y + j(1.5)}`
+  }
+  d += ` L ${sx + j(4)} ${sy + j(4)}` // overshoot the start rather than closing on it
+  return d
+}
+
+// Two overlapping passes, like a box drawn a little too fast and retraced once.
+const handDrawnBox = (seed: number) => {
+  const rng = mulberry32(seed)
+  return `<path d="${handDrawnRect(rng, 3)}"/><path d="${handDrawnRect(rng, 4)}"/>`
+}
+
+// Same idea for the "keep" ring: an imperfect oval, not a clean ellipse.
+function handDrawnOval(rng: () => number): string {
+  const j = (n: number) => (rng() - 0.5) * n
+  const pts: [number, number][] = [
+    [50 + j(4), 4 + j(4)],
+    [96 + j(4), 23 + j(4)],
+    [50 + j(4), 42 + j(4)],
+    [4 + j(4), 23 + j(4)],
+  ]
+  const [sx, sy] = pts[0]
+  let d = `M ${sx} ${sy}`
+  for (let i = 1; i <= 4; i++) {
+    const [px, py] = pts[i - 1]
+    const [x, y] = pts[i % 4]
+    d += ` Q ${(px + x) / 2 + j(10)} ${(py + y) / 2 + j(10)} ${x} ${y}`
+  }
+  d += ` L ${sx + j(5)} ${sy + j(5)}`
+  return d
+}
+const handDrawnRing = (seed: number) => {
+  const rng = mulberry32(seed)
+  return `<path d="${handDrawnOval(rng)}"/><path d="${handDrawnOval(rng)}"/>`
+}
+
+// Size the note's text to fill most of the note — a one-word result gets to be huge,
+// a long one shrinks just enough to still fit, rather than every note using one fixed size.
+function fitNoteText(note: HTMLElement) {
+  const text = note.querySelector<HTMLElement>('.note-text')!
+  const cs = getComputedStyle(note)
+  const availH = note.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)
+  let lo = 14
+  let hi = 110
+  let best = lo
+  while (lo <= hi) {
+    const mid = (lo + hi) >> 1
+    text.style.fontSize = `${mid}px`
+    // scrollWidth vs. the element's own (already width-constrained) clientWidth catches
+    // a genuinely unbreakable word; comparing against a separately-computed float would
+    // fail on sub-pixel rounding alone every time.
+    const overflowsWidth = text.scrollWidth > text.clientWidth + 1
+    const fits = text.scrollHeight <= availH + 1 && !overflowsWidth
+    if (fits) { best = mid; lo = mid + 1 } else { hi = mid - 1 }
+  }
+  text.style.fontSize = `${best}px`
+}
 
 const theme: Theme = {
   voice,
@@ -32,7 +109,6 @@ const theme: Theme = {
     document.documentElement.dataset.theme = 'whiteboard'
     document.title = 'Idea Workshop'
     root.innerHTML = `
-      ${wobble}
       <div class="board">
         <div class="wall">
           <header class="board-head">
@@ -43,20 +119,20 @@ const theme: Theme = {
             ${machine.reels.map((r, i) => `
               <section class="slot cat-${categories[i]}" aria-label="${r.label}">
                 <div class="frame">
-                  <div class="frame-border" aria-hidden="true" style="filter:url(#board-wobble-${boxSeeds[i]})"></div>
+                  <svg class="frame-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${handDrawnBox(boxSeeds[i])}</svg>
                   <p class="frame-label">${sentence(r.label)}</p>
                   <div class="note-well">
                     <div class="note" data-note="${i}"><p class="note-text" data-text="${i}"></p></div>
                   </div>
                   <button type="button" class="keep" data-keep="${i}" aria-pressed="false" aria-label="Keep the ${r.label.toLowerCase()}">
                     <span class="keep-word">keep</span>
-                    <svg class="keep-ring" viewBox="0 0 100 46" aria-hidden="true" style="filter:url(#board-wobble-${boxSeeds[i]})"><ellipse cx="50" cy="23" rx="46" ry="19"/></svg>
+                    <svg class="keep-ring" viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true">${handDrawnRing(boxSeeds[i])}</svg>
                   </button>
                 </div>
               </section>`).join('')}
           </main>
           <button type="button" class="reroll">
-            <span class="reroll-box"><span class="reroll-border" aria-hidden="true" style="filter:url(#board-wobble-41)"></span><span class="reroll-text">Reroll</span></span>
+            <span class="reroll-box"><svg class="reroll-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${handDrawnBox(boxSeeds[3])}</svg><span class="reroll-text">Ideate</span></span>
           </button>
           <div class="reading">
             <p class="status" data-status>${IDLE}</p>
@@ -73,8 +149,27 @@ const theme: Theme = {
     const status = root.querySelector<HTMLElement>('[data-status]')!
     const brief = root.querySelector<HTMLElement>('.brief')!
 
-    const show = (i: number, item: Item) => { texts[i].textContent = item.item }
+    // Two words read better stacked one-per-line than squeezed onto one wide line —
+    // it lets the text grow bigger and fill the note the way handwriting actually would.
+    const layoutText = (s: string) => {
+      const words = s.split(' ')
+      return words.length === 2 ? words.join('\n') : s
+    }
+
+    const show = (i: number, item: Item) => {
+      texts[i].textContent = layoutText(item.item)
+      fitNoteText(notes[i])
+    }
     machine.reels.forEach((_, i) => show(i, machine.results[i]))
+
+    // The board's own size (and so each note's) can change on resize; refit in place.
+    let resizeFrame = 0
+    const onResize = () => {
+      cancelAnimationFrame(resizeFrame)
+      resizeFrame = requestAnimationFrame(() => notes.forEach((note) => fitNoteText(note)))
+    }
+    window.addEventListener('resize', onResize)
+    cleanup.push(() => { window.removeEventListener('resize', onResize); cancelAnimationFrame(resizeFrame) })
 
     keeps.forEach((b, i) => b.addEventListener('click', () => machine.toggleHold(i)))
     reroll.addEventListener('click', () => machine.spin())

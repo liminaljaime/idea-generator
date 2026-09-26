@@ -62,24 +62,34 @@
   color: var(--marker-grey);
 }
 
-.slots { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 3vw, 30px); }
+.slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 3vw, 30px); }
+
+.slot { min-width: 0; }
 
 .frame {
   position: relative;
+  min-width: 0;
   padding: clamp(12px, 2.2vh, 18px) clamp(10px, 2vw, 16px) clamp(30px, 5vh, 42px);
   display: grid;
   justify-items: center;
   gap: clamp(8px, 1.6vh, 12px);
 }
+/* A hand-drawn box: two overlapping, imperfectly-closed rectangle strokes per box
+   (see fitNoteText/handDrawnRect in index.ts) rather than a single tidy CSS border —
+   real hand-drawn rectangles never close their corners cleanly. */
 .frame-border {
   position: absolute;
   inset: 0;
-  border: 3.5px solid var(--marker-black);
-  border-radius: 6px;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  color: var(--marker-black);
   pointer-events: none;
-  transition: border-color 0.15s ease;
+  transition: color 0.15s ease;
 }
-.slot.kept .frame-border { border-color: var(--marker-blue); border-width: 4.5px; }
+.frame-border path { fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; }
+.slot.kept .frame-border { color: var(--marker-blue); }
+.slot.kept .frame-border path { stroke-width: 3.2; }
 
 .frame-label {
   position: relative;
@@ -90,10 +100,11 @@
   color: var(--marker-black);
 }
 
-.note-well { width: 100%; aspect-ratio: 1 / 0.85; display: flex; align-items: center; justify-content: center; }
+.note-well { width: 100%; min-width: 0; aspect-ratio: 1 / 0.85; display: flex; align-items: center; justify-content: center; }
 
 .note {
   position: relative;
+  min-width: 0;
   width: 82%;
   aspect-ratio: 1;
   box-sizing: border-box;
@@ -113,7 +124,16 @@
 .cat-yellow .note { background: linear-gradient(160deg, #fff1a8, var(--postit-yellow)); }
 .cat-green .note { background: linear-gradient(160deg, #c3f2c0, var(--postit-green)); }
 
-.note-text { margin: 0; font: 400 clamp(1.5rem, 2.7vw, 1.9rem) var(--note-font); color: #232323; line-height: 1.05; }
+.note-text {
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  font: 400 1.6rem var(--note-font);
+  color: #232323;
+  line-height: 1.05;
+  overflow-wrap: break-word;
+  white-space: pre-line;
+}
 
 /* The "keep" control: a plain scrawled word until held, when a hand-drawn ring
    appears round it, like it's just been circled in the meeting. */
@@ -137,11 +157,12 @@
   inset: -8px -18px;
   width: calc(100% + 36px);
   height: calc(100% + 16px);
+  overflow: visible;
   color: var(--marker-blue);
   opacity: 0;
   transition: opacity 0.15s ease;
 }
-.keep-ring ellipse { fill: none; stroke: currentColor; stroke-width: 3; }
+.keep-ring path { fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; }
 .keep[aria-pressed="true"] .keep-ring { opacity: 1; }
 .keep:disabled { cursor: default; }
 
@@ -150,14 +171,17 @@
 .reroll-border {
   position: absolute;
   inset: 0;
-  border: 3.5px solid var(--marker-black);
-  border-radius: 6px;
-  transition: border-color 0.15s ease;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  color: var(--marker-black);
+  transition: color 0.15s ease;
 }
+.reroll-border path { fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; }
 .reroll-text { position: relative; font: 400 clamp(1rem, 2vw, 1.2rem) var(--board-font); color: var(--marker-blue); }
 .reroll:active:not(:disabled) .reroll-box { transform: translateY(2px); }
 .reroll:disabled .reroll-text { color: #9aa3ad; }
-.reroll:disabled .reroll-border { border-color: #9aa3ad; }
+.reroll:disabled .reroll-border { color: #9aa3ad; }
 
 .reading { text-align: center; }
 .status {
