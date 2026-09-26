@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Permanent+Marker&family=Reenie+Beanie&display=swap');
 
 :root[data-theme="whiteboard"] {
   --postit-pink: #ff9fc0;
@@ -7,7 +7,12 @@
   --marker-black: #232323;
   --marker-blue: #1f5fbf;
   --marker-grey: #6b6b68;
-  --display: 'Kalam', 'Comic Sans MS', cursive;
+  /* Board ink (title, box labels, keep/reroll) reads like a Sharpie on whiteboard;
+     the notes themselves are written in a softer hand, like ballpoint on paper. */
+  --board-font: 'Permanent Marker', 'Comic Sans MS', cursive;
+  --hand-font: 'Kalam', 'Comic Sans MS', cursive;
+  --note-font: 'Reenie Beanie', 'Comic Sans MS', cursive;
+  --display: var(--hand-font);
 
   color-scheme: light;
   color: var(--marker-black);
@@ -47,13 +52,13 @@
 .board-head { text-align: center; }
 .board-head h1 {
   margin: 0;
-  font: 700 clamp(1.8rem, 4.2vh, 2.6rem) var(--display);
+  font: 400 clamp(1.7rem, 4vh, 2.4rem) var(--board-font);
   color: var(--marker-black);
   transform: rotate(-1deg);
 }
 .board-sub {
-  margin: 2px 0 0;
-  font: 400 clamp(0.85rem, 1.8vh, 1rem) var(--display);
+  margin: 4px 0 0;
+  font: 400 clamp(0.85rem, 1.8vh, 1rem) var(--hand-font);
   color: var(--marker-grey);
 }
 
@@ -66,24 +71,22 @@
   justify-items: center;
   gap: clamp(8px, 1.6vh, 12px);
 }
-.frame::before {
-  content: '';
+.frame-border {
   position: absolute;
   inset: 0;
-  border: 3px solid var(--marker-black);
+  border: 3.5px solid var(--marker-black);
   border-radius: 6px;
-  filter: url(#board-wobble);
   pointer-events: none;
   transition: border-color 0.15s ease;
 }
-.slot.kept .frame::before { border-color: var(--marker-blue); border-width: 4px; }
+.slot.kept .frame-border { border-color: var(--marker-blue); border-width: 4.5px; }
 
 .frame-label {
   position: relative;
   align-self: start;
   justify-self: start;
   margin: -2px 0 0 6px;
-  font: 400 clamp(0.8rem, 1.7vw, 0.98rem) var(--display);
+  font: 400 clamp(0.85rem, 1.8vw, 1.05rem) var(--board-font);
   color: var(--marker-black);
 }
 
@@ -99,19 +102,9 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  border-radius: 2px;
-  box-shadow: 2px 6px 10px rgb(0 0 0 / 0.25), 0 1px 0 rgb(255 255 255 / 0.4) inset;
+  border-radius: 1px;
+  box-shadow: 2px 5px 9px rgb(0 0 0 / 0.22), 0 1px 0 rgb(255 255 255 / 0.4) inset;
   transform: rotate(var(--note-rot, -2deg));
-}
-.note::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 22%;
-  height: 22%;
-  background: linear-gradient(135deg, transparent 50%, rgb(0 0 0 / 0.12) 50%);
-  border-radius: 0 0 2px 0;
 }
 .slot:nth-of-type(1) .note { --note-rot: -3deg; }
 .slot:nth-of-type(2) .note { --note-rot: 2deg; }
@@ -120,7 +113,7 @@
 .cat-yellow .note { background: linear-gradient(160deg, #fff1a8, var(--postit-yellow)); }
 .cat-green .note { background: linear-gradient(160deg, #c3f2c0, var(--postit-green)); }
 
-.note-text { margin: 0; font: 400 clamp(0.9rem, 1.7vw, 1.1rem) var(--display); color: #232323; line-height: 1.25; }
+.note-text { margin: 0; font: 400 clamp(1.5rem, 2.7vw, 1.9rem) var(--note-font); color: #232323; line-height: 1.05; }
 
 /* The "keep" control: a plain scrawled word until held, when a hand-drawn ring
    appears round it, like it's just been circled in the meeting. */
@@ -136,7 +129,7 @@
 .keep-word {
   position: relative;
   z-index: 1;
-  font: 400 clamp(0.82rem, 1.6vw, 1rem) var(--display);
+  font: 400 clamp(0.8rem, 1.6vw, 0.98rem) var(--board-font);
   color: var(--marker-blue);
 }
 .keep-ring {
@@ -147,7 +140,6 @@
   color: var(--marker-blue);
   opacity: 0;
   transition: opacity 0.15s ease;
-  filter: url(#board-wobble);
 }
 .keep-ring ellipse { fill: none; stroke: currentColor; stroke-width: 3; }
 .keep[aria-pressed="true"] .keep-ring { opacity: 1; }
@@ -155,35 +147,33 @@
 
 .reroll { justify-self: center; margin-top: 2px; }
 .reroll-box { position: relative; display: inline-flex; padding: 10px 28px; }
-.reroll-box::before {
-  content: '';
+.reroll-border {
   position: absolute;
   inset: 0;
-  border: 3px solid var(--marker-black);
+  border: 3.5px solid var(--marker-black);
   border-radius: 6px;
-  filter: url(#board-wobble);
   transition: border-color 0.15s ease;
 }
-.reroll-text { position: relative; font: 700 clamp(1rem, 2vw, 1.2rem) var(--display); color: var(--marker-blue); }
+.reroll-text { position: relative; font: 400 clamp(1rem, 2vw, 1.2rem) var(--board-font); color: var(--marker-blue); }
 .reroll:active:not(:disabled) .reroll-box { transform: translateY(2px); }
 .reroll:disabled .reroll-text { color: #9aa3ad; }
-.reroll:disabled .reroll-box::before { border-color: #9aa3ad; }
+.reroll:disabled .reroll-border { border-color: #9aa3ad; }
 
 .reading { text-align: center; }
 .status {
   margin: 0;
-  font: 400 clamp(0.78rem, 1.5vh, 0.9rem) var(--display);
+  font: 400 clamp(0.78rem, 1.5vh, 0.9rem) var(--hand-font);
   color: var(--marker-grey);
 }
 .brief {
   margin: 4px 0 0;
-  font: 400 clamp(0.95rem, 1.8vw, 1.15rem) var(--display);
+  font: 700 clamp(0.95rem, 1.8vw, 1.15rem) var(--hand-font);
   color: var(--marker-black);
   min-height: 1.6em;
 }
 
 /* Theme switcher, whiteboard style */
-[data-theme="whiteboard"] .theme-switcher a { color: var(--marker-black); background: #fff; border: 2px solid var(--marker-black); font-family: var(--display); font-weight: 700; }
+[data-theme="whiteboard"] .theme-switcher a { color: var(--marker-black); background: #fff; border: 2px solid var(--marker-black); font-family: var(--board-font); font-weight: 400; }
 [data-theme="whiteboard"] .theme-switcher a[aria-current="page"] { background: var(--postit-yellow); }
 
 /* --- Redraw: the old note peels, tumbles off the bottom of the board, and the new

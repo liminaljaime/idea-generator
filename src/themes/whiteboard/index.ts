@@ -12,13 +12,16 @@ let cleanup: (() => void)[] = []
 const categories = ['pink', 'yellow', 'green'] as const
 const IDLE = 'Ready when you are'
 
+// Three seeds so the three boxes don't all wobble in exactly the same pattern.
 const wobble = `
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <filter id="board-wobble" x="-8%" y="-8%" width="116%" height="116%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.05" numOctaves="2" seed="6"/>
-      <feDisplacementMap in="SourceGraphic" scale="5"/>
-    </filter>
+    ${[6, 17, 29, 41].map((seed) => `
+      <filter id="board-wobble-${seed}" x="-8%" y="-8%" width="116%" height="116%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.045" numOctaves="2" seed="${seed}"/>
+        <feDisplacementMap in="SourceGraphic" scale="6"/>
+      </filter>`).join('')}
   </svg>`
+const boxSeeds = [6, 17, 29] as const
 
 const sentence = (s: string) => s.charAt(0) + s.slice(1).toLowerCase()
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
@@ -40,19 +43,20 @@ const theme: Theme = {
             ${machine.reels.map((r, i) => `
               <section class="slot cat-${categories[i]}" aria-label="${r.label}">
                 <div class="frame">
+                  <div class="frame-border" aria-hidden="true" style="filter:url(#board-wobble-${boxSeeds[i]})"></div>
                   <p class="frame-label">${sentence(r.label)}</p>
                   <div class="note-well">
                     <div class="note" data-note="${i}"><p class="note-text" data-text="${i}"></p></div>
                   </div>
                   <button type="button" class="keep" data-keep="${i}" aria-pressed="false" aria-label="Keep the ${r.label.toLowerCase()}">
                     <span class="keep-word">keep</span>
-                    <svg class="keep-ring" viewBox="0 0 100 46" aria-hidden="true"><ellipse cx="50" cy="23" rx="46" ry="19"/></svg>
+                    <svg class="keep-ring" viewBox="0 0 100 46" aria-hidden="true" style="filter:url(#board-wobble-${boxSeeds[i]})"><ellipse cx="50" cy="23" rx="46" ry="19"/></svg>
                   </button>
                 </div>
               </section>`).join('')}
           </main>
           <button type="button" class="reroll">
-            <span class="reroll-box"><span class="reroll-text">Reroll</span></span>
+            <span class="reroll-box"><span class="reroll-border" aria-hidden="true" style="filter:url(#board-wobble-41)"></span><span class="reroll-text">Reroll</span></span>
           </button>
           <div class="reading">
             <p class="status" data-status>${IDLE}</p>
