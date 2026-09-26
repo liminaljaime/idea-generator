@@ -86,8 +86,9 @@
   color: var(--marker-black);
   pointer-events: none;
   transition: color 0.15s ease;
+  filter: url(#marker-ink);
 }
-.frame-border path { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+.frame-border path { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
 .slot.kept .frame-border { color: var(--marker-blue); }
 .slot.kept .frame-border path { stroke-width: 2; }
 
@@ -164,8 +165,9 @@
   color: var(--marker-blue);
   opacity: 0;
   transition: opacity 0.15s ease;
+  filter: url(#marker-ink);
 }
-.keep-ring path { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.keep-ring path { fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; }
 .keep[aria-pressed="true"] .keep-ring { opacity: 1; }
 .keep:disabled { cursor: default; }
 
@@ -179,8 +181,9 @@
   overflow: visible;
   color: var(--marker-black);
   transition: color 0.15s ease;
+  filter: url(#marker-ink);
 }
-.reroll-border path { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
+.reroll-border path { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
 .reroll-text { position: relative; font: 400 clamp(1rem, 2vw, 1.2rem) var(--board-font); color: var(--marker-blue); }
 .reroll:active:not(:disabled) .reroll-box { transform: translateY(2px); }
 .reroll:disabled .reroll-text { color: #9aa3ad; }

@@ -13,6 +13,20 @@ const categories = ['pink', 'yellow', 'green'] as const
 const IDLE = 'Ready when you are'
 const boxSeeds = [6, 17, 29, 41] as const
 
+// Real marker ink isn't a clean line: density varies along the stroke, edges are
+// soft, and there are dry-looking patches. Modulating the stroke's own opacity with
+// noise (rather than just displacing its outline) gets much closer than a tidy path.
+const inkFilter = `
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <filter id="marker-ink" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" seed="5" result="noise"/>
+      <feColorMatrix in="noise" type="matrix"
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.55 0.55 0 0 0.2" result="inkMask"/>
+      <feComposite in="SourceGraphic" in2="inkMask" operator="in" result="inked"/>
+      <feGaussianBlur in="inked" stdDeviation="0.3"/>
+    </filter>
+  </svg>`
+
 const sentence = (s: string) => s.charAt(0) + s.slice(1).toLowerCase()
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
@@ -122,6 +136,7 @@ const theme: Theme = {
     document.documentElement.dataset.theme = 'whiteboard'
     document.title = 'Idea Workshop'
     root.innerHTML = `
+      ${inkFilter}
       <div class="board">
         <div class="wall">
           <header class="board-head">
