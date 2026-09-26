@@ -172,18 +172,18 @@
 .keep:disabled { cursor: default; }
 
 .reroll { justify-self: center; margin-top: 2px; }
-.reroll-box { position: relative; display: inline-flex; padding: 10px 28px; }
+.reroll-box { position: relative; display: inline-flex; padding: 10px 24px; }
 .reroll-border {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
+  inset: -12px -24px;
+  width: calc(100% + 48px);
+  height: calc(100% + 24px);
   overflow: visible;
   color: var(--marker-black);
   transition: color 0.15s ease;
   filter: url(#marker-ink);
 }
-.reroll-border path { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.reroll-border path { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
 .reroll-text { position: relative; font: 400 clamp(1rem, 2vw, 1.2rem) var(--board-font); color: var(--marker-blue); }
 .reroll:active:not(:disabled) .reroll-box { transform: translateY(2px); }
 .reroll:disabled .reroll-text { color: #9aa3ad; }

@@ -168,7 +168,7 @@ const theme: Theme = {
               </section>`).join('')}
           </main>
           <button type="button" class="reroll">
-            <span class="reroll-box"><svg class="reroll-border" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">${handDrawnBox(boxSeeds[3])}</svg><span class="reroll-text">Ideate</span></span>
+            <span class="reroll-box"><svg class="reroll-border" viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true">${handDrawnRing(boxSeeds[3])}</svg><span class="reroll-text">Ideate</span></span>
           </button>
           <div class="reading">
             <p class="status" data-status>${IDLE}</p>
