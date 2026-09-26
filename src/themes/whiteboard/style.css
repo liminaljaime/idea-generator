@@ -167,9 +167,8 @@
   transition: opacity 0.15s ease;
   filter: url(#marker-ink);
 }
-.keep-ring ellipse { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+.keep-ring ellipse { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .keep[aria-pressed="true"] .keep-ring { opacity: 1; }
-.keep[aria-pressed="true"] .keep-ring ellipse { stroke-width: 3.2; }
 .keep:disabled { cursor: default; }
 
 .reroll { justify-self: center; margin-top: 2px; }
@@ -184,7 +183,7 @@
   transition: color 0.15s ease;
   filter: url(#marker-ink);
 }
-.reroll-border ellipse { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+.reroll-border ellipse { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
 .reroll-text { position: relative; font: 400 clamp(1.4rem, 3vw, 1.75rem) var(--board-font); color: var(--marker-blue); }
 .reroll:active:not(:disabled) .reroll-box { transform: translateY(2px); }
 .reroll:disabled .reroll-text { color: #9aa3ad; }
