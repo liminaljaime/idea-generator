@@ -13,17 +13,22 @@ const categories = ['pink', 'yellow', 'green'] as const
 const IDLE = 'Ready when you are'
 const boxSeeds = [6, 17, 29, 41] as const
 
-// Real marker ink isn't a clean line: density varies along the stroke, edges are
-// soft, and there are dry-looking patches. Modulating the stroke's own opacity with
-// noise (rather than just displacing its outline) gets much closer than a tidy path.
+// Real dry-erase marker isn't fine uniform grain (that reads as paper fibre) — it's
+// bigger, streaky dry patches where the felt tip skipped, with fairly sharp ink/no-ink
+// transitions rather than a smooth gradient, plus a soft bled edge. Low, asymmetric
+// turbulence frequency gives elongated streaks instead of isotropic speckle; a steep
+// alpha curve turns the smooth noise into more binary patches instead of grain.
 const inkFilter = `
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <filter id="marker-ink" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB">
-      <feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="2" seed="5" result="noise"/>
+    <filter id="marker-ink" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+      <feTurbulence type="fractalNoise" baseFrequency="0.045 0.22" numOctaves="2" seed="5" result="noise"/>
       <feColorMatrix in="noise" type="matrix"
-        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.55 0.55 0 0 0.2" result="inkMask"/>
+        values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.6 1.6 0 0 -0.35" result="inkMaskRaw"/>
+      <feComponentTransfer in="inkMaskRaw" result="inkMask">
+        <feFuncA type="gamma" amplitude="1" exponent="0.5" offset="0"/>
+      </feComponentTransfer>
       <feComposite in="SourceGraphic" in2="inkMask" operator="in" result="inked"/>
-      <feGaussianBlur in="inked" stdDeviation="0.3"/>
+      <feGaussianBlur in="inked" stdDeviation="0.45"/>
     </filter>
   </svg>`
 
