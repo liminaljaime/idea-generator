@@ -89,31 +89,21 @@ const handDrawnBox = (seed: number) => {
   return `<path d="${handDrawnRect(rng, 3)}"/><path d="${handDrawnRect(rng, 4)}"/>`
 }
 
-// Same idea for the circle round "Run with it": an imperfect oval, not a clean
-// ellipse — a bit messier than the box strokes since it's drawn as one quick loop.
-function handDrawnOval(rng: () => number): string {
-  const j = (n: number) => (rng() - 0.5) * n
-  // Eight points round the ellipse (not just 4) so the curve stays recognisably
-  // round even with jitter, instead of collapsing into a diamond/bowtie.
-  const ring: [number, number][] = [
-    [50, 4], [75, 8], [96, 23], [75, 38],
-    [50, 42], [25, 38], [4, 23], [25, 8],
-  ]
-  const pts = ring.map(([x, y]) => [x + j(4), y + j(4)] as [number, number])
-  const [sx, sy] = pts[0]
-  let d = `M ${sx} ${sy}`
-  const n = pts.length
-  for (let i = 1; i <= n; i++) {
-    const [px, py] = pts[i - 1]
-    const [x, y] = pts[i % n]
-    d += ` Q ${(px + x) / 2 + j(4)} ${(py + y) / 2 + j(4)} ${x} ${y}`
-  }
-  d += ` L ${sx + j(5)} ${sy + j(5)}`
-  return d
-}
+// Same idea for the circle round "Run with it"/"Ideate": real overlapping ellipses,
+// not a jittered polygon — a hand-drawn circle has no corners anywhere on it, just
+// two or three slightly mismatched passes (different centre, radius and tilt).
 const handDrawnRing = (seed: number) => {
   const rng = mulberry32(seed)
-  return `<path d="${handDrawnOval(rng)}"/><path d="${handDrawnOval(rng)}"/>`
+  const j = (n: number) => (rng() - 0.5) * n
+  const passes = [0, 1].map(() => {
+    const cx = 50 + j(5)
+    const cy = 23 + j(5)
+    const rx = 46 + j(7)
+    const ry = 19 + j(5)
+    const rot = j(8)
+    return `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" transform="rotate(${rot} ${cx} ${cy})"/>`
+  })
+  return passes.join('')
 }
 
 // Size the note's text to fill most of the note — a one-word result gets to be huge,
