@@ -86,8 +86,7 @@ const theme: Theme = {
             ${machine.reels.map((r, i) => `
               <section class="slot suit-${suits[i]}" aria-label="${r.label}">
                 <p class="suit-name">${r.label}</p>
-                <div class="deck" data-deck="${i}" aria-hidden="true">${cardBack(suits[i])}</div>
-                <div class="card up" data-card="${i}">
+                <div class="card" data-card="${i}">
                   <div class="inner">
                     <div class="face back">${cardBack(suits[i])}</div>
                     <div class="face front">
@@ -109,7 +108,6 @@ const theme: Theme = {
       </div>`
 
     const cards = [...root.querySelectorAll<HTMLElement>('[data-card]')]
-    const decks = [...root.querySelectorAll<HTMLElement>('[data-deck]')]
     const keeps = [...root.querySelectorAll<HTMLButtonElement>('[data-keep]')]
     const shuffle = root.querySelector<HTMLButtonElement>('.shuffle')!
     const status = root.querySelector<HTMLElement>('[data-status]')!
@@ -120,8 +118,7 @@ const theme: Theme = {
       root.querySelector(`[data-art="${i}"]`)!.innerHTML = badgeSvg(item)
       root.querySelector(`[data-name="${i}"]`)!.textContent = item.item
     }
-    machine.reels.forEach((_, i) => show(i, machine.results[i]))
-    brief.textContent = machine.brief
+    // The cards wait face-down until the first shuffle — nothing is revealed on load.
 
     keeps.forEach((b, i) => b.addEventListener('click', () => machine.toggleHold(i)))
     shuffle.addEventListener('click', () => machine.spin())
@@ -145,22 +142,18 @@ const theme: Theme = {
       shuffle.classList.add('ringing')
       brief.classList.add('waiting')
       if (prefersReducedMotion()) {
-        spinning.forEach((i) => show(i, results[i]))
+        spinning.forEach((i) => { show(i, results[i]); cards[i].classList.add('up') })
         return machine.settle()
       }
-      // Turn the old cards over and sweep them back to their decks, then shuffle.
+      // Turn face-down, pause a beat, then wiggle in place as if being shuffled, and
+      // deal — one at a time, left to right — flipping each over to reveal its result.
       spinning.forEach((i) => cards[i].classList.remove('up'))
-      await wait(350)
-      spinning.forEach((i) => { cards[i].classList.add('away'); decks[i].classList.add('shuffling') })
-      await wait(650)
-      spinning.forEach((i) => decks[i].classList.remove('shuffling'))
-      // Deal one at a time, then flip, left to right.
+      await wait(500)
+      spinning.forEach((i) => cards[i].classList.add('wiggle'))
+      await wait(700)
+      spinning.forEach((i) => cards[i].classList.remove('wiggle'))
       for (const i of spinning) {
         show(i, results[i])
-        cards[i].classList.remove('away')
-        await wait(320)
-      }
-      for (const i of spinning) {
         cards[i].classList.add('up')
         await wait(420)
       }

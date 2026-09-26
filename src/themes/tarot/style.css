@@ -130,24 +130,18 @@
 .suit-moon { --suit: #9b86e8; --suit-deep: #34236b; }
 .suit-star { --suit: #f08aa6; --suit-deep: #6d1f3a; }
 
-/* The deck: a small squared-up pile the cards are dealt from */
-.deck {
-  width: calc(var(--card-w) * 0.42);
-  aspect-ratio: 60 / 90;
-  border-radius: 5px;
-  color: var(--suit);
-  background: var(--suit-deep);
-  box-shadow: 1px 1px 0 var(--suit-deep), 2px 2px 0 #0006, 3px 3px 0 var(--suit-deep), 4px 4px 0 #0006;
+/* Cards: a two-sided flip. They start and rest face-down; shuffling wiggles them in
+   place, then each flips over as it's dealt. */
+.card { width: var(--card-w); aspect-ratio: 60 / 98; perspective: 900px; }
+@keyframes card-wiggle {
+  0%, 100% { transform: rotate(0deg) translateX(0); }
+  15% { transform: rotate(-4deg) translateX(-3px); }
+  32% { transform: rotate(3deg) translateX(3px); }
+  49% { transform: rotate(-3deg) translateX(-2px); }
+  66% { transform: rotate(2deg) translateX(2px); }
+  83% { transform: rotate(-1deg) translateX(0); }
 }
-.deck svg { display: block; width: 100%; height: 100%; }
-.deck.shuffling { animation: riffle 0.22s ease-in-out 3; }
-@keyframes riffle {
-  25% { transform: translateX(-5px) rotate(-5deg); }
-  75% { transform: translateX(5px) rotate(5deg); }
-}
-
-/* Cards: a two-sided flip */
-.card { width: var(--card-w); aspect-ratio: 60 / 98; perspective: 900px; transition: transform 0.32s cubic-bezier(.2,.8,.3,1), opacity 0.32s; }
+.card.wiggle { animation: card-wiggle 0.7s ease-in-out; }
 .card .inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform 0.45s ease; transform: rotateY(0deg); }
 .card.up .inner { transform: rotateY(180deg); }
 .face { position: absolute; inset: 0; border-radius: 8px; backface-visibility: hidden; -webkit-backface-visibility: hidden; overflow: hidden; }
@@ -186,8 +180,6 @@
   hyphens: auto;
 }
 .name::after { content: "\00a0."; } /* non-breaking, so the full stop never drops to its own line */
-/* Swept back onto the deck before a deal */
-.card.away { transform: translateY(calc(var(--card-w) * -0.9)) scale(0.42); opacity: 0; transition: none; }
 .card.kept .front { box-shadow: 0 0 0 3px var(--gold), 0 0 22px rgb(226 179 74 / 0.7), inset 0 0 0 8px #fffaf0, inset 0 0 0 10px var(--ink); }
 
 /* Keep: a little brass tab */
@@ -239,12 +231,10 @@
 [data-theme="tarot"] .theme-switcher a { color: var(--gold-soft); background: var(--velvet-deep); border: 1px solid rgb(226 179 74 / 0.6); font-family: var(--mystic); }
 [data-theme="tarot"] .theme-switcher a[aria-current="page"] { background: var(--gold); color: var(--velvet-deep); }
 
-/* Phones: smaller cards, decks hidden (cards still flip) */
+/* Phones: smaller cards (they still shuffle and flip the same way) */
 @media (max-width: 720px) {
   :root[data-theme="tarot"] { --card-w: calc((100vw - 64px) / 3); }
   .spread { gap: 12px; }
-  .deck { display: none; }
-  .card.away { transform: translateY(-30px) scale(0.8); }
   .name { font-size: 0.52rem; letter-spacing: 0.02em; padding: 3px 2px; }
   .suit-name { font-size: 0.58rem; letter-spacing: 0.04em; }
   .front { padding: 12px 11px 13px; }
@@ -254,5 +244,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card, .card .inner, .deck.shuffling, .sign { transition: none; animation: none; }
+  .card, .card .inner, .sign { transition: none; animation: none; }
 }
