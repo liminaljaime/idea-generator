@@ -48,17 +48,18 @@
   gap: clamp(10px, 2vh, 18px);
 }
 
-.board-head { text-align: center; }
+.board-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(16px, 3vw, 32px);
+  text-align: left;
+}
 .board-head h1 {
   margin: 0;
   font: 400 clamp(2.55rem, 6vh, 3.6rem) var(--board-font);
   color: var(--marker-black);
   transform: rotate(-1deg);
-}
-.board-sub {
-  margin: 4px 0 0;
-  font: 400 clamp(0.85rem, 1.8vh, 1rem) var(--hand-font);
-  color: var(--marker-grey);
 }
 
 .slots { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 3vw, 30px); }
@@ -168,17 +169,7 @@
 .keep[aria-pressed="true"] .keep-ring { opacity: 1; }
 .keep:disabled { cursor: default; }
 
-/* Ideate sits under the first card; the summary starts under the middle card,
-   mirroring the .slots column widths so everything stays vertically aligned. */
-.bottom-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
-  gap: clamp(14px, 3vw, 30px);
-  align-items: start;
-  margin-top: 8px;
-}
-
-.reroll { justify-self: start; margin-top: 2px; }
+.reroll { flex: none; }
 .reroll-box { position: relative; display: inline-flex; padding: 18px 46px; }
 .reroll-border {
   position: absolute;
@@ -196,7 +187,7 @@
 .reroll:disabled .reroll-text { color: #9aa3ad; }
 .reroll:disabled .reroll-border { color: #9aa3ad; }
 
-.reading { text-align: left; }
+.reading { text-align: left; margin-top: 8px; }
 .reading-title {
   margin: 0 0 6px;
   font: 400 clamp(1.1rem, 2.2vw, 1.4rem) var(--board-font);
@@ -232,12 +223,11 @@
 .note.landing { animation: note-land 320ms ease-out forwards; }
 
 @media (max-width: 720px) {
+  .board-head { flex-direction: column; align-items: center; text-align: center; }
   .slots { grid-template-columns: 1fr; gap: 16px; }
   .wall { padding: 18px 16px 26px; }
   .note-well { aspect-ratio: 1 / 0.75; }
   .note { width: 58%; }
-  .bottom-row { grid-template-columns: 1fr; }
-  .reroll { justify-self: center; }
   .reading { text-align: center; }
 }
 

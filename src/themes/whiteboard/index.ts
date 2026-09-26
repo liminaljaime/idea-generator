@@ -138,7 +138,9 @@ const theme: Theme = {
         <div class="wall">
           <header class="board-head">
             <h1>Concept Jam</h1>
-            <p class="board-sub">How might we align perspectives and unlock synergistic possibilities?</p>
+            <button type="button" class="reroll">
+              <span class="reroll-box"><svg class="reroll-border" viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true">${handDrawnRing(boxSeeds[3])}</svg><span class="reroll-text">Ideate</span></span>
+            </button>
           </header>
           <main class="slots">
             ${machine.reels.map((r, i) => `
@@ -156,14 +158,9 @@ const theme: Theme = {
                 </div>
               </section>`).join('')}
           </main>
-          <div class="bottom-row">
-            <button type="button" class="reroll">
-              <span class="reroll-box"><svg class="reroll-border" viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true">${handDrawnRing(boxSeeds[3])}</svg><span class="reroll-text">Ideate</span></span>
-            </button>
-            <div class="reading">
-              <h2 class="reading-title">Where did we land?</h2>
-              <p class="brief" aria-hidden="true"></p>
-            </div>
+          <div class="reading">
+            <h2 class="reading-title">Where did we land?</h2>
+            <p class="brief" aria-hidden="true"></p>
           </div>
         </div>
       </div>`
