@@ -85,12 +85,9 @@
   overflow: visible;
   color: var(--marker-black);
   pointer-events: none;
-  transition: color 0.15s ease;
   filter: url(#marker-ink);
 }
-.frame-border path { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
-.slot.kept .frame-border { color: var(--marker-blue); }
-.slot.kept .frame-border path { stroke-width: 2; }
+.frame-border path { fill: none; stroke: currentColor; stroke-width: 2px; stroke-linecap: round; vector-effect: non-scaling-stroke; }
 
 .frame-label {
   position: relative;
@@ -167,11 +164,21 @@
   transition: opacity 0.15s ease;
   filter: url(#marker-ink);
 }
-.keep-ring ellipse { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.keep-ring ellipse { fill: none; stroke: currentColor; stroke-width: 2px; stroke-linecap: round; vector-effect: non-scaling-stroke; }
 .keep[aria-pressed="true"] .keep-ring { opacity: 1; }
 .keep:disabled { cursor: default; }
 
-.reroll { justify-self: center; margin-top: 2px; }
+/* Ideate sits under the first card; the summary starts under the middle card,
+   mirroring the .slots column widths so everything stays vertically aligned. */
+.bottom-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+  gap: clamp(14px, 3vw, 30px);
+  align-items: start;
+  margin-top: 8px;
+}
+
+.reroll { justify-self: start; margin-top: 2px; }
 .reroll-box { position: relative; display: inline-flex; padding: 18px 46px; }
 .reroll-border {
   position: absolute;
@@ -183,20 +190,20 @@
   transition: color 0.15s ease;
   filter: url(#marker-ink);
 }
-.reroll-border ellipse { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+.reroll-border ellipse { fill: none; stroke: currentColor; stroke-width: 3px; stroke-linecap: round; vector-effect: non-scaling-stroke; }
 .reroll-text { position: relative; font: 400 clamp(1.4rem, 3vw, 1.75rem) var(--board-font); color: var(--marker-blue); }
 .reroll:active:not(:disabled) .reroll-box { transform: translateY(2px); }
 .reroll:disabled .reroll-text { color: #9aa3ad; }
 .reroll:disabled .reroll-border { color: #9aa3ad; }
 
-.reading { text-align: center; }
-.status {
-  margin: 0;
-  font: 400 clamp(0.78rem, 1.5vh, 0.9rem) var(--hand-font);
-  color: var(--marker-grey);
+.reading { text-align: left; }
+.reading-title {
+  margin: 0 0 6px;
+  font: 400 clamp(1.1rem, 2.2vw, 1.4rem) var(--board-font);
+  color: var(--marker-black);
 }
 .brief {
-  margin: 4px 0 0;
+  margin: 0;
   font: 700 clamp(0.95rem, 1.8vw, 1.15rem) var(--hand-font);
   color: var(--marker-black);
   min-height: 1.6em;
@@ -229,6 +236,9 @@
   .wall { padding: 18px 16px 26px; }
   .note-well { aspect-ratio: 1 / 0.75; }
   .note { width: 58%; }
+  .bottom-row { grid-template-columns: 1fr; }
+  .reroll { justify-self: center; }
+  .reading { text-align: center; }
 }
 
 @media (prefers-reduced-motion: reduce) {

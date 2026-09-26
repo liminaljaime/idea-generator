@@ -10,7 +10,6 @@ import voice from '../../data/workshop-facilitator.csv?raw'
 let cleanup: (() => void)[] = []
 
 const categories = ['pink', 'yellow', 'green'] as const
-const IDLE = 'Ready when you are'
 const boxSeeds = [6, 17, 29, 41] as const
 
 // Real dry-erase marker isn't fine uniform grain (that reads as paper fibre) — it's
@@ -157,12 +156,14 @@ const theme: Theme = {
                 </div>
               </section>`).join('')}
           </main>
-          <button type="button" class="reroll">
-            <span class="reroll-box"><svg class="reroll-border" viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true">${handDrawnRing(boxSeeds[3])}</svg><span class="reroll-text">Ideate</span></span>
-          </button>
-          <div class="reading">
-            <p class="status" data-status>${IDLE}</p>
-            <p class="brief" aria-hidden="true"></p>
+          <div class="bottom-row">
+            <button type="button" class="reroll">
+              <span class="reroll-box"><svg class="reroll-border" viewBox="0 0 100 46" preserveAspectRatio="none" aria-hidden="true">${handDrawnRing(boxSeeds[3])}</svg><span class="reroll-text">Ideate</span></span>
+            </button>
+            <div class="reading">
+              <h2 class="reading-title">Where did we land?</h2>
+              <p class="brief" aria-hidden="true"></p>
+            </div>
           </div>
         </div>
       </div>`
@@ -172,7 +173,6 @@ const theme: Theme = {
     const slots = [...root.querySelectorAll<HTMLElement>('.slot')]
     const keeps = [...root.querySelectorAll<HTMLButtonElement>('[data-keep]')]
     const reroll = root.querySelector<HTMLButtonElement>('.reroll')!
-    const status = root.querySelector<HTMLElement>('[data-status]')!
     const brief = root.querySelector<HTMLElement>('.brief')!
 
     // Two words read better stacked one-per-line than squeezed onto one wide line —
@@ -211,7 +211,6 @@ const theme: Theme = {
       keepWords[index].textContent = held ? "This one's got legs!" : 'Run with it'
       slots[index].classList.toggle('kept', held)
       reroll.disabled = !machine.canSpin
-      status.textContent = machine.canSpin ? IDLE : 'Everything is kept — let one go to reroll'
     }))
 
     // A note peels off, tumbles off the bottom of the board, then the new one gets
@@ -239,7 +238,6 @@ const theme: Theme = {
 
     cleanup.push(machine.on('spin', async ({ spinning, results }) => {
       setBusy(true)
-      status.textContent = 'Reworking the board…'
       brief.classList.add('waiting')
       if (prefersReducedMotion()) {
         spinning.forEach((i) => show(i, results[i]))
@@ -252,7 +250,6 @@ const theme: Theme = {
 
     cleanup.push(machine.on('ready', (e) => {
       setBusy(false)
-      status.textContent = IDLE
       brief.textContent = e.brief
       brief.classList.remove('waiting')
     }))
