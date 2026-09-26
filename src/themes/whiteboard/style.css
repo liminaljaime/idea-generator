@@ -18,10 +18,17 @@
   color: var(--marker-black);
   font-family: var(--display);
 }
-[data-theme="whiteboard"] body { margin: 0; background: #cfcfcb; }
+[data-theme="whiteboard"] body {
+  margin: 0;
+  background:
+    radial-gradient(ellipse at 25% 15%, rgb(255 255 255 / 0.9), transparent 45%),
+    radial-gradient(ellipse at 80% 85%, rgb(0 0 0 / 0.04), transparent 50%),
+    linear-gradient(160deg, #fbfbf9, #f0f0ed 60%, #e6e6e2 100%);
+}
 :where([data-theme="whiteboard"]) :where(button) { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; padding: 0; }
 [data-theme="whiteboard"] :focus-visible { outline: 3px solid var(--marker-blue); outline-offset: 3px; }
 
+/* The whole page is the whiteboard — full-bleed, no frame or bezel round it. */
 .board {
   min-height: 100vh;
   min-height: 100dvh;
@@ -29,21 +36,13 @@
   display: grid;
   place-items: center;
   padding: clamp(12px, 3vh, 28px);
-  background: #cfcfcb;
 }
 
-/* The whiteboard itself: a bright, faintly smudged surface in an aluminium-grey frame. */
 .wall {
   position: relative;
-  width: min(1080px, 100%);
+  width: 100%;
+  max-width: 1200px;
   box-sizing: border-box;
-  background:
-    radial-gradient(ellipse at 25% 15%, rgb(255 255 255 / 0.9), transparent 45%),
-    radial-gradient(ellipse at 80% 85%, rgb(0 0 0 / 0.04), transparent 50%),
-    linear-gradient(160deg, #fbfbf9, #f0f0ed 60%, #e6e6e2 100%);
-  border: 10px solid #c3c3bf;
-  border-radius: 10px;
-  box-shadow: 0 20px 44px rgb(0 0 0 / 0.28), inset 0 0 50px rgb(0 0 0 / 0.04);
   padding: clamp(18px, 3.6vh, 34px) clamp(16px, 4vw, 44px);
   display: grid;
   gap: clamp(10px, 2vh, 18px);
