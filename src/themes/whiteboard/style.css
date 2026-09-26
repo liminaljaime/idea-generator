@@ -150,9 +150,12 @@
 .keep-word {
   position: relative;
   z-index: 1;
+  display: inline-block;
+  max-width: 9ch;
+  text-align: center;
   font: 400 clamp(0.95rem, 1.9vw, 1.15rem) var(--board-font);
+  line-height: 1.15;
   color: var(--marker-blue);
-  white-space: nowrap;
 }
 .keep-ring {
   position: absolute;
@@ -223,13 +226,48 @@
 }
 .note.landing { animation: note-land 320ms ease-out forwards; }
 
+/* Small screens: everything needs to fit in view without scrolling, so each
+   category collapses into one compact row — small label on top, a rectangular
+   (not square) post-it beside its "Run with it" button — rather than three tall
+   stacked cards. Mirrors how Homespun Ideas lays its reels out as rows on mobile. */
 @media (max-width: 720px) {
-  .board-head { flex-direction: column; align-items: center; text-align: center; }
-  .slots { grid-template-columns: 1fr; gap: 16px; }
-  .wall { padding: 18px 16px 26px; }
-  .note-well { aspect-ratio: 1 / 0.75; }
-  .note { width: 58%; }
-  .reading { text-align: center; }
+  .board { align-items: start; padding-top: clamp(12px, 3vh, 24px); }
+  .wall { padding: 12px 14px 18px; gap: 8px; }
+
+  .board-head { gap: 10px; }
+  .board-head h1 { font: 400 clamp(1.5rem, 8vw, 2rem) var(--board-font); }
+
+  .reroll-box { padding: 8px 18px; }
+  .reroll-border { inset: -8px -14px; width: calc(100% + 28px); height: calc(100% + 16px); }
+  .reroll-text { font-size: clamp(0.85rem, 4vw, 1rem); }
+
+  .slots { grid-template-columns: 1fr; gap: 8px; }
+  .frame {
+    padding: 8px 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    grid-template-areas: "label label" "note keep";
+    justify-items: stretch;
+    align-items: center;
+    gap: 4px 12px;
+  }
+  .frame-label { grid-area: label; font-size: clamp(0.72rem, 3vw, 0.82rem); }
+  .note-well {
+    grid-area: note;
+    width: 100%;
+    height: clamp(60px, 16vw, 80px);
+    aspect-ratio: auto;
+    justify-content: flex-start;
+  }
+  .note { width: 100%; height: 100%; aspect-ratio: auto; padding: 10%; }
+  .keep { grid-area: keep; margin-bottom: 0; padding: 4px 6px; }
+  .keep-word { font-size: clamp(0.68rem, 2.8vw, 0.8rem); }
+  .keep-ring { inset: -8px -14px; width: calc(100% + 28px); height: calc(100% + 16px); }
+
+  .reading { margin-top: 4px; }
+  .reading-title { font-size: clamp(0.95rem, 4vw, 1.1rem); }
+  .brief { font-size: clamp(1.05rem, 4.5vw, 1.25rem); }
 }
 
 @media (prefers-reduced-motion: reduce) {
