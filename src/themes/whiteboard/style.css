@@ -102,7 +102,7 @@
   color: var(--marker-black);
 }
 
-.note-well { width: 100%; min-width: 0; min-height: 0; aspect-ratio: 4 / 5; display: flex; align-items: center; justify-content: center; }
+.note-well { width: 100%; min-width: 0; min-height: 0; aspect-ratio: 1 / 0.9; display: flex; align-items: center; justify-content: center; }
 
 .note {
   position: relative;
