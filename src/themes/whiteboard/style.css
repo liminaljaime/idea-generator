@@ -147,6 +147,7 @@
   display: grid;
   place-items: center;
   padding: 6px 10px;
+  margin-bottom: 16px;
 }
 .keep-word {
   position: relative;
@@ -179,12 +180,12 @@
   width: calc(100% + 60px);
   height: calc(100% + 32px);
   overflow: visible;
-  color: var(--marker-black);
+  color: var(--marker-blue);
   transition: color 0.15s ease;
   filter: url(#marker-ink);
 }
 .reroll-border ellipse { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
-.reroll-text { position: relative; font: 400 clamp(1.15rem, 2.4vw, 1.4rem) var(--board-font); color: var(--marker-blue); }
+.reroll-text { position: relative; font: 400 clamp(1.4rem, 3vw, 1.75rem) var(--board-font); color: var(--marker-blue); }
 .reroll:active:not(:disabled) .reroll-box { transform: translateY(2px); }
 .reroll:disabled .reroll-text { color: #9aa3ad; }
 .reroll:disabled .reroll-border { color: #9aa3ad; }
